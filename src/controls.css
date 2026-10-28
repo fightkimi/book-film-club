@@ -1,0 +1,725 @@
+/* Criterion reference: square controls, 13px bold UI text, .6px tracking,
+   #252525 / #fff / #f6f6f6, 56px desktop and 44–48px mobile targets.
+   Keyboard semantics and focus management remain owned by Radix. */
+:root {
+  --control-ink: #252525;
+  --control-muted: #8e8e8e;
+  --control-line: #e4e4e4;
+  --control-paper: #f6f6f6;
+  --control-ui:
+    "Montserrat Variable", "Noto Sans SC Variable", Arial, sans-serif;
+}
+.criterion-button.rt-Button {
+  position: relative;
+  min-height: 56px;
+  height: auto;
+  padding: 18px 24px;
+  border: 2px solid var(--control-ink);
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: var(--control-ink);
+  color: #fff;
+  font-family: var(--control-ui);
+  font-size: 13px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  clip-path: none !important;
+  filter: none !important;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease-out,
+    color 180ms ease-out,
+    border-color 180ms ease-out;
+  gap: 10px;
+  white-space: nowrap;
+}
+.criterion-button.rt-variant-outline {
+  background: #fff;
+  border-color: #ededed;
+  color: var(--control-ink);
+}
+.criterion-button.rt-variant-ghost,
+.criterion-button.rt-variant-soft {
+  background: transparent;
+  border-color: transparent;
+  color: var(--control-ink);
+  padding: 10px 14px;
+  min-height: 44px;
+}
+.criterion-button:hover:not(:disabled) {
+  background: #424242;
+  color: #fff;
+  border-color: #424242;
+}
+.criterion-button.rt-variant-outline:hover:not(:disabled),
+.criterion-button.rt-variant-ghost:hover:not(:disabled) {
+  background: #252525;
+  color: #fff;
+  border-color: #252525;
+}
+.criterion-button:active:not(:disabled) {
+  background: #111;
+  border-color: #111;
+  transform: none;
+}
+.criterion-button:disabled,
+.criterion-button[data-disabled] {
+  background: #eee;
+  border-color: #eee;
+  color: #999;
+  opacity: 1;
+  cursor: not-allowed;
+  transform: none;
+}
+.criterion-button:focus-visible {
+  outline: 2px solid #252525;
+  outline-offset: 4px;
+}
+.criterion-button svg {
+  stroke-width: 1.5;
+}
+.hero-copy .criterion-button,
+.closing .criterion-button {
+  background: #fff;
+  color: #252525;
+  border-color: #fff;
+}
+.hero-copy .criterion-button:hover,
+.closing .criterion-button:hover {
+  background: #252525;
+  color: #fff;
+  border-color: #252525;
+}
+.actions {
+  gap: 14px;
+}
+.page-head .actions {
+  gap: 14px;
+  align-items: center;
+}
+.field.criterion-select {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  margin: 20px 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  min-height: 0;
+  border-radius: 0;
+}
+.criterion-select > .select-label {
+  font-family: var(--control-ui);
+  font-size: 12px;
+  line-height: 18px;
+  color: #747474;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+.criterion-select .rt-SelectTrigger {
+  width: 100%;
+  height: 56px;
+  min-height: 56px;
+  padding: 0 20px;
+  border: 2px solid #ededed;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: #fff;
+  color: #252525;
+  font-family: var(--control-ui);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease-out,
+    color 180ms ease-out,
+    border-color 180ms ease-out;
+}
+.criterion-select .rt-SelectTrigger:hover,
+.criterion-select .rt-SelectTrigger[data-state="open"] {
+  background: #252525;
+  color: #fff;
+  border-color: #252525;
+}
+.criterion-select .rt-SelectTrigger:focus-visible {
+  outline: 2px solid #252525;
+  outline-offset: 3px;
+}
+.criterion-select-menu {
+  border: 1px solid #ddd;
+  border-radius: 0 !important;
+  background: #fff;
+  box-shadow: 0 6px 20px #00000012;
+  padding: 5px;
+  font-family: var(--control-ui);
+}
+.criterion-select-menu .rt-SelectItem {
+  min-height: 40px;
+  border-radius: 0;
+  margin: 0;
+  font-family: var(--control-ui);
+  font-size: 13px;
+  line-height: 20px;
+  color: #252525;
+}
+.criterion-select-menu .rt-SelectItem[data-highlighted] {
+  background: #252525;
+  color: #fff;
+}
+.criterion-select-menu
+  .rt-SelectItem[data-state="checked"]:not([data-highlighted]) {
+  background: #f0f0f0;
+  color: #252525;
+}
+.criterion-select.compact-select {
+  margin: 0;
+  width: 170px;
+}
+.compact-select > .select-label {
+  position: absolute;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 56px;
+  padding: 12px 18px;
+  border: 1px solid #dedede;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: none;
+}
+.search-box input {
+  padding: 4px 0;
+  background: transparent;
+  font-family: var(--control-ui);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+  color: #252525;
+}
+.search-box input::placeholder {
+  color: #999;
+}
+.search-box > svg {
+  color: #747474;
+  stroke-width: 1.5;
+}
+.header-search {
+  border-radius: 0;
+  background: #fff;
+  border-color: #dedede;
+}
+.field > input,
+.field > textarea {
+  border-radius: 0;
+  border: 1px solid #d8d8d8;
+  background: #fff;
+  box-shadow: none;
+  font-family: var(--control-ui);
+  font-size: 14px;
+}
+.field > input:focus,
+.field > textarea:focus {
+  border-color: #252525;
+}
+.rt-CheckboxRoot {
+  border-radius: 0;
+}
+.collection-search {
+  margin-bottom: 28px;
+}
+.criterion-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid #d2d2d2;
+  padding: 0 0 32px;
+  margin-bottom: 40px;
+}
+.collection-count {
+  font-family: var(--control-ui);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #8e8e8e;
+  white-space: nowrap;
+}
+.collection-count strong {
+  color: #252525;
+}
+.criterion-toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.criterion-toolbar-controls .filter-toggle {
+  min-width: 150px;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+.criterion-toolbar-controls .criterion-select .rt-SelectTrigger {
+  border-left: 0;
+}
+.view-switch {
+  display: flex;
+}
+.view-switch button {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border: 2px solid #ededed;
+  border-left: 0;
+  cursor: pointer;
+  color: #777;
+}
+.view-switch button[aria-pressed="true"] {
+  background: #f0f0f0;
+  color: #252525;
+}
+.view-switch button:hover {
+  background: #252525;
+  color: white;
+  border-color: #252525;
+}
+.active-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: -20px 0 32px;
+  font: 12px var(--control-ui);
+  color: #666;
+}
+.active-filters span {
+  background: #eee;
+  padding: 8px 12px;
+}
+.active-filters button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 0;
+  padding: 8px;
+  color: #252525;
+}
+.collection-card {
+  position: relative;
+  padding: 12px 12px 18px;
+  margin: -12px -12px 0;
+  transition: background-color 160ms ease-out;
+  min-width: 0;
+}
+.collection-card:hover,
+.collection-card:focus-within {
+  background: #fff;
+  box-shadow: 0 8px 24px #00000008;
+}
+.collection-card .cover {
+  aspect-ratio: 3/4;
+  background: #f6f6f6;
+  object-fit: contain;
+}
+.collection-card .work-caption h3 {
+  font-family: var(--control-ui);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0;
+  margin: 5px 0 5px;
+  text-wrap: pretty;
+}
+.collection-card .byline {
+  font-family: Georgia, "Noto Serif SC Variable", serif;
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #8e8e8e;
+}
+.collection-status {
+  display: block;
+  font-family: var(--control-ui);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  color: #6d797f;
+  margin-top: 14px;
+}
+.collection-status.complete {
+  color: #229d74;
+}
+.collection-card .work-meta {
+  font: 11px/1.5 var(--control-ui);
+  color: #999;
+  margin-top: 8px;
+}
+.collection-card .stars {
+  margin: 8px 0 0;
+  color: #666;
+}
+.collection-card .stars svg {
+  width: 13px;
+  height: 13px;
+}
+.collection-actions {
+  margin-top: 18px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 140ms ease-out;
+}
+.collection-actions > .criterion-button {
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 8px;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+}
+.collection-card:hover .collection-actions,
+.collection-card:focus-within .collection-actions {
+  visibility: visible;
+  opacity: 1;
+}
+.criterion-collection-grid {
+  row-gap: 42px;
+}
+.criterion-collection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.criterion-collection-list .collection-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 0;
+  padding: 22px 0;
+  border-bottom: 1px solid #ddd;
+  box-shadow: none;
+}
+.criterion-collection-list .card-link {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  flex: 1;
+}
+.criterion-collection-list .cover {
+  width: 72px;
+  height: 96px;
+  flex-shrink: 0;
+}
+.criterion-collection-list .collection-status {
+  margin-top: 0;
+}
+.criterion-collection-list .collection-actions {
+  visibility: visible;
+  opacity: 1;
+  margin: 0;
+  width: 140px;
+}
+.criterion-filter-panel {
+  position: fixed !important;
+  right: 0 !important;
+  left: auto !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  transform: none !important;
+  margin: 0 !important;
+  max-height: none !important;
+  height: 100dvh;
+  width: min(680px, 70vw);
+  max-width: none !important;
+  border-radius: 0 !important;
+  background: #fff;
+  padding: 40px !important;
+  box-shadow: -10px 0 50px #0001 !important;
+}
+.criterion-filter-panel .modal-head .rt-DialogTitle {
+  font-family: var(--control-ui);
+  font-size: 23px;
+  font-weight: 700;
+}
+.criterion-filter-panel .filter-panel-body {
+  margin: 40px 0;
+}
+.criterion-filter-panel .actions {
+  border-top: 1px solid #ddd;
+  padding-top: 24px;
+  margin-top: 40px;
+}
+.wordmark {
+  gap: 12px !important;
+}
+.wordmark img.brand-frequency {
+  width: 52px;
+  height: 44px;
+  object-fit: contain;
+}
+.wordmark img.brand-lettering {
+  width: 110px;
+  height: 50px;
+  object-fit: contain;
+}
+.header-top {
+  padding: 22px 32px;
+  min-height: 96px;
+}
+.navigation-modal {
+  padding: 22px 32px 24px !important;
+}
+.navigation-modal .modal-head {
+  padding-bottom: 22px;
+  min-height: 74px;
+}
+@media (max-width: 900px) {
+  .criterion-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .criterion-toolbar-controls {
+    width: 100%;
+  }
+  .criterion-toolbar-controls .compact-select {
+    flex: 1;
+  }
+  .collection-actions {
+    visibility: visible;
+    opacity: 1;
+  }
+  .filter-row {
+    flex-wrap: wrap;
+  }
+  .filter-row .search-box {
+    flex-basis: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .criterion-button.rt-Button {
+    min-height: 48px;
+    padding: 14px 18px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    gap: 8px;
+  }
+  .criterion-button svg {
+    width: 16px;
+    height: 16px;
+  }
+  .actions,
+  .page-head .actions {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .criterion-select .rt-SelectTrigger {
+    height: 48px;
+    min-height: 48px;
+    padding: 0 14px;
+    font-size: 12px;
+  }
+  .criterion-select > .select-label {
+    font-size: 12px;
+    line-height: 17px;
+  }
+  .field.criterion-select {
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .search-box {
+    min-height: 52px;
+    padding: 10px 14px;
+  }
+  .search-box input {
+    font-size: 14px;
+    line-height: 24px;
+  }
+  .filter-row {
+    gap: 16px;
+    align-items: stretch;
+  }
+  .filter-row .field {
+    min-width: calc(50% - 8px);
+    margin: 0;
+  }
+  .collection-search {
+    margin: 0 0 24px;
+  }
+  .criterion-toolbar {
+    padding-bottom: 24px;
+    margin-bottom: 30px;
+    gap: 16px;
+  }
+  .criterion-toolbar-controls .filter-toggle {
+    min-width: 92px;
+    padding: 0 14px;
+    height: 48px;
+  }
+  .criterion-toolbar-controls .compact-select {
+    margin: 0;
+    width: auto;
+    min-width: 0;
+    flex: 1;
+  }
+  .view-switch button {
+    width: 44px;
+    height: 48px;
+  }
+  .view-switch svg {
+    width: 17px;
+    height: 17px;
+  }
+  .collection-card {
+    padding: 8px 8px 14px;
+    margin: -8px -8px 0;
+  }
+  .collection-card .work-caption h3 {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .collection-card .byline {
+    font-size: 12px;
+  }
+  .collection-card .work-meta {
+    font-size: 12px;
+  }
+  .collection-status {
+    font-size: 12px;
+    margin-top: 12px;
+  }
+  .collection-actions {
+    visibility: visible;
+    opacity: 1;
+    margin-top: 12px;
+  }
+  .collection-actions > .criterion-button {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .criterion-collection-grid {
+    row-gap: 26px;
+  }
+  .criterion-collection-list .collection-card {
+    gap: 12px;
+  }
+  .criterion-collection-list .card-link {
+    gap: 14px;
+  }
+  .criterion-collection-list .cover {
+    width: 60px;
+    height: 80px;
+  }
+  .criterion-collection-list .collection-actions {
+    width: 90px;
+  }
+  .criterion-collection-list .collection-actions > .criterion-button {
+    padding: 10px 5px;
+    font-size: 12px;
+  }
+  .criterion-filter-panel.modal:not(.navigation-modal) {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw;
+    height: 100dvh;
+    max-height: none !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+    padding: 28px 24px !important;
+  }
+  .criterion-filter-panel .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .wordmark img.brand-frequency {
+    width: 42px;
+    height: 38px;
+  }
+  .wordmark img.brand-lettering {
+    width: 98px;
+    height: 44px;
+  }
+  .header-top {
+    padding: 20px 24px;
+    min-height: 84px;
+  }
+  .navigation-modal {
+    padding: 20px 24px 24px !important;
+  }
+  .navigation-modal .modal-head {
+    padding-bottom: 20px;
+    min-height: 64px;
+  }
+  .mobile-cycle-actions .criterion-button {
+    min-height: 46px;
+  }
+  .progress-card-actions > .criterion-button {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .criterion-button,
+  .collection-card,
+  .collection-actions {
+    transition: none !important;
+  }
+}
+
+.text-button,
+.row-actions button {
+  font-family: var(--control-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: #252525;
+  min-height: 44px;
+  text-decoration: none;
+}
+.text-button:hover,
+.row-actions button:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.icon-button {
+  color: #252525;
+  border-radius: 0;
+  transition: background-color 150ms ease-out;
+}
+.icon-button:hover {
+  background: #f6f6f6;
+}
+.toast .icon-button:hover {
+  background: #424242;
+}
+.poster-credit {
+  font-size: 12px;
+}
+
+.criterion-collection-grid {
+  background: #f6f6f6;
+  padding: 32px;
+  margin: 0 -32px;
+}
+.criterion-collection-grid .collection-card .cover {
+  background: transparent;
+}
+@media (max-width: 600px) {
+  .criterion-collection-grid {
+    padding: 24px;
+    margin: 0 -24px;
+    column-gap: 22px;
+  }
+}
