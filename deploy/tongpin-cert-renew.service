@@ -1,0 +1,5 @@
+[Unit]
+Description=Renew Tongpin HTTPS certificate
+[Service]
+Type=oneshot
+ExecStart=/opt/tongpin-certbot/bin/certbot renew --quiet --deploy-hook "systemctl reload nginx"

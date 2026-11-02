@@ -1,0 +1,22 @@
+[Unit]
+Description=Tongpin Book and Film Club
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/tongpin/current
+EnvironmentFile=/etc/tongpin/tongpin.env
+ExecStart=/opt/tongpin/venv/bin/python -B server.py
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/tongpin/data
+
+[Install]
+WantedBy=multi-user.target

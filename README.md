@@ -120,3 +120,5 @@ npm audit
 书籍还可选择 `GOOGLE_BOOKS_KEY` 配置的 Google Books，或不需密钥的 Open Library。可用 `METADATA_USER_AGENT` 标识应用与真实联系方式。全部配置项见 `.env.example`；产品代码仍不会自动读取上级目录的 `.env`。
 
 来源、维护日期、安全与许可证核查见 [数据源与开源复用报告](docs/research/2026-11-02-media-sources.md)。官方接口的可访问性和中文覆盖率并非保证；缺少资料时保留人工核对入口。
+
+服务器发布、IP HTTPS、回退与电影密钥配置见 [部署说明](docs/DEPLOYMENT.md)。支持将 `TMDB_API_HOST` 设为 `api.tmdb.org` 以适配主域名不可达的部署网络；只允许固定 TMDB 域名，不将密钥交给任意镜像。
