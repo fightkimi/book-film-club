@@ -43,3 +43,12 @@ Text Animate 来源下载于 2026-10-28；变更为按字素拆分、响应减�
 收藏区以用户提供的 Criterion 网格截图和官网为依据，支持完整封面、轻量信息、操作显隐、列表切换及排序。手机端操作区始终可见。
 
 产品标志现为原创细线频率 SVG，与矢量化手写字标并排。字标来自本次 ImageGen 原创结果，通过临时 VTracer 工具整理为 10 条路径，不包含内嵌位图；VTracer 未加入应用运行依赖。旧版纸页按钮、书签纹理、胶片边框、人物和放映机图标已经撤下，不属于交付设计。
+
+## 书影陪伴功能复用（2026-11-02）
+
+- 界面复用现有 Radix Themes Dialog / Select / Checkbox / Button、Lucide 图标及 Criterion 样式，不新增依赖。
+- Movie Concierge：借鉴截图中的“心情 + 时长”选片思路；具体 Skill 仓库未确认，未安装或复制。实现为已入库候选的服务端筛选及受约束 AI 推荐。
+- Film Analysis：参考 [AlterLab Film Analysis](https://github.com/AlterLab-IEU/AlterLab-FC-Skills/blob/main/skills/cdm/alterlab-cdm-film-analysis/SKILL.md) 的观察、证据与解释分离方法，自行编写导赏提示词；未复制其 Skill 文本或代码。
+- Movie Review Critic / Cinematic Language：借鉴感想整理、证据追问与通俗术语的能力方向，未宣称安装截图中的具体项目。
+- TMDB / Open Library：继续沿用已有元数据与封面适配，不增加同类封装。
+- [Douban Sync](https://github.com/cosformula/douban-sync-skill)（MIT）及 [Letterboxd 文件导入导出](https://letterboxd.com/api-beta/) 已评估，留待后续导入阶段；本期没有增加同步任务、登录采集或额外账号凭证。

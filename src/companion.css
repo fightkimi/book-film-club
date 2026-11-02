@@ -1,0 +1,120 @@
+.companion-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.companion-fields:disabled {
+  opacity: 0.65;
+}
+.companion-fields:disabled * {
+  pointer-events: none;
+}
+.companion-caption {
+  font-size: 13px;
+  line-height: 1.65;
+}
+.companion-results,
+.review-assistant {
+  margin-top: 28px;
+  border-top: 1px solid #d9d9d9;
+  padding-top: 24px;
+}
+.companion-results h3,
+.review-assistant h3 {
+  margin: 0;
+}
+.companion-candidates {
+  display: grid;
+  gap: 0;
+}
+.companion-candidate {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid #dedede;
+}
+.companion-candidate .cover {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: contain;
+  background: #f6f6f6;
+}
+.companion-candidate h3 {
+  margin: 8px 0;
+  font-size: 22px;
+}
+.companion-candidate p {
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+.companion-guide {
+  background: #f6f6f6;
+  padding: 24px;
+  margin: 24px 0 16px;
+}
+.companion-guide h3 {
+  font-size: 25px;
+  margin: 12px 0 20px;
+}
+.companion-guide h4,
+.companion-review-result h4 {
+  font-family: var(--control-ui);
+  font-size: 15px;
+  margin: 24px 0 12px;
+}
+.companion-guide p,
+.companion-guide li,
+.companion-guide dd,
+.companion-review-result {
+  font-size: 16px;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+.companion-guide ul,
+.companion-guide ol,
+.companion-review-result ul {
+  padding-left: 22px;
+}
+.companion-guide li,
+.companion-review-result li {
+  padding-left: 4px;
+  margin: 10px 0;
+}
+.companion-guide dt {
+  font-weight: 600;
+  margin-top: 16px;
+}
+.companion-guide dd {
+  margin: 4px 0 0;
+  color: #565656;
+}
+.companion-review-result {
+  border-left: 2px solid #333;
+  padding-left: 20px;
+  margin-top: 24px;
+}
+@media (max-width: 600px) {
+  .companion-candidate {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 16px;
+  }
+  .companion-candidate h3 {
+    font-size: 20px;
+  }
+  .companion-candidate .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .companion-candidate .criterion-button {
+    width: 100%;
+    padding: 0 12px;
+  }
+  .companion-guide {
+    padding: 20px;
+  }
+}

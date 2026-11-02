@@ -60,6 +60,7 @@ import {
 } from "./forms.jsx";
 import Draw from "./Draw.jsx";
 import Metadata from "./Metadata.jsx";
+import { Discover, Guide } from "./Companion.jsx";
 
 export async function api(path, body) {
   const controller = new AbortController();
@@ -999,6 +1000,23 @@ export default function App() {
               查看主题历史
               <ChevronRight size={15} />
             </a>
+            {c.status === "draft" && (isAdmin || c.participants[user.id]) && (
+              <ActionRow>
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    setModal({
+                      type: "discover",
+                      theme: c.theme,
+                      cycleId: c.id,
+                    })
+                  }
+                >
+                  <Search size={16} />
+                  为本期挑选作品
+                </Button>
+              </ActionRow>
+            )}
           </div>
           <aside>
             <h3>本期完成要求</h3>
@@ -1347,10 +1365,16 @@ export default function App() {
                   onClick={() => askAI("analyze", { theme_id: theme.id })}
                 >
                   <Sparkles size={16} />
-                  AI 解构与推荐
+                  AI 解构与灵感
                 </Button>
               </ActionRow>
             )}
+            <ActionRow>
+              <Button onClick={() => setModal({ type: "discover", theme })}>
+                <Search size={16} />
+                挑选作品
+              </Button>
+            </ActionRow>
           </article>
           <aside className="info-aside">
             <h3>主题档案</h3>
@@ -1603,6 +1627,15 @@ export default function App() {
               {work.description || "简介待补全"}
             </p>
             <div className="work-tags">{work.tags}</div>
+            <ActionRow>
+              <Button
+                variant="outline"
+                onClick={() => setModal({ type: "guide", work })}
+              >
+                <BookOpen size={16} />
+                {work.kind === "book" ? "读前导赏" : "观前导赏"}
+              </Button>
+            </ActionRow>
             <Pick
               label="我的书单 / 片单"
               value={shelf}
@@ -2008,8 +2041,38 @@ export default function App() {
       {modal?.type === "review" && (
         <ReviewForm
           {...modal}
+          api={api}
+          aiEnabled={services.ai}
+          allowAssistant={modal.userId === user.id}
           state={s}
           onSave={save("review.save")}
+          onClose={() => setModal(null)}
+        />
+      )}
+      {modal?.type === "discover" && (
+        <Discover
+          key={(modal.cycleId || "") + modal.theme.id}
+          theme={modal.theme}
+          cycle={s.cycles.find((c) => c.id === modal.cycleId)}
+          api={api}
+          enabled={services.ai}
+          onClose={() => setModal(null)}
+          onOpen={(id) => {
+            setModal(null);
+            go("works/" + id);
+          }}
+          onImport={isAdmin ? () => setModal({ type: "metadata" }) : null}
+          onNominate={(id) =>
+            act("nominate", { cycle_id: modal.cycleId, work_id: id })
+          }
+        />
+      )}
+      {modal?.type === "guide" && (
+        <Guide
+          key={modal.work.id}
+          work={modal.work}
+          api={api}
+          enabled={services.ai}
           onClose={() => setModal(null)}
         />
       )}

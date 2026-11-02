@@ -17,6 +17,7 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 import ai
+import companion
 import metadata
 from domain import Problem, admin, empty_state, find, mutate, now, report, text, uid
 
@@ -243,17 +244,32 @@ class Handler(BaseHTTPRequestHandler):
                     c.execute('INSERT INTO metadata_cache VALUES(?,?,?,?)',(token,user['id'],json.dumps(item),time.time()+3600))
                     c.commit()
                     self.send({'item':item,'token':token}); return
+                if path=='/api/discover':
+                    _,s=load_state(c)
+                    result=companion.discover(s,user,p)
+                    self.send({'works':result['works'],'total':result['total']}); return
                 if path=='/api/ai':
-                    admin(user)
                     _,s=load_state(c)
                     task=p.get('task')
-                    if task=='themes': context={'existing':[t['title'] for t in s['themes']],'brief':text(p.get('brief',''),2000,False)}
-                    elif task=='analyze': context=find(s['themes'],p.get('theme_id'))
-                    elif task=='recap':
-                        cy=find(s['cycles'],p.get('cycle_id'))
-                        context={'theme':cy['theme'],'direction':cy['direction'],'reviews':[{'body':r['body'],'rating':r['rating']} for r in s['reviews'] if r['cycle_id']==cy['id']]}
-                    else: raise Problem('AI 任务无效')
-                    self.send({'draft':ai.generate(task,context)}); return
+                    if task in ('recommend','guide','review'):
+                        context=companion.context_for(task,s,user,p)
+                    else:
+                        admin(user)
+                        if task=='themes': context={'existing':[t['title'] for t in s['themes']],'brief':text(p.get('brief',''),2000,False)}
+                        elif task=='analyze': context=find(s['themes'],p.get('theme_id'))
+                        elif task=='recap':
+                            cy=find(s['cycles'],p.get('cycle_id'))
+                            context={'theme':cy['theme'],'direction':cy['direction'],'reviews':[{'body':r['body'],'rating':r['rating']} for r in s['reviews'] if r['cycle_id']==cy['id']]}
+                        else: raise Problem('AI 任务无效')
+                    if task in ('recommend','guide','review'):
+                        with companion.generation_slot(user['id']):
+                            draft=ai.generate(task,context)
+                    else:
+                        draft=ai.generate(task,context)
+                    response={'draft':draft}
+                    if task=='recommend':
+                        response['works']=[find(s['works'],w['id']) for w in context['candidates']]
+                    self.send(response); return
                 if path!='/api/action': raise Problem('接口不存在',404)
                 c.execute('BEGIN IMMEDIATE')
                 rev,s=load_state(c)
