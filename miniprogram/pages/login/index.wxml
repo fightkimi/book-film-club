@@ -1,14 +1,11 @@
-<import src="../../templates/brand.wxml"/>
+<import src="../../templates/brand-intro.wxml"/>
 <view class="page entry-page">
   <template is="brand-intro"/>
-  <view class="entry-form">
-  <view class="entry-heading">回到小组</view>
-  <view class="entry-help">登录后继续本期阅读与观影。</view>
-  <label for="club-account" class="label">小组账号</label>
-  <input id="club-account" class="field" value="{{username}}" data-field="username" bindinput="input" placeholder="请输入账号" maxlength="40"/>
-  <label for="club-credential" class="label">密码</label>
-  <input id="club-credential" class="field" password="{{true}}" value="{{credential}}" data-field="credential" bindinput="input" placeholder="请输入密码" maxlength="256" confirm-type="done" bindconfirm="submit"/>
-  <view wx:if="{{error}}" class="error">{{error}}</view>
-  <button class="entry-submit" loading="{{busy}}" disabled="{{busy}}" bindtap="submit">登录　→</button>
+  <view class="entry-actions">
+    <view wx:if="{{error}}" class="entry-error">{{error}}</view>
+    <view wx:elif="{{invited}}" class="entry-hint">首次登录将绑定邀请对应的小组成员。</view>
+    <button class="entry-submit" loading="{{busy}}" disabled="{{busy}}" bindtap="submit">
+      {{busy ? '正在登录…' : '微信登录'}}
+    </button>
   </view>
 </view>

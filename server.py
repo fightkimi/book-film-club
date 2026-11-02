@@ -21,6 +21,7 @@ import ai
 import companion
 import imports
 import studies
+import wechat_login
 import metadata
 from domain import Problem, admin, empty_state, find, mutate, now, report, text, uid
 
@@ -50,6 +51,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS import_cache(token TEXT PRIMARY KEY,user_id TEXT NOT NULL,body TEXT NOT NULL,expires INTEGER NOT NULL);
         CREATE TABLE IF NOT EXISTS metadata_cache(token TEXT PRIMARY KEY,user_id TEXT NOT NULL,body TEXT NOT NULL,expires INTEGER NOT NULL);
         ''')
+        c.executescript(wechat_login.SCHEMA)
         c.execute('INSERT OR IGNORE INTO state VALUES(1,0,?)',(json.dumps(empty_state()),))
     os.chmod(DB_PATH,0o600)
 
@@ -242,7 +244,18 @@ class Handler(BaseHTTPRequestHandler):
             if path in ['/api/login','/api/setup']:
                 self.authenticate(path,p); return
             with connect() as c:
+                if path=='/api/wechat/login':
+                    member_id=wechat_login.identify(c,p,client_ip(self.client_address[0],self.headers))
+                    token=issue_session(c,member_id)
+                    c.commit()
+                    self.send({'ok':True},cookie=token); return
                 user=self.user(c)
+                if path=='/api/wechat/invite':
+                    admin(user)
+                    c.execute('BEGIN IMMEDIATE')
+                    result=wechat_login.invite(c,p.get('user_id'))
+                    c.commit()
+                    self.send(result); return
                 if path=='/api/logout':
                     raw=http.cookies.SimpleCookie(self.headers.get('Cookie',''))['club_session'].value
                     c.execute('DELETE FROM sessions WHERE token=?',(hashlib.sha256(raw.encode()).hexdigest(),))
@@ -317,7 +330,13 @@ class Handler(BaseHTTPRequestHandler):
                     raise Problem('其他成员刚刚更新了内容，已刷新数据，请重新提交',409)
                 action=p.get('action'); args=p.get('payload',{})
                 if not isinstance(args,dict): raise Problem('操作内容无效')
-                if action=='member.add':
+                if action=='member.wechat_add':
+                    admin(user)
+                    # Keep the member ID as the owner of all activity and library records.
+                    member=create_user(c,{'name':args.get('name'),'username':'wx_'+uid(),'credential':secrets.token_urlsafe(48)})
+                    result={'id':member['id']}
+                    s['audit'].append(dict(id=uid(),action=action,user_id=user['id'],target_id=member['id'],at=now()))
+                elif action=='member.add':
                     admin(user)
                     added=create_user(c,args)
                     result={'id':added['id']}

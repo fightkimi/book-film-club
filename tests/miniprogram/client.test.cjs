@@ -5,6 +5,7 @@ const D = require("../../miniprogram/lib/data");
 function runtime(handler) {
   return {
     getSystemInfoSync: () => ({ platform: "devtools" }),
+    login: (options) => options.success({ code: "wx-code-fixture" }),
     request: handler,
   };
 }
@@ -35,7 +36,7 @@ test("wx.request maintains a session only in memory and uses revision for mutati
       const path = options.url.split("/api/")[1];
       let data = {};
       let header = {};
-      if (path === "login")
+      if (path === "wechat/login")
         header = {
           "Set-Cookie":
             "club_session=test-session; Path=/; HttpOnly; SameSite=Strict",
@@ -52,7 +53,11 @@ test("wx.request maintains a session only in memory and uses revision for mutati
     }),
     { baseUrl: "http://127.0.0.1:8787" },
   );
-  await client.login("reader", "fixture-only");
+  await client.loginWithWeChat("invite-fixture");
+  assert.deepEqual(calls[0].data, {
+    code: "wx-code-fixture",
+    invite: "invite-fixture",
+  });
   assert.equal(client.hasSession(), true);
   assert.equal(calls[1].header.Cookie, "club_session=test-session");
   await client.action("shelf.save", { work_id: "work", status: "wish" });
@@ -68,7 +73,7 @@ test("401 drops local session; a version conflict refreshes and never retries mu
   const client = createClient(
     runtime((o) => {
       const path = o.url.split("/api/")[1];
-      if (path === "login")
+      if (path === "wechat/login")
         return o.success({
           statusCode: 200,
           data: {},
@@ -87,7 +92,7 @@ test("401 drops local session; a version conflict refreshes and never retries mu
     }),
     { baseUrl: "http://localhost:8787" },
   );
-  await client.login("reader", "fixture");
+  await client.loginWithWeChat();
   await assert.rejects(client.action("test", {}), /conflict/);
   assert.equal(mutation, 1);
   assert.equal(client.get().revision, 2);
@@ -164,4 +169,12 @@ test("all declared pages and handlers exist, and there is no web-view or persist
     assert.doesNotMatch(wxml, /<web-view|PASSWORD_vm4/);
     assert.doesNotMatch(js, /setStorageSync\([^)]*(credential|cookie|token)/i);
   }
+});
+
+test("tourist preview cannot impersonate a WeChat member", async () => {
+  const wx = runtime(() => assert.fail("must not send a login request"));
+  wx.getAccountInfoSync = () => ({ miniProgram: { appId: "touristappid" } });
+  const client = createClient(wx, { baseUrl: "http://127.0.0.1:8787" });
+  await assert.rejects(client.loginWithWeChat(), /游客预览/);
+  assert.equal(client.hasSession(), false);
 });
