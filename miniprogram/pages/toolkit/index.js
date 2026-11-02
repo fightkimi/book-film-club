@@ -68,7 +68,7 @@ C.define({
         await new Promise((resolve, reject) =>
           wx.shareFileMessage({
             filePath: path,
-            fileName: "同频个人档案.json",
+            fileName: "un eco 个人档案.json",
             success: resolve,
             fail: reject,
           }),

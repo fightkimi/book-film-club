@@ -11,7 +11,7 @@ SKILL_VERSION='1.0.5'
 
 def gateway(api_name, **params):
     if api_name not in ('/store/search','/book/info'):
-        raise Problem('同频仅开放微信读书的书籍搜索与详情接口')
+        raise Problem('仅开放微信读书的书籍搜索与详情接口')
     key=os.environ.get('WEREAD_API_KEY')
     if not key: raise Problem('微信读书尚未配置 WEREAD_API_KEY，可先选择其他书籍来源',503)
     data=read_json('https://i.weread.qq.com/api/agent/gateway',{'Authorization':'Bearer '+key,'Content-Type':'application/json'},

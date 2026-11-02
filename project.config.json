@@ -1,9 +1,9 @@
 {
-  "description": "同频原生微信小程序开发版",
+  "description": "un eco 读书与观影小组",
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
   "appid": "touristappid",
-  "projectname": "tongpin-miniprogram",
+  "projectname": "un eco",
   "libVersion": "latest",
   "setting": {
     "es6": true,

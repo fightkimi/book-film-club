@@ -1,4 +1,4 @@
-# 同频 echo
+# un eco
 
 合上书，散了场<br>
 我们接着聊
@@ -133,6 +133,6 @@ npm audit
 
 ### 微信登录
 
-服务端配置 `WECHAT_APP_ID` 和 `WECHAT_APP_SECRET`，客户端工程使用同一个正式 AppID。后端使用微信 code2Session 校验临时 code，以 AppID 范围内的身份映射签发同频会话。游客模式可预览界面，真实登录需已配置的小程序及合法 HTTPS 请求域名。
+服务端配置 `WECHAT_APP_ID` 和 `WECHAT_APP_SECRET`，客户端工程使用同一个正式 AppID。后端使用微信 code2Session 校验临时 code，以 AppID 范围内的身份映射签发小组会话。游客模式可预览界面，真实登录需已配置的小程序及合法 HTTPS 请求域名。
 
 首次启用时先启动新版后端创建绑定表，再在服务器运行 `sudo /opt/tongpin/venv/bin/python /opt/tongpin/current/scripts/wechat_invite.py 已有管理员账号`。在微信开发者工具为该管理员设置启动页 `pages/login/index`，将命令给出的 invite 查询参数随真机预览交给本人。管理员登录后可在成员详情里生成专属邀请并通过微信转发。新成员只需由管理员填写名字创建。邀请相当于一次性绑定凭据，10 分钟过期，重新生成会使旧邀请失效。已绑定的成员此后直接微信登录，原成员 ID 继续关联历史作品和小组活动。
