@@ -7,6 +7,8 @@ import unittest
 from pathlib import Path
 from http.server import ThreadingHTTPServer
 import server
+from unittest.mock import patch
+from test_companion import sample_state
 
 class HttpBoundaries(unittest.TestCase):
     @classmethod
@@ -62,6 +64,34 @@ class HttpBoundaries(unittest.TestCase):
         self.assertTrue(all('secret' not in u for u in export['members']))
     def test_member_cannot_export(self):
         self.assertEqual(self.request('/api/export',cookie=self.member_auth)[0],403)
+    def test_companion_member_access_and_private_context(self):
+        _,before,_=self.request('/api/state',cookie=self.member_auth)
+        state=sample_state(before['user']['id'])
+        with patch('server.load_state',return_value=(before['revision'],state)):
+            self.assertEqual(self.request('/api/discover',{'theme_id':'theme'},self.member_auth)[0],200)
+            self.assertEqual(self.request('/api/ai',{'task':'themes'},self.member_auth)[0],403)
+            payload={'task':'review','cycle_id':'cycle','work_id':'short','body':'我自己的感想'}
+            with patch('server.ai.generate',return_value={'polished':'整理稿','suggestions':['表达建议'],'questions':['依据？']}) as generate:
+                status,_,_=self.request('/api/ai',payload,self.member_auth)
+                self.assertEqual(status,200)
+                context=generate.call_args.args[1]
+                self.assertEqual(context['draft'],'我自己的感想')
+                self.assertNotIn('PRIVATE NOTE',json.dumps(context))
+                self.assertNotIn('OTHER REVIEW',json.dumps(context))
+            with patch.dict('os.environ',{},clear=True):
+                self.assertEqual(self.request('/api/ai',{'task':'guide','work_id':'short'},self.member_auth)[0],503)
+            with patch('server.ai.generate',return_value={'recommendations':[{'work_id':'short','reason':'主题关联','caveat':''}]}):
+                status,response,_=self.request('/api/ai',{'task':'recommend','theme_id':'theme','kind':'movie','minutes':90},self.member_auth)
+                self.assertEqual(status,200)
+                self.assertEqual([w['id'] for w in response['works']],['short'])
+            state['cycles'][0]['status']='archived'
+            self.assertEqual(self.request('/api/ai',payload,self.member_auth)[0],409)
+        _,after,_=self.request('/api/state',cookie=self.member_auth)
+        self.assertEqual(before['revision'],after['revision'])
+        self.assertEqual(before['state'],after['state'])
+    def test_companion_requires_authenticated_same_origin_requests(self):
+        self.assertEqual(self.request('/api/discover',{'theme_id':'theme'})[0],401)
+        self.assertEqual(self.request('/api/ai',{'task':'guide'},self.member_auth,'https://evil.example')[0],403)
     def test_rollback_invalid_action(self):
         _,before,_=self.request('/api/state',cookie=self.auth)
         self.request('/api/action',{'revision':before['revision'],'action':'unknown','payload':{}},self.auth)

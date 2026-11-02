@@ -9,6 +9,7 @@ import "@fontsource-variable/noto-serif-sc";
 import App from "./App.jsx";
 import "./styles.css";
 import "./controls.css";
+import "./companion.css";
 createRoot(document.getElementById("root")).render(
   <Theme accentColor="gray" grayColor="sand" radius="full">
     <App />

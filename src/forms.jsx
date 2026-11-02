@@ -1,5 +1,6 @@
 import posterCatalog from "./posters.json";
 import React, { useState } from "react";
+import { ReviewAssistant } from "./Companion.jsx";
 import {
   Field,
   Pick,
@@ -429,7 +430,16 @@ export function RecordForm({ cycle, userId, state, users, onSave, onClose }) {
     </Modal>
   );
 }
-export function ReviewForm({ cycle, userId, state, onSave, onClose }) {
+export function ReviewForm({
+  cycle,
+  userId,
+  state,
+  onSave,
+  onClose,
+  api,
+  aiEnabled,
+  allowAssistant,
+}) {
   const [tab, setTab] = useState(cycle.works[0].id);
   const old = state.reviews.find(
     (r) => r.cycle_id === cycle.id && r.work_id === tab && r.user_id === userId,
@@ -481,6 +491,14 @@ export function ReviewForm({ cycle, userId, state, onSave, onClose }) {
               checked={f.spoiler}
               onChange={(v) => p("spoiler", v)}
             />
+            {allowAssistant && (
+              <ReviewAssistant
+                form={f}
+                patch={p}
+                api={api}
+                enabled={aiEnabled}
+              />
+            )}
           </>
         )}
       </Editor>
