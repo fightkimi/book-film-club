@@ -52,3 +52,9 @@ Text Animate 来源下载于 2026-10-28；变更为按字素拆分、响应减�
 - Movie Review Critic / Cinematic Language：借鉴感想整理、证据追问与通俗术语的能力方向，未宣称安装截图中的具体项目。
 - TMDB / Open Library：继续沿用已有元数据与封面适配，不增加同类封装。
 - [Douban Sync](https://github.com/cosformula/douban-sync-skill)（MIT）及 [Letterboxd 文件导入导出](https://letterboxd.com/api-beta/) 已评估，留待后续导入阶段；本期没有增加同步任务、登录采集或额外账号凭证。
+
+## 完整书影工具与数据源
+
+新增原生组合组件 `Toolkit`、`ImportLibrary`、`StudyNotebook`、`FilmSources`，复用现有 Radix Tabs/Dialog/Select/Button 和 Lucide；本地视频使用 HTML video，不上传、不引入解码服务。新增标准库 CSV/JSON 解析器和官方 HTTP 适配器，无新 npm/pip 运行依赖。
+
+微信读书依据 Tencent/WeChatReading 官方 Skill 1.0.5 的接口契约自行适配；LICENSE 原文为 Apache-2.0。其他能力依照维护中的 calibre / Yamtrack / BookLore / MoviePilot 等的架构和官方服务文档实现，没有复制 GPL/AGPL 代码，也没有安装截图中未核实的同名 Skill。详细来源、最近 push 日期与保留限制见 [核查报告](research/2026-11-02-media-sources.md)。

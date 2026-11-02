@@ -44,6 +44,12 @@ class HttpBoundaries(unittest.TestCase):
         return status,json.loads(raw),cookie.split(';')[0] if cookie else None
     def test_anonymous_cannot_read_data(self):
         self.assertEqual(self.request('/api/state')[0],401)
+    def test_local_video_policy_is_limited_to_self_and_blob(self):
+        c=http.client.HTTPConnection('127.0.0.1',self.port,timeout=10)
+        c.request('GET','/api/session');response=c.getresponse()
+        policy=response.getheader('Content-Security-Policy');response.read();c.close()
+        self.assertIn("media-src 'self' blob:;",policy)
+        self.assertIn("connect-src 'self';",policy)
     def test_setup_is_one_time(self):
         self.assertEqual(self.request('/api/setup',{})[0],409)
     def test_member_cannot_admin(self):
@@ -92,6 +98,35 @@ class HttpBoundaries(unittest.TestCase):
     def test_companion_requires_authenticated_same_origin_requests(self):
         self.assertEqual(self.request('/api/discover',{'theme_id':'theme'})[0],401)
         self.assertEqual(self.request('/api/ai',{'task':'guide'},self.member_auth,'https://evil.example')[0],403)
+    def test_personal_import_preview_bound_to_user_and_one_time(self):
+        status,preview,_=self.request('/api/import/preview',{'provider':'letterboxd','content':'Name,Rating,Review\n私人电影,4,私人的感想','status':'done'},self.member_auth)
+        self.assertEqual(status,200)
+        _,member,_=self.request('/api/state',cookie=self.member_auth)
+        args={'token':preview['token'],'selected':[preview['rows'][0]['source_key']],'mappings':{}}
+        request={'revision':member['revision'],'action':'library.import','payload':args}
+        self.assertEqual(self.request('/api/action',request,self.auth)[0],409)
+        status,result,_=self.request('/api/action',request,self.member_auth)
+        self.assertEqual(status,200);self.assertEqual(result['result']['added'],1)
+        self.assertEqual(result['state']['journals'][0]['body'],'私人的感想')
+        request['revision']=result['revision']
+        self.assertEqual(self.request('/api/action',request,self.member_auth)[0],409)
+        _,admin_state,_=self.request('/api/state',cookie=self.auth)
+        self.assertEqual(admin_state['state']['journals'],[])
+        _,export,_=self.request('/api/export',cookie=self.auth)
+        self.assertNotIn('journals',export['state'])
+        _,personal,_=self.request('/api/personal-export',cookie=self.member_auth)
+        self.assertEqual(personal['journals'][0]['body'],'私人的感想')
+        other_id=personal['journals'][0]['id']
+        self.assertEqual(self.request('/api/action',{'revision':result['revision'],'action':'journal.link','payload':{'id':other_id,'work_id':'any'}},self.auth)[0],403)
+    def test_personal_study_save_persists_and_is_not_shared(self):
+        _,before,_=self.request('/api/state',cookie=self.auth)
+        work={'kind':'movie','title':'Notebook test film','creator':'Creator','description':'Info','image':'https://example.com/poster.jpg','source_url':'https://example.com/film','metadata_status':'confirmed'}
+        status,created,_=self.request('/api/action',{'revision':before['revision'],'action':'work.save','payload':work},self.auth)
+        self.assertEqual(status,200)
+        status,saved,_=self.request('/api/action',{'revision':created['revision'],'action':'study.save','payload':{'work_id':created['result']['id'],'mode':'shots','shots':[{'start':0,'end':5,'evidence':'私人观察内容'}]}},self.member_auth)
+        self.assertEqual(status,200);self.assertEqual(saved['state']['studies'][0]['shots'][0]['id'],'S1')
+        _,admin_state,_=self.request('/api/state',cookie=self.auth)
+        self.assertEqual(admin_state['state']['studies'],[])
     def test_rollback_invalid_action(self):
         _,before,_=self.request('/api/state',cookie=self.auth)
         self.request('/api/action',{'revision':before['revision'],'action':'unknown','payload':{}},self.auth)

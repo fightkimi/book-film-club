@@ -18,6 +18,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 import ai
 import companion
+import imports
+import studies
 import metadata
 from domain import Problem, admin, empty_state, find, mutate, now, report, text, uid
 
@@ -44,6 +46,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,user_id TEXT REFERENCES users(id),expires INTEGER NOT NULL);
         CREATE TABLE IF NOT EXISTS state(id INTEGER PRIMARY KEY CHECK(id=1),revision INTEGER NOT NULL,body TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS attempts(ip TEXT PRIMARY KEY,count INTEGER NOT NULL,until INTEGER NOT NULL);
+        CREATE TABLE IF NOT EXISTS import_cache(token TEXT PRIMARY KEY,user_id TEXT NOT NULL,body TEXT NOT NULL,expires INTEGER NOT NULL);
         CREATE TABLE IF NOT EXISTS metadata_cache(token TEXT PRIMARY KEY,user_id TEXT NOT NULL,body TEXT NOT NULL,expires INTEGER NOT NULL);
         ''')
         c.execute('INSERT OR IGNORE INTO state VALUES(1,0,?)',(json.dumps(empty_state()),))
@@ -81,6 +84,8 @@ def save_state(c,revision,state):
 
 def snapshot(c,user):
     rev,s=load_state(c)
+    for key in ('journals','studies'):
+        s[key]=[r for r in s.get(key,[]) if r['user_id']==user['id']]
     s['reports']={cy['id']:[report(s,cy,mid) for mid in cy['participants']] for cy in s['cycles']}
     if user['role']!='admin':
         s['audit']=[]
@@ -88,7 +93,7 @@ def snapshot(c,user):
             if r['user_id']!=user['id']:
                 r.pop('note',None)
         s['shelves']=[r for r in s['shelves'] if r['user_id']==user['id']]
-    return dict(revision=rev,state=s,users=public_users(c),user={k:user[k] for k in ['id','name','username','role']},services={'ai':ai.configured(),'tmdb':bool(os.environ.get('TMDB_TOKEN'))})
+    return dict(revision=rev,state=s,users=public_users(c),user={k:user[k] for k in ['id','name','username','role']},services={'ai':ai.configured(),'tmdb':bool(os.environ.get('TMDB_TOKEN')),'googlebooks':bool(os.environ.get('GOOGLE_BOOKS_KEY')),'trakt':bool(os.environ.get('TRAKT_CLIENT_ID')),'omdb':bool(os.environ.get('OMDB_KEY')),'weread':bool(os.environ.get('WEREAD_API_KEY'))})
 
 
 def create_user(c,p,role='member'):
@@ -128,7 +133,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('X-Content-Type-Options','nosniff')
         self.send_header('X-Frame-Options','DENY')
         self.send_header('Referrer-Policy','no-referrer')
-        self.send_header('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'")
+        self.send_header('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'")
         if cookie is not None:
             secure='; Secure' if os.environ.get('CLUB_SECURE_COOKIE')=='1' else ''
             self.send_header('Set-Cookie','club_session=%s; Path=/; HttpOnly; SameSite=Strict; Max-Age=%s%s'%(cookie,604800 if cookie else 0,secure))
@@ -185,9 +190,15 @@ class Handler(BaseHTTPRequestHandler):
                     user=self.user(c)
                     if parsed.path=='/api/state':
                         self.send(snapshot(c,user)); return
+                    if parsed.path=='/api/toolkit':
+                        self.send({'glossary':studies.GLOSSARY}); return
+                    if parsed.path=='/api/personal-export':
+                        _,s=load_state(c)
+                        self.send({'schema':1,'exported_at':now(),**{key:[r for r in s.get(key,[]) if r['user_id']==user['id']] for key in ('journals','studies','shelves')}},filename='tongpin-personal.json'); return
                     if parsed.path=='/api/export':
                         admin(user)
                         rev,s=load_state(c)
+                        for key in ('journals','studies'): s.pop(key,None)
                         self.send({'schema':1,'exported_at':now(),'revision':rev,'state':s,'members':public_users(c)},filename='book-film-club.json'); return
                     if parsed.path=='/api/report.csv':
                         admin(user)
@@ -235,7 +246,7 @@ class Handler(BaseHTTPRequestHandler):
                     c.commit()
                     self.send({'ok':True},cookie=token); return
                 if path=='/api/metadata/search':
-                    result=metadata.search(p.get('kind'),p.get('query'))
+                    result=metadata.search(p.get('kind'),p.get('query'),p.get('provider'))
                     self.send({'results':result}); return
                 if path=='/api/metadata/detail':
                     item=metadata.detail(p.get('provider'),p.get('source_id'))
@@ -244,6 +255,22 @@ class Handler(BaseHTTPRequestHandler):
                     c.execute('INSERT INTO metadata_cache VALUES(?,?,?,?)',(token,user['id'],json.dumps(item),time.time()+3600))
                     c.commit()
                     self.send({'item':item,'token':token}); return
+                if path=='/api/metadata/extras':
+                    _,s=load_state(c)
+                    self.send(metadata.film_extras(find(s['works'],p.get('work_id')))); return
+                if path=='/api/metadata/charts':
+                    self.send(metadata.charts(p.get('page',1))); return
+                if path in ('/api/import/preview','/api/import/trakt'):
+                    _,s=load_state(c)
+                    payload=imports.trakt_page(p) if path.endswith('/trakt') else p
+                    if path.endswith('/trakt') and payload['content']=='[]':
+                        self.send({'rows':[],'errors':[],'token':None}); return
+                    result=imports.parse(payload,s)
+                    token=uid()
+                    c.execute('DELETE FROM import_cache WHERE expires<? OR user_id=?',(time.time(),user['id']))
+                    c.execute('INSERT INTO import_cache VALUES(?,?,?,?)',(token,user['id'],json.dumps(result),time.time()+1800))
+                    c.commit()
+                    self.send(dict(result,token=token)); return
                 if path=='/api/discover':
                     _,s=load_state(c)
                     result=companion.discover(s,user,p)
@@ -251,7 +278,9 @@ class Handler(BaseHTTPRequestHandler):
                 if path=='/api/ai':
                     _,s=load_state(c)
                     task=p.get('task')
-                    if task in ('recommend','guide','review'):
+                    if task=='study':
+                        context=studies.ai_context(p,s)
+                    elif task in ('recommend','guide','review'):
                         context=companion.context_for(task,s,user,p)
                     else:
                         admin(user)
@@ -261,7 +290,7 @@ class Handler(BaseHTTPRequestHandler):
                             cy=find(s['cycles'],p.get('cycle_id'))
                             context={'theme':cy['theme'],'direction':cy['direction'],'reviews':[{'body':r['body'],'rating':r['rating']} for r in s['reviews'] if r['cycle_id']==cy['id']]}
                         else: raise Problem('AI 任务无效')
-                    if task in ('recommend','guide','review'):
+                    if task in ('recommend','guide','review','study'):
                         with companion.generation_slot(user['id']):
                             draft=ai.generate(task,context)
                     else:
@@ -290,6 +319,19 @@ class Handler(BaseHTTPRequestHandler):
                     c.execute('DELETE FROM sessions WHERE user_id=?',(member['id'],))
                     s['audit'].append(dict(id=uid(),action=action,user_id=user['id'],target_id=member['id'],at=now()))
                     result=None
+                elif action=='library.import':
+                    row=c.execute('SELECT body FROM import_cache WHERE token=? AND user_id=? AND expires>?',(args.get('token'),user['id'],time.time())).fetchone()
+                    if not row: raise Problem('导入预览已过期，请重新预览',409)
+                    result=imports.apply_preview(s,user,json.loads(row['body']),args)
+                    c.execute('DELETE FROM import_cache WHERE token=?',(args.get('token'),))
+                elif action=='study.save':
+                    result=studies.save(s,user,args)
+                elif action=='journal.link':
+                    entry=find(s.get('journals',[]),args.get('id'))
+                    if entry['user_id']!=user['id']: raise Problem('只能修改自己的记录',403)
+                    work=find(s['works'],args.get('work_id'))
+                    if work['kind']!=entry['kind']: raise Problem('关联作品类型不一致')
+                    entry.update(work_id=work['id'],updated_at=now()); result=entry
                 elif action=='metadata.import':
                     row=c.execute('SELECT body FROM metadata_cache WHERE token=? AND user_id=? AND expires>?',(args.get('token'),user['id'],time.time())).fetchone()
                     if not row: raise Problem('刮削预览已过期，请重新搜索',409)

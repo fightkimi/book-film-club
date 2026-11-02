@@ -61,6 +61,9 @@ import {
 import Draw from "./Draw.jsx";
 import Metadata from "./Metadata.jsx";
 import { Discover, Guide } from "./Companion.jsx";
+import Toolkit from "./Toolkit.jsx";
+import StudyNotebook from "./StudyNotebook.jsx";
+import FilmSources from "./FilmSources.jsx";
 
 export async function api(path, body) {
   const controller = new AbortController();
@@ -95,6 +98,7 @@ const NAV = [
   ["works", "书影库"],
   ["reviews", "感想与回顾"],
   ["members", "小组成员"],
+  ["toolkit", "书影工具"],
 ];
 const go = (route) => {
   location.hash = "/" + route;
@@ -1443,7 +1447,13 @@ export default function App() {
     let works = s.works.filter(
       (w) =>
         (kind === "all" || w.kind === kind) &&
-        (w.title + w.creator + w.tags)
+        (
+          w.title +
+          w.creator +
+          w.tags +
+          (w.extra?.original_title || "") +
+          (w.extra?.aliases || []).join(" ")
+        )
           .toLowerCase()
           .includes(query.toLowerCase()) &&
         (filter === "all" ||
@@ -1636,6 +1646,34 @@ export default function App() {
                 {work.kind === "book" ? "读前导赏" : "观前导赏"}
               </Button>
             </ActionRow>
+            <ActionRow>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  setModal({ type: "study", work, mode: "analysis" })
+                }
+              >
+                作品深读
+              </Button>
+              {work.kind === "movie" && (
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      setModal({ type: "study", work, mode: "shots" })
+                    }
+                  >
+                    逐镜记录
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setModal({ type: "filmSources", work })}
+                  >
+                    评分与相关影片
+                  </Button>
+                </>
+              )}
+            </ActionRow>
             <Pick
               label="我的书单 / 片单"
               value={shelf}
@@ -1663,9 +1701,13 @@ export default function App() {
                   <a href={work.source_url} target="_blank" rel="noreferrer">
                     {work.provider === "openlibrary"
                       ? "Open Library"
-                      : work.provider === "tmdb"
-                        ? "TMDB"
-                        : "手工资料来源"}
+                      : work.provider === "weread"
+                        ? "微信读书"
+                        : work.provider === "googlebooks"
+                          ? "Google Books"
+                          : work.provider === "tmdb"
+                            ? "TMDB"
+                            : "手工资料来源"}
                   </a>
                 ) : (
                   "尚未提供"
@@ -1703,6 +1745,24 @@ export default function App() {
                 <>
                   <dt>页数</dt>
                   <dd>{work.extra.pages}</dd>
+                </>
+              )}
+              {work.extra?.original_title && (
+                <>
+                  <dt>原名</dt>
+                  <dd>{work.extra.original_title}</dd>
+                </>
+              )}
+              {work.extra?.aliases?.length > 0 && (
+                <>
+                  <dt>中文译名</dt>
+                  <dd>{work.extra.aliases.join(" / ")}</dd>
+                </>
+              )}
+              {work.extra?.translator && (
+                <>
+                  <dt>译者</dt>
+                  <dd>{work.extra.translator}</dd>
                 </>
               )}
               {work.extra?.runtime && (
@@ -1744,6 +1804,20 @@ export default function App() {
         )}
       </div>
     );
+  } else if (route === "toolkit") {
+    content = (
+      <Toolkit
+        state={s}
+        services={services}
+        api={api}
+        act={act}
+        onMetadata={(initial = "", initialKind = "book") =>
+          setModal({ type: "metadata", initial, initialKind })
+        }
+        onStudy={(work, mode) => setModal({ type: "study", work, mode })}
+        onCharts={() => setModal({ type: "filmSources" })}
+      />
+    );
   } else if (route === "members") {
     const member = selectedUser;
     content = (
@@ -1770,6 +1844,13 @@ export default function App() {
         />
         {member ? (
           <>
+            {member.id === user.id && (
+              <ActionRow>
+                <Button onClick={() => go("toolkit")}>
+                  我的书影工具与档案
+                </Button>
+              </ActionRow>
+            )}
             <a href="#/members" className="back-link">
               <ArrowLeft size={16} />
               所有成员
@@ -2047,6 +2128,27 @@ export default function App() {
           state={s}
           onSave={save("review.save")}
           onClose={() => setModal(null)}
+        />
+      )}
+      {modal?.type === "study" && (
+        <StudyNotebook
+          key={modal.work.id + modal.mode}
+          {...modal}
+          state={s}
+          api={api}
+          act={act}
+          enabled={services.ai}
+          onClose={() => setModal(null)}
+        />
+      )}
+      {modal?.type === "filmSources" && (
+        <FilmSources
+          work={modal.work}
+          api={api}
+          onClose={() => setModal(null)}
+          onSearch={(initial) =>
+            setModal({ type: "metadata", initial, initialKind: "movie" })
+          }
         />
       )}
       {modal?.type === "discover" && (
