@@ -1,6 +1,6 @@
 <template name="brand-intro">
-  <view class="club-masthead" aria-label="同频 echo">
-    <image class="club-signature" src="/assets/echo-tongpin.svg" mode="aspectFit"/>
+  <view class="club-masthead" aria-label="un eco">
+    <image class="club-signature" src="/assets/un-eco.png" mode="aspectFit"/>
   </view>
   <view class="club-opening">
     <text>合上书，散了场</text>

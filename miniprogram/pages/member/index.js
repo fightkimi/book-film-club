@@ -33,11 +33,11 @@ C.define({
   onShareAppMessage(event) {
     if (event.from === "button" && this.invite && this.data.isAdmin) {
       return {
-        title: "加入同频小组",
+        title: "加入 un eco 书影小组",
         path: "/pages/login/index?invite=" + encodeURIComponent(this.invite),
       };
     }
-    return { title: "同频 echo", path: "/pages/login/index" };
+    return { title: "un eco", path: "/pages/login/index" };
   },
   progress(e) {
     C.go("progress", {

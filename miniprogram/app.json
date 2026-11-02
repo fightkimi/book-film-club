@@ -28,7 +28,7 @@
     "pages/import/index"
   ],
   "window": {
-    "navigationBarTitleText": "同频",
+    "navigationBarTitleText": "余响",
     "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTextStyle": "black",
     "backgroundTextStyle": "dark",

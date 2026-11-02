@@ -12,7 +12,7 @@ button{margin:0;border-radius:0;font-size:27rpx;line-height:1.4;padding:25rpx 28
   padding: 24rpx 0 32rpx;
   border-bottom: 1px solid #d0d7da;
 }
-.club-signature { width: 328rpx; height: 82rpx; }
+.club-signature { width: 192rpx; height: 38rpx; }
 .club-opening {
   padding: 54rpx 0 44rpx;
   color: #172126;
