@@ -6,7 +6,7 @@ import time
 from urllib.parse import urlsplit
 from domain import Problem
 
-HOSTS = {'openlibrary.org', 'www.googleapis.com', 'api.themoviedb.org', 'www.omdbapi.com', 'api.trakt.tv', 'i.weread.qq.com'}
+HOSTS = {'openlibrary.org', 'www.googleapis.com', 'api.themoviedb.org', 'api.tmdb.org', 'www.omdbapi.com', 'api.trakt.tv', 'i.weread.qq.com'}
 _lock = threading.Lock()
 _hosts = {host: threading.Lock() for host in HOSTS}
 _cache = {}

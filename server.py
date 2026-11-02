@@ -6,6 +6,7 @@ import hashlib
 import hmac
 import http.cookies
 import io
+import ipaddress
 import json
 import mimetypes
 import os
@@ -110,6 +111,16 @@ def issue_session(c,user_id):
     c.execute('DELETE FROM sessions WHERE expires<?',(time.time(),))
     c.execute('INSERT INTO sessions VALUES(?,?,?)',(hashlib.sha256(raw.encode()).hexdigest(),user_id,int(time.time())+604800))
     return raw
+
+
+def client_ip(peer, headers):
+    # Only the explicitly configured loopback proxy may supply this header.
+    if os.environ.get('CLUB_TRUST_PROXY') == '1' and ipaddress.ip_address(peer).is_loopback:
+        try:
+            return str(ipaddress.ip_address(headers.get('X-Real-IP','')))
+        except ValueError:
+            pass
+    return peer
 
 
 def seed_themes():
@@ -366,7 +377,7 @@ class Handler(BaseHTTPRequestHandler):
     def authenticate(self,path,p):
         with connect() as c:
             c.execute('BEGIN IMMEDIATE')
-            ip=self.client_address[0]
+            ip=client_ip(self.client_address[0],self.headers)
             attempt=c.execute('SELECT * FROM attempts WHERE ip=?',(ip,)).fetchone()
             if attempt and attempt['until']>time.time() and attempt['count']>=10:
                 raise Problem('尝试次数过多，请 15 分钟后重试',429)

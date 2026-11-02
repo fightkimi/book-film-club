@@ -40,7 +40,10 @@ def tmdb(path, **params):
     token = os.environ.get('TMDB_TOKEN')
     if not token:
         raise Problem('电影刮削尚未配置 TMDB_TOKEN，请在服务器配置 API 读访问令牌',503)
-    return read_json('https://api.themoviedb.org/3/'+path+'?'+urllib.parse.urlencode({'language':'zh-CN',**params}), {'Authorization':'Bearer '+token})
+    host=os.environ.get('TMDB_API_HOST','api.themoviedb.org')
+    if host not in ('api.themoviedb.org','api.tmdb.org'):
+        raise Problem('TMDB_API_HOST 只能使用支持的 TMDB 域名',503)
+    return read_json('https://'+host+'/3/'+path+'?'+urllib.parse.urlencode({'language':'zh-CN',**params}), {'Authorization':'Bearer '+token})
 
 
 def search(kind, query, provider=None):
