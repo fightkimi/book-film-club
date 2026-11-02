@@ -16,10 +16,18 @@ export default function Metadata({
   onClose,
   onManual,
   initial = "",
+  initialKind = "book",
   work = null,
   services,
 }) {
-  const [kind, setKind] = useState(work?.kind || "book"),
+  const [kind, setKind] = useState(work?.kind || initialKind),
+    [provider, setProvider] = useState(
+      ["openlibrary", "googlebooks", "weread"].includes(work?.provider)
+        ? work.provider
+        : services.weread
+          ? "weread"
+          : "openlibrary",
+    ),
     [query, setQuery] = useState(initial || work?.title || ""),
     [results, setResults] = useState(null),
     [preview, setPreview] = useState(null),
@@ -50,7 +58,13 @@ export default function Metadata({
               e.preventDefault();
               run(async () =>
                 setResults(
-                  (await api("/api/metadata/search", { kind, query })).results,
+                  (
+                    await api("/api/metadata/search", {
+                      kind,
+                      query,
+                      provider: kind === "book" ? provider : "tmdb",
+                    })
+                  ).results,
                 ),
               );
             }}
@@ -64,7 +78,7 @@ export default function Metadata({
                   setResults(null);
                 }}
                 options={[
-                  ["book", "书籍 / Open Library"],
+                  ["book", "书籍"],
                   ["movie", "电影 / TMDB"],
                 ]}
               />
@@ -80,6 +94,33 @@ export default function Metadata({
               </Button>
             </div>
           </form>
+          {kind === "book" && (
+            <Pick
+              label="书籍资料来源"
+              value={provider}
+              onChange={(v) => {
+                setProvider(v);
+                setResults(null);
+              }}
+              options={[
+                ["weread", "微信读书 / 中文书籍"],
+                ["openlibrary", "Open Library"],
+                ["googlebooks", "Google Books"],
+              ]}
+            />
+          )}
+          {kind === "book" &&
+            provider === "googlebooks" &&
+            !services.googlebooks && (
+              <p className="notice">
+                Google Books 尚未配置，可先切换到 Open Library。
+              </p>
+            )}
+          {kind === "book" && provider === "weread" && !services.weread && (
+            <p className="notice">
+              微信读书尚未配置，可先选择其他来源；只获取书籍公开资料，不读取任何成员书架或私人笔记。
+            </p>
+          )}
           {kind === "movie" && !services.tmdb && (
             <p className="notice">
               电影数据源尚未配置 TMDB 读访问令牌。可先手工录入完整资料与来源。

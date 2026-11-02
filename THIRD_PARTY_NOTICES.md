@@ -26,3 +26,9 @@ Open Library metadata and Covers API: https://openlibrary.org/developers and htt
 TMDB data/images: https://developer.themoviedb.org/docs/faq . This product uses the TMDB API but is not endorsed or certified by TMDB. A token is required for live use.
 
 RogerEbert.com is the user-selected visual reference. Its articles, brand logo, commercial fonts and production CSS are not redistributed as this application's source or content. Source inspection assets remain local evidence. No code from BookLore, MoviePilot, Literary Circle or alsatianco/spin-the-wheel is copied into this repository.
+
+## 书影工具来源说明（2026-11-02）
+
+本次新增能力使用自编写的适配器和格式解析器，没有新增第三方运行包或复制同名 Skill 源码。微信读书接口依据 Tencent/WeChatReading（Apache-2.0）官方 Skill 1.0.5 文档；豆瓣 CSV 兼容 cosformula/douban-sync-skill（MIT）；其余开源架构参考、官方 API 及许可证边界详见 docs/research/2026-11-02-media-sources.md。
+
+Open Library、微信读书、Google Books、TMDB、Trakt 等数据及图片遵循各自来源条款；客户端代码许可证不授予内容再分发权。OMDb 网站注明内容采用 CC BY-NC 4.0，作为可选非商业评分来源；应用在界面标明经 OMDb 获取，不合并或冒称原站直接提供的评分。

@@ -10,6 +10,7 @@ import App from "./App.jsx";
 import "./styles.css";
 import "./controls.css";
 import "./companion.css";
+import "./toolkit.css";
 createRoot(document.getElementById("root")).render(
   <Theme accentColor="gray" grayColor="sand" radius="full">
     <App />
