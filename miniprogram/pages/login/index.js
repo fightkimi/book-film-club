@@ -1,28 +1,22 @@
 const api = require("../../lib/api");
+
 Page({
-  data: {
-    username: "",
-    credential: "",
-    busy: false,
-    error: "",
-    baseUrl: require("../../config").baseUrl,
+  data: { busy: false, error: "", invited: false },
+
+  onLoad(options) {
+    this.invite = options.invite || "";
+    this.setData({ invited: Boolean(this.invite) });
   },
-  input(e) {
-    this.setData({ [e.currentTarget.dataset.field]: e.detail.value });
-  },
+
   async submit() {
     if (this.data.busy) return;
-    if (!this.data.username || !this.data.credential) {
-      this.setData({ error: "请填写小组账号和密码" });
-      return;
-    }
     this.setData({ busy: true, error: "" });
     try {
-      await api.login(this.data.username, this.data.credential);
-      this.setData({ credential: "" });
+      await api.loginWithWeChat(this.invite);
+      this.invite = "";
       wx.switchTab({ url: "/pages/activities/index" });
-    } catch (e) {
-      this.setData({ error: e.message });
+    } catch (error) {
+      this.setData({ error: error.message });
     } finally {
       this.setData({ busy: false });
     }

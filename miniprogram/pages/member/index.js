@@ -21,6 +21,24 @@ C.define({
         }),
     });
   },
+  makeInvite() {
+    C.run(this, async () => {
+      const result = await C.api.request("/api/wechat/invite", {
+        user_id: this.query.id,
+      });
+      this.invite = result.invite;
+      this.setData({ inviteReady: true });
+    });
+  },
+  onShareAppMessage(event) {
+    if (event.from === "button" && this.invite && this.data.isAdmin) {
+      return {
+        title: "加入同频小组",
+        path: "/pages/login/index?invite=" + encodeURIComponent(this.invite),
+      };
+    }
+    return { title: "同频 echo", path: "/pages/login/index" };
+  },
   progress(e) {
     C.go("progress", {
       id: e.currentTarget.dataset.id,

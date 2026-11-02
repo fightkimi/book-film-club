@@ -99,9 +99,31 @@ function createClient(runtime, config) {
     },
     get: () => snapshot,
     hasSession: () => !!cookie,
-    async login(username, credential) {
-      await request("/api/login", { username, credential });
-      if (!cookie) throw new Error("登录会话未返回，请检查服务配置");
+    async loginWithWeChat(invite = "") {
+      clear();
+      const appInfo =
+        runtime.getAccountInfoSync && runtime.getAccountInfoSync();
+      if (appInfo?.miniProgram?.appId === "touristappid") {
+        throw new Error(
+          "当前为游客预览，使用正式小程序 AppID 后即可微信登录。",
+        );
+      }
+      const code = await new Promise((resolve, reject) =>
+        runtime.login({
+          timeout: 10000,
+          success: (result) =>
+            result.code
+              ? resolve(result.code)
+              : reject(new Error("微信未返回登录凭据，请重试。")),
+          fail: () =>
+            reject(
+              new Error("微信登录暂不可用，请检查小程序 AppID 或稍后重试。"),
+            ),
+        }),
+      );
+      const payload = invite ? { code, invite } : { code };
+      await request("/api/wechat/login", payload);
+      if (!cookie) throw new Error("登录会话未返回，请重试。");
       return refresh();
     },
     async logout() {

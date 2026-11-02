@@ -3,7 +3,7 @@
     <image class="club-signature" src="/assets/echo-tongpin.svg" mode="aspectFit"/>
   </view>
   <view class="club-opening">
-    <text>合上书，散了场，</text>
-    <text>我们接着聊。</text>
+    <text>合上书，散了场</text>
+    <text>我们接着聊</text>
   </view>
 </template>
