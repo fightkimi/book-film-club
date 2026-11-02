@@ -33,7 +33,7 @@ TMDB 非商业开发者 API 免费，但需按其要求署名；商业用途另�
 
 登录自己的 [TMDB API 设置](https://www.themoviedb.org/settings/api)，完成开发者申请。申请主体、联系方式和条款由账号持有人确认。取 **API Read Access Token**，不是把账号密码填到应用。建议用途说明：
 
-> Tongpin is a non-commercial book and film discussion club. We use TMDB to search Chinese and international films and display film metadata, posters, credits, and ratings with attribution. We do not provide film downloads or streaming.
+> echo is a non-commercial book and film discussion club. We use TMDB to search Chinese and international films and display film metadata, posters, credits, and ratings with attribution. We do not provide film downloads or streaming.
 
 部署完成后在服务器执行（输入不会回显，不进入 shell 历史）：
 

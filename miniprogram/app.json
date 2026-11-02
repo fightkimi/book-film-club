@@ -1,0 +1,72 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/activities/index",
+    "pages/themes/index",
+    "pages/library/index",
+    "pages/profile/index",
+    "pages/theme/index",
+    "pages/draw/index",
+    "pages/cycle/index",
+    "pages/theme-edit/index",
+    "pages/cycle-edit/index",
+    "pages/work/index",
+    "pages/metadata/index",
+    "pages/work-edit/index",
+    "pages/progress/index",
+    "pages/review/index",
+    "pages/recap/index",
+    "pages/recommend/index",
+    "pages/guide/index",
+    "pages/members/index",
+    "pages/member/index",
+    "pages/settings/index",
+    "pages/toolkit/index",
+    "pages/journal/index",
+    "pages/films/index",
+    "pages/notebook/index",
+    "pages/import/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "同频",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundTextStyle": "dark",
+    "backgroundColor": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#777777",
+    "selectedColor": "#202124",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/activities/index",
+        "text": "活动"
+      },
+      {
+        "pagePath": "pages/themes/index",
+        "text": "主题"
+      },
+      {
+        "pagePath": "pages/library/index",
+        "text": "书影"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "useExtendedLib": {
+    "weui": true
+  },
+  "usingComponents": {
+    "mp-cells": "weui-miniprogram/cells/cells",
+    "mp-cell": "weui-miniprogram/cell/cell",
+    "mp-toptips": "weui-miniprogram/toptips/toptips"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
