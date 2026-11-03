@@ -1,1 +1,31 @@
-.draw-stage{margin:50rpx 0;min-height:420rpx;background:#263238;color:#fff;padding:28rpx;display:flex;align-items:center;justify-content:center;overflow:hidden}.shelf{display:flex;align-items:flex-end;border-bottom:6rpx solid #94a1a4;width:100%;height:300rpx;gap:10rpx}.spine{writing-mode:vertical-rl;flex:1;background:#d9ddda;color:#223039;padding:18rpx 12rpx;height:240rpx;font-family:serif}.spine:nth-child(2n){height:270rpx;background:#aebcbd}.drawing .spine{animation:shuffle 1s ease-in-out infinite}.drawing .spine:nth-child(2n){animation-delay:.3s}.cinema{border:12rpx solid #171c1e;background:#e8ece9;color:#222}.cinema .spine{background:#293a42;color:white}.reveal{text-align:center;animation:fade .5s ease-out}@keyframes shuffle{0%,100%{transform:translateY(0)}50%{transform:translateY(-28rpx)}}@keyframes fade{from{opacity:0;transform:translateY(20rpx)}to{opacity:1;transform:translateY(0)}}
+.screening { color: #242b29; padding-top: 28rpx; }
+.screen-label { color: #55615a; font: 500 25rpx/1.4 sans-serif; letter-spacing: 2rpx; }
+.screen-title { font: 500 54rpx/1.25 "Songti SC", serif; margin: 10rpx 0 24rpx; }
+.screen-panel { border-top: 2rpx solid #27322e; border-bottom: 1rpx solid #c7ceca; }
+.film-window { position: relative; height: 0; padding-top: 56.25%; overflow: hidden; background: #fafafa; }
+.film-frame { position: absolute; inset: 0; width: 100%; height: 100%; }
+.panel-caption { display: flex; justify-content: space-between; align-items: center; padding: 10rpx 4rpx; color: #55615a; font-size: 23rpx; }
+.panel-caption text:first-child { font: italic 28rpx/1 Georgia, serif; }
+.control-label { margin: 24rpx 0 10rpx; font-size: 28rpx; font-weight: 600; }
+.choice-row, .result-actions { display: flex; gap: 12rpx; }
+.screening .choice { flex: 1; min-width: 0; width: auto; min-height: 44px; padding: 8px 2px; border: 1rpx solid #c8cec9; color: #48524c; background: #fff; font-size: 17px; font-weight: 400; }
+.screening .choice.chosen { background: #e8ece6; color: #233327; border-color: #637464; font-weight: 600; }
+.hint, .pool-note { font-size: 25rpx; color: #59615c; }
+.hint { margin-top: 12rpx; }
+.screening .screen-action { width: 100%; margin: 26rpx 0 8rpx; min-height: 48px; }
+.pool-note { text-align: center; }
+.result-actions { margin-top: 28rpx; }
+.result-actions button { flex: 1; min-width: 0; width: auto; font-size: 15px; }
+.retry-row { display: flex; justify-content: space-between; }
+.again { min-height: 44px; margin: 8rpx auto 0; }
+@media (prefers-reduced-motion: reduce) { .moving { visibility: hidden; } }
+
+.result { animation: show-result 220ms ease-out; }
+.result-masthead { display: flex; align-items: center; justify-content: space-between; padding: 6rpx 0 20rpx; border-bottom: 2rpx solid #26352c; }
+.result-signature { font: italic 32rpx/1 Georgia, serif; }
+.result-spread { min-height: 40vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24rpx; padding: 40rpx 12rpx; box-sizing: border-box; text-align: center; }
+.result-title { font: 500 68rpx/1.35 "Songti SC", "Noto Serif CJK SC", serif; color: #1c2922; overflow-wrap: anywhere; line-break: strict; }
+.result-description { font-size: 30rpx; line-height: 1.65; color: #49534c; overflow-wrap: anywhere; }
+.result-note { padding-top: 12rpx; border-top: 1rpx solid #cbd1cb; text-align: right; color: #58625a; font-size: 24rpx; }
+@keyframes show-result { from { opacity: .25; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .result { animation: none; } }

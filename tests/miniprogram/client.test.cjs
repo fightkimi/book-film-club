@@ -294,7 +294,14 @@ test("library mixes both media and counts and filters the real collection", () =
       require.resolve("../../miniprogram/pages/library/index"),
       "utf8",
     ),
-    { require: (name) => (name.endsWith("/page") ? common : D) },
+    {
+      require: (name) =>
+        name.endsWith("/page")
+          ? common
+          : name.endsWith("/library-topics")
+            ? require("../../miniprogram/lib/library-topics")
+            : D,
+    },
   );
   const page = {
     ...config,
@@ -345,4 +352,39 @@ test("only canonical TMDB poster URLs use the same-origin cache; stored source i
   ]) {
     assert.equal(posterUrl(other), other);
   }
+});
+
+test("an invited visitor can explicitly use their own binding after a mismatch", async () => {
+  const fs = require("node:fs"),
+    vm = require("node:vm");
+  const attempts = [],
+    destinations = [];
+  let page;
+  vm.runInNewContext(
+    fs.readFileSync(
+      require.resolve("../../miniprogram/pages/login/index"),
+      "utf8",
+    ),
+    {
+      Page: (config) => {
+        page = config;
+      },
+      require: () => ({
+        async loginWithWeChat(invite) {
+          attempts.push(invite);
+          if (invite) throw new Error("此微信已绑定其他成员");
+        },
+      }),
+      wx: { switchTab: (options) => destinations.push(options.url) },
+    },
+  );
+  page.setData = (update) => Object.assign(page.data, update);
+  page.onLoad({ invite: "member-invite-fixture" });
+  await page.submit({ currentTarget: { dataset: {} } });
+  assert.equal(page.data.invited, true);
+  assert.equal(page.data.error, "此微信已绑定其他成员");
+  assert.equal(destinations.length, 0);
+  await page.submit({ currentTarget: { dataset: { identity: "existing" } } });
+  assert.deepEqual(attempts, ["member-invite-fixture", ""]);
+  assert.deepEqual(destinations, ["/pages/activities/index"]);
 });

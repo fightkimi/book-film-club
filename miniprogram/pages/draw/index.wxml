@@ -1,2 +1,51 @@
-<view class="page"><view class="eyebrow">A NEW BEGINNING</view><view class="title">让下一次相遇，
-从一个主题开始。</view><picker range="{{kinds}}" value="{{kindIndex}}" bindchange="kind" disabled="{{phase==='drawing'}}"><view class="picker">{{kinds[kindIndex]}}</view></picker><picker range="{{modes}}" value="{{modeIndex}}" bindchange="mode" disabled="{{phase==='drawing'}}"><view class="picker">{{modes[modeIndex]}}</view></picker><view class="draw-stage {{phase}} {{kindIndex===1?'cinema':'bookshelf'}}"><view wx:if="{{phase!=='revealed'}}" class="shelf"><view wx:for="{{candidates}}" wx:key="id" class="spine">{{item.title}}</view></view><view wx:if="{{phase==='revealed'}}" class="reveal"><view class="small">本次抽取</view><view class="theme-title">{{result.theme_title}}</view></view></view><button wx:if="{{phase!=='drawing'}}" loading="{{busy}}" disabled="{{busy||!isAdmin}}" bindtap="draw">{{phase==='revealed'?'再抽一次':'开始抽取'}}</button><button wx:if="{{phase==='drawing'}}" class="quiet" bindtap="skip">直接查看结果</button><view wx:if="{{phase==='revealed'}}" class="actions"><button class="secondary" bindtap="openResult">查看主题</button><button bindtap="create">发起活动</button></view><view class="muted">每次抽取都会保留记录，退出页面也不会改变结果。</view><view wx:if="{{error}}" class="error">{{error}}</view></view>
+<view class="page screening">
+  <block wx:if="{{phase !== 'revealed'}}">
+  <view class="screen-heading">
+    <view class="screen-label">主题放映室</view>
+    <view class="screen-title">这次，聊什么？</view>
+  </view>
+  <view class="screen-panel">
+    <view class="film-window">
+      <image class="film-frame" src="/assets/motion/projector-start.jpg" mode="aspectFit" aria-hidden="true"/>
+      <image wx:if="{{phase === 'drawing'}}" class="film-frame moving" src="/assets/motion/theme-projector.gif" mode="aspectFit" bindload="filmLoaded" binderror="reveal" aria-hidden="true"/>
+    </view>
+    <view class="panel-caption">
+      <text>un eco</text>
+      <text>{{phase === 'drawing' ? '正在出签' : '等待放映'}}</text>
+    </view>
+  </view>
+
+  <view class="controls">
+    <view class="control-label">活动类型</view>
+    <view class="choice-row">
+      <button wx:for="{{kinds}}" wx:key="value" class="choice {{kindIndex === index ? 'chosen' : ''}}" data-field="kindIndex" data-index="{{index}}" bindtap="choose" disabled="{{!poolReady || busy || phase === 'drawing'}}">{{item.label}}</button>
+    </view>
+    <view class="control-label">抽取方式</view>
+    <view class="choice-row">
+      <button wx:for="{{modes}}" wx:key="value" class="choice {{modeIndex === index ? 'chosen' : ''}}" data-field="modeIndex" data-index="{{index}}" bindtap="choose" disabled="{{!poolReady || busy || phase === 'drawing'}}">{{item.label}}</button>
+    </view>
+    <view class="hint">{{modes[modeIndex].hint}}</view>
+    <button wx:if="{{phase === 'drawing'}}" class="screen-action secondary" bindtap="reveal">直接查看结果</button>
+    <button wx:else class="screen-action" loading="{{busy}}" disabled="{{busy || !isAdmin || !candidateCount}}" bindtap="draw">抽取主题</button>
+    <view wx:if="{{poolReady}}" class="pool-note">{{!isAdmin ? '由小组管理员抽取' : (candidateCount ? candidateCount + ' 个候选主题' : '暂无候选主题，可更换类型或抽取方式')}}</view>
+  </view>
+
+  </block>
+  <view wx:else class="result">
+    <view class="result-masthead"><text class="screen-label">本期主题</text><text class="result-signature">un eco</text></view>
+    <view class="result-spread" aria-live="polite">
+      <view class="result-title">“{{result.theme_title}}”</view>
+      <view wx:if="{{result.description}}" class="result-description">{{result.description}}</view>
+    </view>
+    <view class="result-note">已存入抽取历史</view>
+    <view class="result-actions">
+      <button class="secondary" bindtap="openResult">查看主题</button>
+      <button wx:if="{{isAdmin}}" bindtap="create">用这个主题发起活动</button>
+    </view>
+    <view wx:if="{{isAdmin}}" class="retry-row">
+      <button class="quiet again" disabled="{{busy}}" bindtap="adjust">调整抽取条件</button>
+      <button class="quiet again" disabled="{{busy || !candidateCount}}" loading="{{busy}}" bindtap="draw">再抽一次</button>
+    </view>
+  </view>
+  <view wx:if="{{error}}" class="error">{{error}}</view>
+</view>

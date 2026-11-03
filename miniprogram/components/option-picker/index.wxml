@@ -1,0 +1,26 @@
+<view class="op-trigger {{disabled ? 'op-disabled' : ''}}" bindtap="open" aria-role="button" aria-disabled="{{disabled}}" aria-label="{{title}}，{{range[value] !== undefined ? (rangeKey ? range[value][rangeKey] : range[value]) : ''}}">
+  <slot/>
+</view>
+<root-portal wx:if="{{opened}}">
+  <mp-half-screen-dialog show="{{opened}}" title="{{section || title}}" maskClosable="{{true}}" bindclose="close">
+    <view slot="desc" class="op-body">
+      <view wx:if="{{grouped && section}}" class="op-back" bindtap="backToGroups" aria-role="button">‹　返回分类</view>
+      <input wx:if="{{searchable}}" class="op-search" placeholder="搜索选项" aria-label="搜索选项" value="{{query}}" bindinput="search" confirm-type="search"/>
+      <scroll-view class="op-list" scroll-y="{{true}}" scroll-into-view="{{anchor}}" style="height: {{rows.length >= 6 ? '43vh' : 'auto'}}">
+        <block wx:for="{{rows}}" wx:key="key">
+          <view wx:if="{{item.opens}}" data-section="{{item.opens}}" bindtap="enterSection" class="op-module" hover-class="op-pressed" aria-role="button" aria-label="{{item.opens}}，{{item.count}} 项">
+            <view class="op-module-line"><text class="op-module-title">{{item.opens}}</text><text class="op-module-count">{{item.count}} 项　›</text></view>
+            <view class="op-module-caption">{{item.activeLabel ? '已选：' + item.activeLabel : (item.opens === '小组主题' ? '活动作品与主题选片' : '书籍与电影的资料分类')}}</view>
+          </view>
+          <view wx:else id="{{item.key}}" data-index="{{item.index}}" bindtap="pick"
+            class="op-row {{item.index === value ? 'op-current' : ''}}" aria-role="radio" aria-checked="{{item.index === value}}" aria-label="{{item.label}}" hover-class="op-pressed">
+            <view class="op-name">{{item.label}}</view>
+            <text wx:if="{{item.index === value}}" class="op-check" aria-hidden="true">✓</text>
+            <text wx:if="{{grouped}}" class="op-count">{{item.count}}</text>
+          </view>
+        </block>
+        <view wx:if="{{!rows.length}}" class="op-empty">没有匹配的选项</view>
+      </scroll-view>
+    </view>
+  </mp-half-screen-dialog>
+</root-portal>
