@@ -1,5 +1,6 @@
 const C = require("../../lib/page"),
   D = require("../../lib/data");
+const { posterUrl } = require("../../lib/poster-url");
 C.define({
   data: {
     shelfIndex: 0,
@@ -13,6 +14,7 @@ C.define({
     );
     this.setData({
       work: D.workView(work),
+      coverUrl: posterUrl(work.image, "w500"),
       sourceName: {
         weread: "微信读书",
         tmdb: "TMDB",

@@ -1,4 +1,5 @@
 const C = require("../../lib/page");
+const { posterUrl } = require("../../lib/poster-url");
 C.define({
   data: { page: 1, result: null },
   async ready({ state }) {
@@ -12,7 +13,13 @@ C.define({
       this.query.id ? "/api/metadata/extras" : "/api/metadata/charts",
       this.query.id ? { work_id: this.query.id } : { page: this.data.page },
     );
-    this.setData({ result: r, items: r.related || r.items || [] });
+    this.setData({
+      result: r,
+      items: (r.related || r.items || []).map((w) => ({
+        ...w,
+        coverUrl: posterUrl(w.image),
+      })),
+    });
   },
   next(e) {
     C.run(this, async () => {

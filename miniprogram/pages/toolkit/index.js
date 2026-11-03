@@ -1,6 +1,9 @@
 const C = require("../../lib/page");
 C.define({
   data: { tab: 0, tabs: ["工具", "我的档案", "视听词典", "资料来源"] },
+  onLoad(query) {
+    if (query.tab === "archive") this.setData({ tab: 1 });
+  },
   async ready({ state, services }) {
     const r = await C.api.request("/api/toolkit");
     this.setData({

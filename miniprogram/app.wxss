@@ -19,3 +19,8 @@ button{margin:0;border-radius:0;font-size:27rpx;line-height:1.4;padding:25rpx 28
   font: 400 54rpx/1.55 "Songti SC", "Noto Serif CJK SC", serif;
 }
 .club-opening text { display: block; }
+
+.page.tab-page { padding-bottom: calc(52px + env(safe-area-inset-bottom) + 40rpx); }
+.cover-row { display: flex; align-items: center; gap: 26rpx; }
+.cover-row .card-title { margin-top: 8rpx; }
+.cover-preview { margin: 20rpx 0; padding: 18rpx; background: #f4f4f0; }

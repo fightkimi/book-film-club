@@ -13,6 +13,7 @@ server {
     ssl_protocols TLSv1.2 TLSv1.3;
     add_header Strict-Transport-Security "max-age=86400" always;
     client_max_body_size 150k;
+    include /etc/nginx/snippets/uneco-media.conf;
     location ~ ^/api/(login|setup|wechat/login)$ {
         limit_req zone=tongpin_auth burst=5 nodelay;
         limit_req_status 429;

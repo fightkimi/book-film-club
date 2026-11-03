@@ -1,4 +1,5 @@
 {
+  "usingComponents": { "activity-cover": "/components/activity-cover/index" },
   "navigationBarTitleText": "本期活动",
   "enablePullDownRefresh": false
 }

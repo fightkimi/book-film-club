@@ -1,4 +1,17 @@
 <import src="../../templates/brand-intro.wxml"/>
-<view class="page">
+<view class="page tab-page">
   <template is="brand-intro"/>
-  <view class="subtitle">{{group}}</view><button wx:if="{{isAdmin}}" bindtap="create">发起活动</button><view wx:if="{{!cycles.length}}" class="empty">还没有活动，先选一个想聊的主题。</view><view wx:for="{{cycles}}" wx:key="id" class="card" data-page="cycle" data-id="{{item.id}}" bindtap="open"><view class="between"><text class="tag">{{item.statusLabel}}</text><text class="muted">{{item.kindLabel}}</text></view><view class="card-title">{{item.title}}</view><view>{{item.theme.title}}</view><view class="muted">{{item.startLabel}} — {{item.endLabel}}{{item.joined?' · 我已参与':''}}</view></view><view wx:if="{{error}}" class="error">{{error}}</view></view>
+  <view class="subtitle">{{group}}</view>
+  <button wx:if="{{isAdmin}}" bindtap="create">发起活动</button>
+  <view wx:if="{{!cycles.length}}" class="empty">还没有活动，先选一个想聊的主题。</view>
+  <view wx:for="{{cycles}}" wx:key="id" class="card cover-row" data-page="cycle" data-id="{{item.id}}" bindtap="open">
+    <activity-cover cover="{{item.cover}}" title="{{item.title}}"/>
+    <view class="grow">
+      <view class="between"><text class="tag">{{item.statusLabel}}</text><text class="muted">{{item.kindLabel}}</text></view>
+      <view class="card-title">{{item.title}}</view>
+      <view>{{item.theme.title}}</view>
+      <view class="muted">{{item.startLabel}} — {{item.endLabel}}{{item.joined?' · 我已参与':''}}</view>
+    </view>
+  </view>
+  <view wx:if="{{error}}" class="error">{{error}}</view>
+</view>

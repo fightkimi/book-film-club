@@ -2,14 +2,14 @@
   "description": "un eco 读书与观影小组",
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
-  "appid": "touristappid",
+  "appid": "wxe8ba0f388fd0353f",
   "projectname": "un eco",
   "libVersion": "latest",
   "setting": {
     "es6": true,
     "postcss": true,
     "minified": true,
-    "urlCheck": false,
+    "urlCheck": true,
     "compileWorklet": false,
     "uglifyFileName": false,
     "uploadWithSourceMap": true,
@@ -38,5 +38,6 @@
     "include": []
   },
   "simulatorPluginLibVersion": {},
-  "editorSetting": {}
+  "editorSetting": {},
+  "isGameTourist": false
 }

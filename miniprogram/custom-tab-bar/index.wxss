@@ -1,0 +1,5 @@
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; align-items: stretch; background: #fff; border-top: 1rpx solid #d5dadd; padding-bottom: env(safe-area-inset-bottom); }
+.tab { position: relative; flex: 1; display: flex; justify-content: center; align-items: center; min-height: 52px; font-size: 17px; line-height: 1.35; font-weight: 400; color: #555e61; }
+.selected { color: #172126; font-weight: 600; }
+.selected::before { content: ""; position: absolute; top: 0; width: 24px; height: 2px; background: #172126; }
+.pressed { background: #f3f4f3; }

@@ -3,4 +3,10 @@ C.define({
   ready({ state }) {
     this.setData({ group: state.group });
   },
+  async logout() {
+    if (await C.confirm("退出本次登录？")) {
+      await C.api.logout().catch(() => {});
+      wx.reLaunch({ url: "/pages/login/index" });
+    }
+  },
 });

@@ -1,0 +1,4 @@
+<view class="jacket" aria-label="{{cover.image && failedImage !== cover.image ? cover.caption : '活动题签'}}">
+  <view class="typeset"><text class="imprint">un eco</text><text class="name">{{title || '本期活动'}}</text></view>
+  <image wx:if="{{cover.image && failedImage !== cover.image}}" src="{{cover.image}}" data-src="{{cover.image}}" mode="aspectFit" class="art" binderror="imageError"/>
+</view>

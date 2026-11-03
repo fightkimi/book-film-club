@@ -1,4 +1,5 @@
 const C = require("../../lib/page");
+const { posterUrl } = require("../../lib/poster-url");
 C.define({
   data: {
     queryText: "",
@@ -45,7 +46,9 @@ C.define({
           : this.data.providers[this.data.providerIndex],
         query: this.data.queryText,
       });
-      this.setData({ results: r.results });
+      this.setData({
+        results: r.results.map((w) => ({ ...w, coverUrl: posterUrl(w.image) })),
+      });
     });
   },
   detail(e) {
@@ -55,7 +58,10 @@ C.define({
         provider: item.provider,
         source_id: item.source_id,
       });
-      this.setData({ preview: r });
+      this.setData({
+        preview: r,
+        previewCover: posterUrl(r.item.image, "w500"),
+      });
     });
   },
   back() {

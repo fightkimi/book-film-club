@@ -89,14 +89,6 @@ function createClient(runtime, config) {
     refresh,
     action,
     clear,
-    asset(path) {
-      if (!/^\/assets\/themes\/[a-z-]+\.jpg$/.test(path))
-        throw new Error("图片路径无效");
-      return (
-        normalizeBase(config.baseUrl, runtime.getSystemInfoSync().platform) +
-        path
-      );
-    },
     get: () => snapshot,
     hasSession: () => !!cookie,
     async loginWithWeChat(invite = "") {
