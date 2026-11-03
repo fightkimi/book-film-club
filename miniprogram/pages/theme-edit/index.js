@@ -1,4 +1,11 @@
 const C = require("../../lib/page");
+const { catalog } = require("../../lib/covers");
+const posterOptions = [
+  { id: "", title: "按主题名称匹配" },
+  { id: "none", title: "不配主题海报" },
+  ...catalog,
+];
+
 C.define({
   data: { kinds: ["书影联动", "读书", "观影"], kindIndex: 0 },
   ready({ state }) {
@@ -14,7 +21,7 @@ C.define({
         kind: "mixed",
         weight: 1,
         enabled: true,
-        poster_key: "none",
+        poster_key: "",
       },
       old || {},
     );
@@ -24,7 +31,19 @@ C.define({
     }
     this.setData({
       form,
+      posterOptions,
+      posterIndex: Math.max(
+        0,
+        posterOptions.findIndex((p) => p.id === (form.poster_key || "")),
+      ),
       kindIndex: ["mixed", "book", "movie"].indexOf(form.kind),
+    });
+  },
+  poster(e) {
+    const posterIndex = Number(e.detail.value);
+    this.setData({
+      posterIndex,
+      "form.poster_key": posterOptions[posterIndex].id,
     });
   },
   kind(e) {

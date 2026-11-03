@@ -39,6 +39,8 @@ function define(options) {
       if (options.onUnload) options.onUnload.call(this);
     },
     async onShow() {
+      const bar = this.getTabBar?.();
+      if (bar) bar.selectPage(this.route);
       if (!api.hasSession()) {
         wx.reLaunch({ url: "/pages/login/index" });
         return;

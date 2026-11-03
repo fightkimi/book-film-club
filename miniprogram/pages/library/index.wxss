@@ -1,1 +1,50 @@
-
+.work-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.work-card .cover { display: block; flex: none; }
+.book-title { overflow-wrap: anywhere; }
+/* Both cards stretch to the height of the longer title in this grid row. */
+.work-details { margin-top: auto; }
+.book-creator {
+  min-height: 1.5em;
+  line-height: 1.5;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.work-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6rpx;
+  margin-top: 4rpx;
+  color: #61696c;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+.work-edition {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.work-year { margin-left: 8rpx; }
+.work-status {
+  flex: none;
+  color: #61696c;
+  font-size: 22rpx;
+  line-height: 1;
+}
+.kind-tabs { display: flex; border-bottom: 1px solid #cbd0d1; margin-bottom: 22rpx; }
+.library-page .kind-tab { flex: 1; min-width: 0; width: auto; min-height: 48px; padding: 0 4rpx; display: flex; gap: 8rpx; align-items: center; justify-content: center; border-bottom: 2px solid transparent; background: #fff; color: #51595d; font-size: 17px; font-weight: 400; }
+.library-page .kind-tab.current { color: #172126; border-bottom-color: #172126; font-weight: 600; }
+.kind-count { font-size: 14px; font-variant-numeric: tabular-nums; }
+.library-search { font-size: 16px; }
+.library-actions { display: flex; align-items: stretch; gap: 14rpx; margin: 16rpx 0 24rpx; }
+.library-page .library-actions button { margin: 0; width: auto; min-height: 46px; padding: 8px 10px; font-size: 16px; }
+.library-page .add-action { flex: 1; }
+.result-count { color: #555e61; font-size: 14px; margin-bottom: 12rpx; }
+.library-page .book-title { font-size: 32rpx; }
+.library-page .book-creator { color: #535b5e; font-size: 28rpx; }

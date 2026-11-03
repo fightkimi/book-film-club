@@ -3,5 +3,6 @@
   <view class="fact"><text class="fact-label">成员</text><text>{{user.name}}</text></view>
   <view class="fact"><text class="fact-label">小组</text><text>{{group}}</text></view>
   <view class="fact"><text class="fact-label">登录方式</text><text>微信登录</text></view>
+  <button class="secondary logout" bindtap="logout">退出登录</button>
   <view wx:if="{{error}}" class="error">{{error}}</view>
 </view>

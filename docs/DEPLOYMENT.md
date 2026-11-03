@@ -51,3 +51,9 @@ sudo /opt/tongpin/venv/bin/python /opt/tongpin/current/scripts/check_movie_sourc
 ## 操作边界
 
 部署不自动复制本机的其他服务密钥。迁移某一枚已有密钥需要明确指定凭据及目标服务器的授权。不要将 `.env`、数据库、SSH 凭据或证书私钥提交 Git。定期备份应使用应用的 SQLite backup 脚本，而非只复制正在写入的数据库主文件。
+
+## 小程序封面与响应压缩
+
+将 `deploy/tmdb-cache.http.conf` 安装到 `/etc/nginx/conf.d/uneco-cover-cache.conf`，将 `deploy/media.server.conf` 安装到 `/etc/nginx/snippets/uneco-media.conf`。给 nginx 工作进程创建可写的 `/var/cache/nginx/uneco-covers` 目录，在小程序域名的 HTTPS server 块中 include 该 snippet，检查配置后 reload。
+
+小程序通过同域 `/media/tmdb/w342/<海报文件名>.jpg` 或 `w500` 访问列表图和详情图。此入口只允许固定的 TMDB 图片源站和文件名格式，不接收任意远程 URL。首次回源后复用磁盘缓存，重复请求可检查 `X-Cover-Cache`。JSON 启用传输压缩，账号和会话接口仍保持原有的缓存策略。

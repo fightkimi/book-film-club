@@ -1,0 +1,6 @@
+:host { display: block; width: 120rpx; flex: none; }
+.jacket { position: relative; width: 120rpx; height: 168rpx; background: #e9e9e3; overflow: hidden; }
+.art { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #eeefec; }
+.typeset { box-sizing: border-box; height: 100%; padding: 11rpx; display: flex; flex-direction: column; justify-content: space-between; color: #f5f4ed; background: #243338; }
+.imprint { font: italic 20rpx/1.1 Georgia, serif; }
+.name { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; border-top: 1rpx solid #8d9997; padding-top: 5rpx; font: 23rpx/1.22 "Songti SC", serif; }

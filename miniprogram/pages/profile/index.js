@@ -4,20 +4,26 @@ C.define({
   ready({ state, user }) {
     this.setData({
       group: state.group,
-      reports: state.cycles.flatMap((cycle) =>
-        (state.reports[cycle.id] || [])
-          .filter((report) => report.user_id === user.id)
-          .map((report) =>
-            Object.assign({}, report, {
-              cycle_id: cycle.id,
-              cycleTitle: cycle.title,
-              statusLabel: D.labels[report.status] || report.status,
-            }),
-          ),
-      ),
+      reports: state.cycles
+        .slice()
+        .sort((a, b) => b.start.localeCompare(a.start))
+        .flatMap((cycle) =>
+          (state.reports[cycle.id] || [])
+            .filter((report) => report.user_id === user.id)
+            .map((report) =>
+              Object.assign({}, report, {
+                cycle_id: cycle.id,
+                cycleTitle: cycle.title,
+                startLabel: D.date(cycle.start),
+                statusLabel: D.labels[report.status] || report.status,
+              }),
+            ),
+        ),
       journalCount: (state.journals || []).length,
-      studyCount: (state.studies || []).length,
     });
+  },
+  archive() {
+    C.go("toolkit", { tab: "archive" });
   },
   toolkit() {
     C.go("toolkit");
@@ -27,11 +33,5 @@ C.define({
   },
   settings() {
     C.go("settings");
-  },
-  async logout() {
-    if (await C.confirm("退出本次登录？")) {
-      await C.api.logout().catch(() => {});
-      wx.reLaunch({ url: "/pages/login/index" });
-    }
   },
 });

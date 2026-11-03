@@ -1,4 +1,6 @@
 const C = require("../../lib/page");
+const { activityCover } = require("../../lib/covers");
+
 C.define({
   data: {
     kinds: ["书影联动", "读书", "观影"],
@@ -32,6 +34,7 @@ C.define({
       form.member_ids = Object.keys(old.participants);
       form.work_ids = old.works.map((w) => w.id);
     }
+    this.worksById = new Map(state.works.map((work) => [work.id, work]));
     this.setData({
       form,
       themes: state.themes,
@@ -50,6 +53,12 @@ C.define({
         Object.assign({}, w, { checked: form.work_ids.includes(w.id) }),
       ),
     });
+    this.updateCover();
+  },
+  updateCover() {
+    const { form, themes, themeIndex } = this.data;
+    const works = form.work_ids.map((id) => this.worksById.get(id)).filter(Boolean);
+    this.setData({ cover: activityCover(themes[themeIndex], works) });
   },
   kind(e) {
     this.setData({
@@ -62,6 +71,7 @@ C.define({
       themeIndex: Number(e.detail.value),
       "form.theme_id": this.data.themes[e.detail.value].id,
     });
+    this.updateCover();
   },
   quantity(e) {
     this.setData({
@@ -74,6 +84,7 @@ C.define({
   },
   works(e) {
     this.setData({ "form.work_ids": e.detail.value });
+    this.updateCover();
   },
   save() {
     C.run(this, async () => {

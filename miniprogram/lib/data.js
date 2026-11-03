@@ -1,3 +1,6 @@
+const { posterUrl } = require("./poster-url");
+const { activityCover } = require("./covers");
+
 const labels = {
   book: "书籍",
   movie: "电影",
@@ -10,6 +13,8 @@ const labels = {
   late_done: "已补交",
   overdue: "已逾期",
   pending: "未完成",
+  planned: "筹备中",
+  not_started: "未开始",
   in_progress: "进行中",
   joined: "参与",
   leave: "请假",
@@ -22,14 +27,39 @@ function date(value) {
   return value ? String(value).slice(0, 10) : "—";
 }
 function workView(work) {
+  const required = [
+    ["title", "标题"],
+    ["creator", work.kind === "movie" ? "导演" : "作者"],
+    ["description", "简介"],
+    ["image", "封面"],
+    ["source_url", "来源"],
+  ];
+  const missing = required
+    .filter(([field]) => !work[field])
+    .map(([, label]) => label);
+  const complete = !missing.length && work.metadata_status === "confirmed";
   return Object.assign({}, work, {
     kindLabel: labels[work.kind],
+    coverUrl: posterUrl(work.image),
     date: date(work.year),
-    complete: work.metadata_status === "confirmed",
+    complete,
+    metadataHint: missing.length
+      ? missing.length === 1
+        ? "缺" + missing[0]
+        : "缺 " + missing.length + " 项"
+      : complete
+        ? ""
+        : "待核对",
+    metadataDetail: missing.length
+      ? "尚缺" + missing.join("、")
+      : complete
+        ? "已确认匹配"
+        : "字段齐全，来源待核对",
   });
 }
 function cycleView(c) {
   return Object.assign({}, c, {
+    cover: activityCover(c.theme, c.works),
     statusLabel: labels[c.status],
     kindLabel: labels[c.kind],
     startLabel: date(c.start),
