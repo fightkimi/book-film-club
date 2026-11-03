@@ -5,7 +5,8 @@
     <view wx:if="{{error}}" class="entry-error">{{error}}</view>
     <view wx:elif="{{invited}}" class="entry-hint">首次登录将绑定邀请对应的小组成员。</view>
     <button class="entry-submit" loading="{{busy}}" disabled="{{busy}}" bindtap="submit">
-      {{busy ? '正在登录…' : '微信登录'}}
+      {{busy ? '正在登录…' : (invited ? '接受邀请并登录' : '微信登录')}}
     </button>
+    <button wx:if="{{invited}}" class="quiet existing-login" data-identity="existing" disabled="{{busy}}" bindtap="submit">用我已绑定的身份登录</button>
   </view>
 </view>

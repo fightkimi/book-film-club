@@ -48,3 +48,12 @@
 .result-count { color: #555e61; font-size: 14px; margin-bottom: 12rpx; }
 .library-page .book-title { font-size: 32rpx; }
 .library-page .book-creator { color: #535b5e; font-size: 28rpx; }
+
+.topic-control { display: flex; align-items: center; gap: 16rpx; min-height: 46px; margin: -8rpx 0 16rpx; padding: 0 16rpx; background: #f1f3ef; color: #344339; }
+.topic-label { flex: none; font-size: 14px; }
+.topic-value { min-width: 0; flex: 1; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; }
+
+.library-actions option-picker { align-self: stretch; }
+.library-status { display: flex; align-items: center; gap: 8px; min-height: 48px; font-weight: 500; }
+.topic-label { font-size: 16px; }
+.topic-value { font-size: 17px; }

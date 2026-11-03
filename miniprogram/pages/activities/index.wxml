@@ -1,8 +1,16 @@
-<import src="../../templates/brand-intro.wxml"/>
 <view class="page tab-page">
-  <template is="brand-intro"/>
-  <view class="subtitle">{{group}}</view>
-  <button wx:if="{{isAdmin}}" bindtap="create">发起活动</button>
+  <view class="club-masthead" aria-label="un eco"><image class="club-signature" src="/assets/un-eco.png" mode="aspectFit"/></view>
+  <view class="club-scene">
+    <view class="scene-copy"><text>合上书，散了场</text><text>我们接着聊</text></view>
+    <view class="scene-art">
+      <image class="scene-frame" src="/assets/motion/club-table.jpg" mode="aspectFit" aria-hidden="true"/>
+      <image wx:if="{{playIntro}}" class="scene-frame scene-motion" src="/assets/motion/club-table.gif" mode="aspectFit" binderror="settleIntro" aria-hidden="true"/>
+    </view>
+  </view>
+  <view class="cycle-heading">
+    <view class="group-name">{{group}}</view>
+    <button wx:if="{{isAdmin}}" class="create-cycle" bindtap="create">发起活动</button>
+  </view>
   <view wx:if="{{!cycles.length}}" class="empty">还没有活动，先选一个想聊的主题。</view>
   <view wx:for="{{cycles}}" wx:key="id" class="card cover-row" data-page="cycle" data-id="{{item.id}}" bindtap="open">
     <activity-cover cover="{{item.cover}}" title="{{item.title}}"/>

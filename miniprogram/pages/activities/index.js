@@ -1,6 +1,17 @@
 const C = require("../../lib/page"),
   D = require("../../lib/data");
 C.define({
+  onLoad() {
+    const visit = getApp().globalData;
+    this.setData({ playIntro: !visit.hasSeenClubIntro });
+    visit.hasSeenClubIntro = true;
+  },
+  settleIntro() {
+    this.setData({ playIntro: false });
+  },
+  onHide() {
+    this.settleIntro();
+  },
   ready({ state, user }) {
     this.setData({
       group: state.group,

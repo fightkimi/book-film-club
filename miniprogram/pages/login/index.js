@@ -8,11 +8,12 @@ Page({
     this.setData({ invited: Boolean(this.invite) });
   },
 
-  async submit() {
+  async submit(event) {
     if (this.data.busy) return;
+    const useExisting = event.currentTarget.dataset.identity === "existing";
     this.setData({ busy: true, error: "" });
     try {
-      await api.loginWithWeChat(this.invite);
+      await api.loginWithWeChat(useExisting ? "" : this.invite);
       this.invite = "";
       wx.switchTab({ url: "/pages/activities/index" });
     } catch (error) {

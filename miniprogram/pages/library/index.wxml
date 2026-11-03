@@ -7,9 +7,16 @@
       <text>{{item.name}}</text><text wx:if="{{loaded}}" class="kind-count">{{item.count}}</text>
     </button>
   </view>
+  <option-picker grouped="{{true}}" title="按主题浏览" wx:if="{{loaded}}" range="{{topicOptions}}" range-key="label" value="{{topicIndex}}" bindchange="topic" aria-label="按主题浏览">
+    <view class="topic-control">
+      <text class="topic-label">按主题浏览</text>
+      <text class="topic-value">{{topicOptions[topicIndex].label}}</text>
+      <text aria-hidden="true">⌄</text>
+    </view>
+  </option-picker>
   <input class="field library-search" placeholder="搜索作品、作者、导演、译名" value="{{query}}" bindinput="search"/>
   <view class="library-actions">
-    <button class="secondary filter-action" bindtap="shelf">{{shelves[shelfIndex]}} ﹀</button>
+    <option-picker title="收藏与资料状态" range="{{shelves}}" value="{{shelfIndex}}" bindchange="shelf"><view class="picker library-status">{{shelves[shelfIndex]}}</view></option-picker>
     <button class="secondary add-action" bindtap="add">{{kind === 'movie' ? '搜索并加入电影' : (kind === 'book' ? '搜索并加入书籍' : '搜索并加入作品')}}</button>
   </view>
   <view wx:if="{{loaded}}" class="result-count">共 {{matchCount}} 部作品</view>

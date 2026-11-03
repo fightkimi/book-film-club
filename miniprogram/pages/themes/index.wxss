@@ -1,1 +1,11 @@
-
+.history { margin-top: 42rpx; border-top: 2rpx solid #27342c; }
+.history .history-toggle { display: flex; align-items: center; justify-content: flex-start; gap: 10px; width: 100%; min-height: 54px; margin: 0; padding: 10px 0; background: white; color: #233029; text-align: left; }
+.history-heading { flex: 1; font: 500 36rpx/1.4 "Songti SC", serif; }
+.history-count, .history-date { font-size: 14px; font-weight: 400; color: #546059; }
+.history-chevron { width: 8px; height: 8px; margin: 0 4px 4px 0; border: solid #46534c; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.history-chevron.up { transform: rotate(225deg); margin-bottom: -4px; }
+.history-item { padding: 12px 0; border-top: 1rpx solid #d6dcd7; }
+.history-title, .history-date { display: block; }
+.history-title { font-size: 17px; color: #26342a; overflow-wrap: anywhere; }
+.history-empty { padding: 12px 0; color: #59615c; }
+.history-more { width: 100%; min-height: 48px; font-size: 16px; }

@@ -17,3 +17,4 @@
 .entry-hint, .entry-error { margin: 0 0 20rpx; font-size: 25rpx; text-align: center; }
 .entry-hint { color: #656565; }
 .entry-error { color: #a3322c; }
+.existing-login { width: 100%; min-height: 44px; margin-top: 8rpx; font-size: 28rpx; }

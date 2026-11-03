@@ -1,7 +1,28 @@
 const C = require("../../lib/page");
 const { themePoster } = require("../../lib/covers");
+const HISTORY_BATCH = 5;
+
+function historyRow(draw) {
+  const time = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}:\d{2})/.exec(draw.at || "");
+  return {
+    id: draw.id,
+    title: draw.theme_title,
+    time: time
+      ? time[1] +
+        " 年 " +
+        Number(time[2]) +
+        " 月 " +
+        Number(time[3]) +
+        " 日 " +
+        time[4]
+      : draw.at || "",
+  };
+}
+
 C.define({
+  data: { historyOpen: false, historyTotal: 0, draws: [] },
   ready({ state }) {
+    this.history = state.draws || [];
     this.setData({
       themes: state.themes.map((t, i) =>
         Object.assign({}, t, {
@@ -12,7 +33,26 @@ C.define({
           ).length,
         }),
       ),
-      draws: state.draws.slice(-20).reverse(),
+      historyTotal: this.history.length,
+      draws: this.data.historyOpen
+        ? this.recent(Math.max(HISTORY_BATCH, this.data.draws.length))
+        : [],
+    });
+  },
+  recent(limit) {
+    return (this.history || []).slice(-limit).reverse().map(historyRow);
+  },
+  toggleHistory() {
+    const historyOpen = !this.data.historyOpen;
+    this.setData({
+      historyOpen,
+      draws: historyOpen ? this.recent(HISTORY_BATCH) : [],
+    });
+  },
+  moreHistory() {
+    if (!this.data.historyOpen) return;
+    this.setData({
+      draws: this.recent(this.data.draws.length + HISTORY_BATCH),
     });
   },
   draw() {

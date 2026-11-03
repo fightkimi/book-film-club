@@ -1,0 +1,22 @@
+:host { display: block; min-width: 0; }
+.op-trigger { min-width: 0; }
+.op-disabled { opacity: .6; }
+.op-body { width: 100%; box-sizing: border-box; text-align: left; color: #202826; padding-bottom: 4px; }
+.op-search { box-sizing: border-box; height: 46px; padding: 0 14px; margin: 2px 0 10px; border: 1px solid #a4aaa6; border-radius: 3px; font-size: 17px; color: #202826; background: white; }
+.op-list { width: 100%; display: block; max-height: 48vh; }
+.op-row { box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; min-height: 54px; padding: 12px; margin: 0; border: 0; border-bottom: 1px solid #e0e3e0; border-radius: 0; background: white; color: #28322d; text-align: left; font-size: 18px; line-height: 1.45; font-weight: 400; }
+
+.op-name { display: block; flex: 1; min-width: 0; white-space: nowrap; overflow-x: auto; scrollbar-width: none; }
+.op-name::-webkit-scrollbar { display: none; }
+.op-count { flex: none; min-width: 2ch; text-align: right; font-size: 16px; font-variant-numeric: tabular-nums; color: #4a5951; }
+.op-current { background: #eaf0e9; color: #213828; font-weight: 600; }
+.op-check { flex: none; font-size: 20px; }
+.op-pressed { background: #e2e7e2; }
+.op-empty { padding: 20px 12px; font-size: 17px; color: #505c55; }
+
+.op-module { box-sizing: border-box; width: 100%; margin: 10px 0; padding: 14px 12px; background: #f1f3ef; border-top: 2px solid #56675a; color: #24342a; }
+.op-module-line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.op-module-title { font: 600 20px/1.4 "Songti SC", serif; }
+.op-module-count { flex: none; font-size: 16px; }
+.op-module-caption { margin-top: 4px; color: #536157; font-size: 15px; }
+.op-back { display: flex; align-items: center; min-height: 46px; margin: 0 0 8px; padding: 0 10px; border-bottom: 1px solid #cdd5ce; color: #324c39; font-weight: 500; font-size: 17px; }
