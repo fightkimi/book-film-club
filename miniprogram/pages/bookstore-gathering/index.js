@@ -1,3 +1,4 @@
+const sharing = require("../../lib/sharing");
 const api = require("../../lib/api");
 const eventApi = require("../../lib/gatherings");
 const { confirm } = require("../../lib/page");
@@ -21,6 +22,7 @@ Page({
     this.setData({ authorized: false });
   },
   onShow() {
+    sharing.enable();
     this.load();
   },
   async action(work) {
@@ -72,6 +74,7 @@ Page({
       patch.materialRev = v.notes_rev;
     }
     this.setData(patch);
+    sharing.enable(); sharing.prepare(this);
     wx.setNavigationBarTitle({
       title: v.state === "deleted" ? v.title : v.kind === "notice" ? "书店告示" : "店里有约",
     });
@@ -181,20 +184,5 @@ Page({
         .join("\n"),
     });
   },
-  onShareAppMessage() {
-    const v = this.data.v;
-    if (v?.state === "deleted") return { title: "书店树洞", path: "/pages/login/index?scene=tree" };
-    return {
-      title:
-        v?.audience === "circle"
-          ? "本店圈友的邀约"
-          : (v?.shop_name || "书店") + "｜" + (v?.title || "店里有约"),
-      path:
-        "/pages/bookstore-gathering/index?id=" +
-        this.id +
-        "&circle=" +
-        (this.circle ? "1" : "0"),
-      imageUrl: "/assets/yuxiang-avatar.png",
-    };
-  },
+  onShareAppMessage: sharing.message,
 });

@@ -309,7 +309,10 @@ def serve(handler, path, query, user, body=None, club_db=None, ip='local'):
     operation=path.removeprefix('/api/bookstores/')
     db=connect(club_db)
     try:
-        if operation=='activity-theme-ai' and body is not None:
+        if operation=='gather-mine' and body is None:
+            require_user(user)
+            result=gatherings.mine(db,user,gatherings.member_person(user,club_db))
+        elif operation=='activity-theme-ai' and body is not None:
             reader=require_user(user)
             state=private_snapshot(handler,club_db)
             context=theme_ideation.context(body,state)

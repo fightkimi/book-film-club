@@ -34,10 +34,11 @@ C.define({
     if (event.from === "button" && this.invite && this.data.isAdmin) {
       return {
         title: "加入 un eco 书影小组",
+        imageUrl: require("../../lib/sharing").coverFor(this),
         path: "/pages/login/index?invite=" + encodeURIComponent(this.invite),
       };
     }
-    return { title: "un eco", path: "/pages/login/index" };
+    return { title: "un eco", path: "/pages/login/index", imageUrl: require("../../lib/sharing").coverFor(this) };
   },
   progress(e) {
     C.go("progress", {

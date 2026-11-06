@@ -8,3 +8,5 @@
   </view>
 </view>
 <view wx:if="{{error}}" class="error" bindtap="load">{{error}}　重试</view>
+
+<share-card id="share-card"/>

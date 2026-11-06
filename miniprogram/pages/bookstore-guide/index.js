@@ -1,5 +1,7 @@
+const sharing = require("../../lib/sharing");
 const { directory, task, writeBookstore } = require("../../lib/bookstore-api");
 Page({
+  onShareAppMessage: sharing.message,
   data: {
     stores: [],
     visible: [],
@@ -17,6 +19,7 @@ Page({
     this.setData({ authorized: false });
   },
   onShow() {
+    sharing.enable();
     this.load();
   },
   load() {

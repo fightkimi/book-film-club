@@ -40,3 +40,5 @@ button{margin:0;border-radius:0;font-size:27rpx;line-height:1.4;padding:25rpx 28
 .dock button { min-width: 0; width: 0; }
 button { max-width: 100%; text-align: center; overflow-wrap: anywhere; }
 .fact-label { flex: none; }
+
+button.content-share{width:auto;margin:12px 36rpx 24px;font-size:14px;min-height:44px;color:#193b2d;padding:10px 0;}

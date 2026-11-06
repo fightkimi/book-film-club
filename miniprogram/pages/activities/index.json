@@ -1,5 +1,8 @@
 {
-  "usingComponents": { "activity-cover": "/components/activity-cover/index" },
+  "usingComponents": {
+    "activity-cover": "/components/activity-cover/index",
+    "share-card": "/components/share-card/index"
+  },
   "navigationBarTitleText": "小组活动",
   "enablePullDownRefresh": true
 }

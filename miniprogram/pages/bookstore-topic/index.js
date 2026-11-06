@@ -1,9 +1,11 @@
+const sharing = require("../../lib/sharing");
 const {
   fetchBookstore,
   writeBookstore,
   task,
 } = require("../../lib/bookstore-api");
 Page({
+  onShareAppMessage: sharing.message,
   data: { busy: false, error: "", replies: [], body: "", more: false },
   onLoad(q) {
     this.id = q.id;
@@ -25,6 +27,7 @@ Page({
     this.setData({ authorized: false });
   },
   onShow() {
+    sharing.enable();
     this.load();
   },
   async read(more) {

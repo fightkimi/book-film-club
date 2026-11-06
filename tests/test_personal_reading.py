@@ -49,6 +49,24 @@ class PersonalRecords(unittest.TestCase):
     def save(self,row,**kw):
         return self.op('save',{'item':row['id'],'rev':row['rev'],'tracking':'manual','status':'done','progress':0,'finished_at':'2026-11-01','rating':4.5,'reflection':'我还没想明白。','spoiler':True,**kw})['item']
 
+    def test_short_thought_can_grow_into_full_review_without_duplicate_or_publication(self):
+        for kind in ('book','movie'):
+            row=self.add(kind=kind,request_id='reflection-'+kind)
+            short=self.save(row,status='reading',progress=20,reflection='想再读一次。',rating=None)
+            listed=self.op('list',q={'view':'wish','kind':kind})['items'][0]
+            self.assertEqual(listed['reflection_excerpt'],'想再读一次。')
+            self.assertFalse(listed['reflection_long'])
+            body=('第一段，保留自己的疑问。\n\n「引用原文」\n—— 第一章\n\n'*200)
+            long=self.save(short,status='reading',progress=20,reflection=body,rating=None)
+            self.assertEqual(long['id'],row['id'])
+            self.assertEqual(self.op('item',q={'item':row['id']})['item']['reflection'],body.strip())
+            listed=self.op('list',q={'view':'wish','kind':kind})['items'][0]
+            self.assertTrue(listed['reflection_long']);self.assertEqual(len(listed['reflection_excerpt']),120)
+            self.assertNotIn('reflection',listed)
+            self.assertEqual(self.op('list',q={'view':'wish','kind':kind},user=self.other)['items'],[])
+        self.assertEqual(self.db.execute('select count(*) from post').fetchone()[0],0)
+        self.assertEqual(self.db.execute('select count(*) from personal_item').fetchone()[0],2)
+
     def note(self,row):
         return self.op('note-add',{'item':row['id'],'body':'这句话仍然让我犹豫。','chapter':'第一章'})
 

@@ -14,3 +14,5 @@
     <button wx:if="{{invited}}" class="quiet existing-login" data-identity="existing" disabled="{{busy}}" bindtap="submit">用我已绑定的身份登录</button>
   </view>
 </view>
+
+<share-card id="share-card"/>

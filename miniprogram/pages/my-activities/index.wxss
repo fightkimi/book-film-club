@@ -1,0 +1,6 @@
+.attendance-section{margin:28px 0 0;}.attendance-section .section-title{font-family:inherit;font-size:15px;font-weight:600;margin:0 0 4px;color:#193b2d;}
+.attendance-card{position:relative;display:block;padding:20px 22px 20px 0;border-bottom:.5px solid #d9d9d9;}
+.attendance-meta{display:flex;align-items:center;justify-content:space-between;gap:16px;color:#646464;font-size:13px;line-height:1.4;}
+.attendance-state{flex:none;color:#193b2d;}.attendance-state.cancelled{color:#646464;}
+.attendance-title{font:500 23px/1.4 "Songti SC",serif;margin:10px 0;overflow-wrap:anywhere;}
+.attendance-date{font-size:15px;font-variant-numeric:tabular-nums;line-height:1.6;}.attendance-place{font-size:13px;line-height:1.6;color:#646464;overflow-wrap:anywhere;margin-top:4px;}.attendance-arrow{position:absolute;right:0;top:52px;color:#888;font-size:24px;}.attendance-pressed{background:#f7f7f5;}

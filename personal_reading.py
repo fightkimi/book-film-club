@@ -250,7 +250,11 @@ def listing(db,reader,q):
     rows=[dict(r) for r in db.execute('SELECT i.* FROM personal_item i WHERE i.reader=? AND (?=\'\' OR i.kind=?) AND '+clause+' ORDER BY i.updated DESC,i.id LIMIT 51 OFFSET ?',(*args,offset))]
     more=len(rows)>50;rows=rows[:50]
     for row in rows:
-        row.pop('reader');row.pop('reflection');row['last_finished']=db.execute('SELECT max(finished_at) FROM personal_log WHERE reader=? AND item=?',(reader,row['id'])).fetchone()[0] or row['finished_at']
+        row.pop('reader')
+        reflection=row.pop('reflection')
+        row['reflection_excerpt']=reflection[:120]
+        row['reflection_long']=len(reflection)>120
+        row['last_finished']=db.execute('SELECT max(finished_at) FROM personal_log WHERE reader=? AND item=?',(reader,row['id'])).fetchone()[0] or row['finished_at']
     totals={r['kind']:r['n'] for r in db.execute('SELECT kind,count(*) AS n FROM personal_log l JOIN personal_item i ON i.id=l.item AND i.reader=l.reader WHERE l.reader=? AND substr(l.finished_at,1,7)=? GROUP BY kind',(reader,current))}
     return {'items':rows,'next':offset+50 if more else None,'month':current,'completed':totals,'connection':status(db,reader)}
 

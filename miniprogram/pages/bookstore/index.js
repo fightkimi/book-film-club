@@ -1,3 +1,4 @@
+const sharing = require("../../lib/sharing");
 const {
   fetchBookstore,
   writeBookstore,
@@ -6,6 +7,7 @@ const {
 const { confirm } = require("../../lib/page");
 const board = require("../../lib/static-assets").board;
 Page({
+  onShareAppMessage: sharing.message,
   data: {
     busy: false,
     error: "",
@@ -28,6 +30,7 @@ Page({
     this.setData({ authorized: false });
   },
   onShow() {
+    sharing.enable();
     this.load();
   },
   async refresh() {

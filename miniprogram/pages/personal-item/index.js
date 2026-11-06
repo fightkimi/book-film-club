@@ -35,9 +35,12 @@ P.define({
     beforeAdoption: null,
     progressOpen: false,
     notesOpen: false,
+    reviewExpanded: false,
+    writing: true,
   },
   onLoad(q) {
     this.id = q.id;
+    this.startEditing = q.edit === "1";
     this.setData({ month: q.month || P.currentMonth() });
   },
   apply(r, force = false) {
@@ -73,6 +76,10 @@ P.define({
       });
       this.rev = r.item.rev;
     }
+    if (!before) this.setData({
+      writing: this.startEditing || !r.item.reflection,
+      reviewExpanded: r.item.reflection.length > 240 || r.item.reflection.split("\n").length > 3,
+    });
   },
   async load() {
     const r = await P.call("item", undefined, { item: this.id });
@@ -127,6 +134,26 @@ P.define({
   },
   toggleProgress() {
     this.setData({ progressOpen: !this.data.progressOpen });
+  },
+  editReflection(e) {
+    this.dirty = true;
+    this.setData({ reflection: e.detail.value });
+  },
+  continueWriting() {
+    this.setData({ writing: true });
+  },
+  toggleReview() {
+    this.setData({ reviewExpanded: !this.data.reviewExpanded });
+  },
+  quoteNote(e) {
+    const note = (this.allNotes || []).find(n => n.id === e.currentTarget.dataset.id);
+    if (!note) return;
+    const excerpt = [note.quote, note.body].filter(Boolean).filter((s, i, a) => a.indexOf(s) === i).join("\n");
+    const quote = "「" + excerpt + "」" + (note.chapter ? "\n—— " + note.chapter : "");
+    const reflection = [this.data.reflection, quote].filter(Boolean).join("\n\n") + "\n\n";
+    if (reflection.length > 12000) { this.setData({ error: "正文最多 12000 字，请先精简再引用" }); return; }
+    this.dirty = true;
+    this.setData({ reflection, writing: true, reviewExpanded: true });
   },
   toggleNotes() {
     this.setData({ notesOpen: !this.data.notesOpen });
@@ -193,6 +220,8 @@ P.define({
       beforeAdoption: this.data.reflection,
       reflection: this.data.aiDraft.polished,
       aiDraft: null,
+      writing: true,
+      reviewExpanded: true,
     });
   },
   restoreReview() {
@@ -257,6 +286,7 @@ P.define({
       });
       this.dirty = false;
       this.apply(r, true);
+      this.setData({ writing: !r.item.reflection });
       wx.showToast({ title: "已保存" });
     });
   },

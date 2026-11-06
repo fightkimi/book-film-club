@@ -5,17 +5,15 @@
       <view class="affiliation"><text class="group-label">所在小组</text><text>{{group}}</text></view>
     </view>
 
-    <view class="section-head"><text class="heading">我的活动</text><text wx:if="{{reports.length}}" class="count">{{reports.length}} 期</text></view>
-    <view wx:if="{{reports.length}}" class="periods">
-      <navigator wx:for="{{reports}}" wx:key="cycle_id" url="/pages/cycle/index?id={{item.cycle_id}}" class="period" hover-class="row-pressed">
-        <view class="period-top"><text class="period-name">{{item.cycleTitle}}</text><text class="period-state">{{item.statusLabel}}</text></view>
-        <view class="period-progress">{{item.startLabel}}{{item.total ? '　已完成 ' + item.completed + ' / ' + item.total + ' 部' : ''}}</view>
+    <view class="section-head"><text class="heading">我参加的</text><navigator class="count" url="/pages/my-activities/index">查看全部 ›</navigator></view>
+    <view wx:if="{{attending.length}}" class="periods">
+      <navigator wx:for="{{attendingPreview}}" wx:key="key" url="{{item.url}}" class="period" hover-class="row-pressed">
+        <view class="period-top"><text class="period-name">{{item.title}}</text><text class="period-state">{{item.status}}</text></view>
+        <view class="period-progress">{{item.type}} · {{item.date}}</view>
       </navigator>
     </view>
-    <view wx:else class="empty-period">
-      <text>还没有参与的活动</text>
-      <navigator class="browse" url="/pages/activities/index" open-type="switchTab" hover-class="row-pressed">去看活动 <text aria-hidden="true">→</text></navigator>
-    </view>
+    <view wx:elif="{{!busy && !attendanceError}}" class="empty-period"><text>还没有参加的活动</text><navigator class="browse" url="/pages/activities/index" open-type="switchTab">去看看 →</navigator></view>
+    <view wx:if="{{attendanceError}}" class="attendance-error" bindtap="onPullDownRefresh">{{attendanceError}}</view>
 
     <view class="section-head"><text class="heading">个人记录</text></view>
     <mp-cells>
@@ -33,3 +31,5 @@
   <view wx:elif="{{busy}}" class="muted">正在读取个人记录…</view>
   <view wx:if="{{error}}" class="error">{{error}}</view>
 </view>
+
+<share-card id="share-card"/>

@@ -11,3 +11,4 @@
 .personal-library .library-types{height:44px;align-items:center;}
 .personal-library .library-types button{height:44px;min-height:44px;width:44px;min-width:44px;padding:0;line-height:1.4;font-size:14px;box-sizing:border-box;}
 @media(max-width:350px){.personal-library .library-types button{width:40px;min-width:40px;}}
+.reflection-excerpt{margin:12px 0 0;font-size:15px;line-height:1.8;color:#444;white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;}.personal-row-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;}.review-read-link{font-size:13px;color:#193b2d;}.personal-library button.quick-reflection{width:auto;margin:0;padding:8px 12px;min-height:40px;font-size:14px;border:.5px solid #d9d9d9;color:#193b2d;}

@@ -1,5 +1,6 @@
 const artwork = require("./static-assets");
 const api = require("./api");
+const sharing = require("./sharing");
 const prefix = "/api/bookstores/";
 const packagedPhotos = {
   "https://www.nationalreading.gov.cn/ydkj/swsh/202603/W020260323583992118074.png":
@@ -61,7 +62,7 @@ async function task(page, work) {
   page.setData({ busy: true, error: "" });
   try {
     await work();
-    if (api.hasSession()) page.setData({ authorized: true });
+    if (api.hasSession()) { page.setData({ authorized: true }); sharing.prepare?.(page); }
   } catch (e) {
     if (e.status === 401 || !api.hasSession()) return requireLogin(page);
     page.setData({ error: e.message || "请求失败，请重试" });

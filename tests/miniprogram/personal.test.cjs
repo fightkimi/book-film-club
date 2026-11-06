@@ -78,3 +78,16 @@ test('note-only updates preserve a typed review but concurrent review edits keep
  h.page.apply({item:{...before,notes_version:'n2',reflection:'另一个窗口修改了正文',rev:7},months:[],history:[]});
  assert.equal(h.page.data.reflection,'正在写的文字');assert.equal(h.page.rev,6);
 });
+
+test('short and long reflections share one editor and expanding or quoting never truncates the draft',()=>{
+ const h=harness('personal-item');h.page.setData({reflection:'一句话。',reviewExpanded:false});
+ h.page.toggleReview();assert.equal(h.page.data.reviewExpanded,true);assert.equal(h.page.data.reflection,'一句话。');
+ const long='第一段\n\n第二段。'.repeat(250);h.page.editReflection({detail:{value:long}});
+ h.page.toggleReview();assert.equal(h.page.data.reflection,long);assert.equal(h.page.dirty,true);
+ h.page.allNotes=[{id:'note1',quote:'原文完整引句',body:'这是我的注释',chapter:'第三章'}];
+ h.page.quoteNote({currentTarget:{dataset:{id:'note1'}}});
+ assert.ok(h.page.data.reflection.startsWith(long));assert.match(h.page.data.reflection,/原文完整引句[\s\S]*这是我的注释[\s\S]*第三章/);
+ assert.equal(h.page.data.reviewExpanded,true);
+ const before='文'.repeat(11999);h.page.setData({reflection:before});h.page.quoteNote({currentTarget:{dataset:{id:'note1'}}});
+ assert.equal(h.page.data.reflection,before);assert.match(h.page.data.error,/12000/);
+});

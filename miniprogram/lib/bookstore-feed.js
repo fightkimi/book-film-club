@@ -4,8 +4,10 @@ const {
   writeBookstore,
   task,
 } = require("./bookstore-api");
+const sharing = require("./sharing");
 module.exports = function forumPage(home) {
   return {
+    onShareAppMessage: sharing.message,
     data: {
       home,
       name: home ? "书店树洞" : "本店读者圈",

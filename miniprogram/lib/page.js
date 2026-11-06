@@ -1,4 +1,5 @@
 const api = require("./api");
+const sharing = require("./sharing");
 function fail(page, error) {
   page.setData({ error: error.message || "暂时无法完成操作" });
   if (error.status === 401) wx.reLaunch({ url: "/pages/login/index" });
@@ -24,6 +25,7 @@ function go(page, params) {
 }
 function define(options) {
   const config = Object.assign({}, options, {
+    onShareAppMessage: options.onShareAppMessage || sharing.message,
     data: Object.assign(
       { busy: false, error: "", notice: "" },
       options.data || {},
@@ -39,6 +41,7 @@ function define(options) {
       if (options.onUnload) options.onUnload.call(this);
     },
     async onShow() {
+      sharing.enable();
       const bar = this.getTabBar?.();
       if (bar) bar.selectPage(this.route);
       if (!api.hasSession()) {
@@ -60,6 +63,7 @@ function define(options) {
           canStartActivity: data.user.can_start_activity ?? ["admin", "organizer"].includes(data.user.role),
         });
         if (options.ready) await options.ready.call(this, data, force);
+        sharing.prepare(this);
       });
     },
     async onPullDownRefresh() {

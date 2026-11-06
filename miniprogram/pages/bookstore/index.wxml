@@ -12,7 +12,7 @@
       <navigator wx:if="{{manage && !managing}}" class="manage-entry" url="/pages/bookstore/index?id={{store.id}}&view=manage" hover-class="manager-pressed">店主管理</navigator>
     </view>
     <block wx:if="{{!managing}}">
-    <view>{{store.lead}}</view>
+    <view>{{store.lead}}</view><button class="quiet content-share" open-type="share">分享这家书店</button>
     <navigator class="entry-link" url="/pages/bookstore-recommend/index?shop={{store.id}}">荐一本书 ›</navigator>
     <scroll-view wx:if="{{store.photos.length}}" scroll-x class="photo-strip"><image wx:for="{{store.photos}}" wx:key="0" src="{{item[0]}}" data-src="{{item[0]}}" bindtap="photo" mode="aspectFill"/></scroll-view>
     <view>{{store.address}}</view><text class="entry-link" data-value="{{store.city}}{{store.address}}" bindtap="copy">复制地址</text><view class="muted">营业时间　{{store.hours || '待确认'}}</view>
@@ -44,3 +44,5 @@
     </view>
   </block>
 </view>
+
+<share-card id="share-card"/>
