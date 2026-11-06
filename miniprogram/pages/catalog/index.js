@@ -1,5 +1,6 @@
 const C = require("../../lib/page");
 const D = require("../../lib/data");
+const movies = require("../../lib/movie-catalog");
 
 const { libraryTopics } = require("../../lib/library-topics");
 const { coverThumbnail } = require("../../lib/poster-url");
@@ -23,61 +24,108 @@ C.define({
     topicIndex: 0,
     topicOptions: [],
   },
-  async ready(snapshot, force) {
-    const previous = this.data.topicOptions[this.data.topicIndex]?.key;
-    const topics = libraryTopics(snapshot.state);
-    this.topicGroups = topics.groups;
-    const topicIndex = Math.max(
-      0,
-      topics.options.findIndex((o) => o.key === previous),
-    );
-    this.setData({ topicOptions: topics.options, topicIndex });
-    // Render the local catalog immediately; merge the authorized member shelves when ready.
-    if (this.lastState !== snapshot.state) {
-      this.collection = snapshot.state.works.filter((w) => w.kind === "movie");
-      this.setData({ groupStatus: "正在合并成员书架…" });
-      this.filter(true);
-    }
-    let group;
-    try {
-      group = await C.api.groupBooks(force);
-    } catch (error) {
-      if (!this._gone) {
-        this.collection = snapshot.state.works;
-        this.setData({
-          groupStatus: "完整书目未加载，暂时显示已入库作品，下拉可重试",
-        });
-        this.filter(true);
-      }
-      throw error;
-    }
-    this.lastState = snapshot.state;
-    if (this._gone) return;
-    const local = new Map(snapshot.state.works.map((w) => [w.id, w]));
-    const books = group.books.map(
-      (b) =>
-        (b.workId && local.get(b.workId)) || {
-          id: "shelf:" + b.id,
-          source_id: b.id,
-          kind: "book",
-          title: b.title,
-          creator: b.author,
-          image: b.cover,
-          external: true,
-          personalUpload: b.personalUpload,
-        },
-    );
-    this.collection = [
-      ...snapshot.state.works.filter((w) => w.kind !== "book"),
-      ...books,
-    ];
-    this.setData({
-      groupStatus: group.unavailable.length
-        ? group.unavailable.join("、") + "的书架暂未加载，下拉可重试"
-        : "",
-    });
-    this.filter(true);
+  onLoad(q) {
+    if (q.kind === "movie") this.setData({ kind: "movie" });
   },
+  async ready(snapshot, force) {
+    this.catalogState = snapshot.state;
+    this.collection = snapshot.state.works;
+    this.updateTopics();
+    this.filter(true);
+    const local = new Map(snapshot.state.works.map((w) => [w.id, w]));
+    let books = snapshot.state.works.filter((w) => w.kind === "book"),
+      movieRows = [],
+      classifications = {};
+    const render = () => {
+      if (this._gone) return;
+      this.collection = movies.merge(
+        [...snapshot.state.works.filter((w) => w.kind !== "book"), ...books],
+        movieRows,
+        classifications,
+      );
+      this.updateTopics();
+      this.filter(true);
+    };
+    await Promise.all([
+      C.api
+        .groupBooks(force)
+        .then((group) => {
+          books = group.books.map(
+            (b) =>
+              (b.workId && local.get(b.workId)) || {
+                id: "shelf:" + b.id,
+                source_id: b.id,
+                kind: "book",
+                title: b.title,
+                creator: b.author,
+                image: b.cover,
+                external: true,
+                personalUpload: b.personalUpload,
+              },
+          );
+          if (!this._gone)
+            this.setData({
+              groupStatus: group.unavailable.length
+                ? "部分成员书架暂未加载，下拉可重试"
+                : "",
+            });
+          render();
+        })
+        .catch((error) => {
+          if (error.status === 401) throw error;
+          if (!this._gone)
+            this.setData({ groupStatus: "成员书架暂未加载，下拉可重试" });
+        }),
+      movies
+        .load(force)
+        .then((result) => {
+          movieRows = result.movies;
+          classifications = result.classifications || {};
+          if (!this._gone) this.setData({ movieStatus: "" });
+          render();
+        })
+        .catch((error) => {
+          if (error.status === 401) throw error;
+          if (!this._gone)
+            this.setData({ movieStatus: "扩展片库暂未加载，下拉可重试" });
+        }),
+    ]);
+  },
+
+  updateTopics() {
+    const previous = this.data.topicOptions[this.data.topicIndex]?.key;
+    const topics = libraryTopics({
+      ...this.catalogState,
+      works: (this.collection || []).filter(
+        (w) => !this.data.kind || w.kind === this.data.kind,
+      ),
+    });
+    this.topicGroups = topics.groups;
+    const options = topics.options
+      .filter((o) => this.data.kind !== "movie" || !o.key.startsWith("club:"))
+      .map((o) => ({
+        ...o,
+        label: !o.key && this.data.kind === "movie" ? "全部类型" : o.label,
+      }));
+    if (this.data.kind === "movie") {
+      const names = movies.orderGenres(
+        options.filter((o) => o.key).map((o) => o.label),
+      );
+      options.sort(
+        (a, b) =>
+          (a.key ? names.indexOf(a.label) + 1 : 0) -
+          (b.key ? names.indexOf(b.label) + 1 : 0),
+      );
+    }
+    this.setData({
+      topicOptions: options,
+      topicIndex: Math.max(
+        0,
+        options.findIndex((o) => o.key === previous),
+      ),
+    });
+  },
+
   topic(e) {
     this.setData({ topicIndex: Number(e.detail.value) });
     this.filter();
@@ -87,7 +135,12 @@ C.define({
     this.filter();
   },
   kind(e) {
-    this.setData({ kind: e.currentTarget.dataset.kind });
+    this.setData({
+      kind: e.currentTarget.dataset.kind,
+      topicIndex: 0,
+      shelfIndex: 0,
+    });
+    this.updateTopics();
     this.filter();
   },
   shelf(e) {
@@ -153,13 +206,17 @@ C.define({
         extra,
         metadataHint,
         external,
+        externalMovie,
         personalUpload,
         source_id,
+        browse_genres,
       }) => ({
         id,
         external,
+        externalMovie,
         personalUpload,
         source_id,
+        categories: (browse_genres || []).join(" · "),
         title,
         creator,
         year: String(year || "").slice(0, 4),
@@ -169,7 +226,7 @@ C.define({
         kind,
         description: description || "",
         runtime: kind === "movie" ? extra?.runtime : null,
-        metadataHint: external ? "成员书架" : metadataHint,
+        metadataHint: externalMovie ? "" : external ? "成员书架" : metadataHint,
       }),
     );
     this.setData({
@@ -201,7 +258,9 @@ C.define({
     if (!row) return;
     if (row.personalUpload)
       return wx.showToast({ title: "个人导入书，仅分享书目", icon: "none" });
-    if (row.external) C.go("work", { book_id: row.id, book_source: "catalog" });
+    if (row.externalMovie) C.go("work", { movie_id: row.id });
+    else if (row.external)
+      C.go("work", { book_id: row.id, book_source: "catalog" });
     else C.go("work", { id: row.id });
   },
   onReachBottom() {

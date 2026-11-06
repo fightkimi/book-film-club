@@ -13,6 +13,7 @@ Page({
     error: "",
   },
   onLoad(q) {
+    q = sharing.decodeQuery(q);
     this.startCity = q.city;
   },
   onHide() {

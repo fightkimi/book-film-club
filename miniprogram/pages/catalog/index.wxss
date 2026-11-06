@@ -72,3 +72,5 @@
 .movie-synopsis{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;overflow-wrap:anywhere;font-size:14px;line-height:1.65;color:#646464;margin-top:10px;}
 .movie-details{font-size:12px;color:#193b2d;margin-top:10px;}
 .film-list .work-meta{flex-wrap:wrap;}
+
+.movie-category{font-size:12px;line-height:1.5;color:#193b2d;margin-top:7px;}

@@ -77,7 +77,9 @@ function filterWorks(works, kind, query) {
           " " +
           w.creator +
           " " +
-          (w.tags || "") +
+          (Array.isArray(w.browse_genres)
+            ? w.browse_genres.join(" ")
+            : w.tags || "") +
           " " +
           ((w.extra || {}).aliases || []).join(" ") +
           " " +

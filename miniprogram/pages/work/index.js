@@ -2,11 +2,20 @@ const C = require("../../lib/page"),
   D = require("../../lib/data");
 const P = require("../../lib/personal-api");
 const { posterUrl } = require("../../lib/poster-url");
+const movies = require("../../lib/movie-catalog");
 C.define({
   async ready({ state, users }) {
     let work;
-    const bibliographicOnly = !!(this.query.book_id || this.query.weread_id);
-    if (this.query.weread_id || this.query.book_source === "public") {
+    const bibliographicOnly = !!(
+      this.query.book_id ||
+      this.query.weread_id ||
+      this.query.movie_id
+    );
+    if (this.query.movie_id) {
+      work = (
+        await P.call("movie-detail", undefined, { id: this.query.movie_id })
+      ).item;
+    } else if (this.query.weread_id || this.query.book_source === "public") {
       const r = await C.api.request("/api/metadata/detail", {
         provider: "weread",
         source_id: this.query.weread_id || this.query.book_id,
@@ -20,9 +29,28 @@ C.define({
       work = r.book;
     } else work = state.works.find((w) => w.id === this.query.id);
     if (!work) throw new Error("作品不存在");
+    if (
+      work.kind === "movie" &&
+      work.provider === "tmdb" &&
+      !work.browse_genres
+    ) {
+      try {
+        const catalog = await movies.load();
+        work = {
+          ...work,
+          browse_genres:
+            catalog.classifications?.[String(work.source_id)] || [],
+        };
+      } catch (e) {
+        if (e.status === 401) throw e;
+      }
+    }
     this.setData({
       bibliographicOnly,
-      work: D.workView(work),
+      work: {
+        ...D.workView(work),
+        browseLabel: (work.browse_genres || []).join(" / "),
+      },
       coverUrl: posterUrl(work.image, "w500"),
       sourceName: {
         weread: "微信读书",
@@ -46,7 +74,10 @@ C.define({
   personal() {
     C.go("personal-add", {
       book:
-        this.query.weread_id || this.query.book_id || "work:" + this.query.id,
+        this.query.movie_id ||
+        this.query.weread_id ||
+        this.query.book_id ||
+        "work:" + this.query.id,
       month: this.query.month || P.currentMonth(),
       source: this.query.weread_id
         ? "public"
@@ -65,7 +96,10 @@ C.define({
       const r = await P.call("add", {
         source,
         source_id:
-          this.query.weread_id || this.query.book_id || "work:" + this.query.id,
+          this.query.movie_id ||
+          this.query.weread_id ||
+          this.query.book_id ||
+          "work:" + this.query.id,
         kind: this.data.work.kind,
       });
       C.go("personal-item", { id: r.item.id });

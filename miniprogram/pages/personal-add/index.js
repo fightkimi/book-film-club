@@ -1,5 +1,6 @@
 const P = require("../../lib/personal-api");
 const { coverThumbnail } = require("../../lib/poster-url");
+const { orderGenres } = require("../../lib/movie-catalog");
 P.define({
   data: {
     kind: "book",
@@ -14,6 +15,8 @@ P.define({
     folders: [{ name: "全部电子书", book_ids: null }],
     folderIndex: 0,
     connection: null,
+    genres: ["全部类型"],
+    genreIndex: 0,
   },
   onLoad(q) {
     this.req = P.requestId();
@@ -51,13 +54,30 @@ P.define({
     const r = await P.call("sources", undefined, {
       source: this.data.source,
       kind: this.data.kind,
+      expanded: this.data.kind === "movie" ? "1" : undefined,
     });
     this.all = (r.items || []).map((b) => ({
       ...b,
       introLoaded: typeof b.description === "string",
       coverUrl: coverThumbnail(b.image || ""),
       year: String(b.year || "").slice(0, 4),
+      runtime: b.runtime || b.extra?.runtime,
     }));
+    if (
+      this.data.kind === "movie" &&
+      this.preset.startsWith("tmdb:") &&
+      !this.all.some((b) => b.id === this.preset)
+    ) {
+      const full = (
+        await P.call("movie-detail", undefined, { id: this.preset })
+      ).item;
+      this.all.unshift({
+        ...full,
+        introLoaded: true,
+        coverUrl: coverThumbnail(full.image),
+        runtime: full.extra?.runtime,
+      });
+    }
     this.setData({
       connection: r.connection || null,
       folders: [
@@ -65,6 +85,18 @@ P.define({
         ...(r.connection?.folders || []),
       ],
       folderIndex: 0,
+      genres: [
+        "全部类型",
+        ...orderGenres([
+          ...new Set(
+            this.all.flatMap(
+              (b) =>
+                b.browse_genres || (b.tags || "").split(" / ").filter(Boolean),
+            ),
+          ),
+        ]),
+      ],
+      genreIndex: 0,
       selected:
         this.all.find(
           (b) => b.id === (this.data.selected?.id || this.preset),
@@ -81,10 +113,22 @@ P.define({
   filter() {
     const term = this.data.query.trim().toLowerCase();
     const folder = this.data.folders[this.data.folderIndex];
+    const genre = this.data.genres[this.data.genreIndex];
     this.matches = (this.all || []).filter(
       (b) =>
         (!folder?.book_ids || folder.book_ids.includes(b.id)) &&
-        (!term || (b.title + " " + b.creator).toLowerCase().includes(term)),
+        (!this.data.genreIndex ||
+          (b.browse_genres || (b.tags || "").split(" / ")).includes(genre)) &&
+        (!term ||
+          [
+            b.title,
+            b.creator,
+            b.extra?.original_title,
+            ...(b.extra?.aliases || []),
+          ]
+            .join(" ")
+            .toLowerCase()
+            .includes(term)),
     );
     this.setData({
       rows: this.matches.slice(0, 40),
@@ -97,6 +141,10 @@ P.define({
   },
   folder(e) {
     this.setData({ folderIndex: Number(e.detail.value) });
+    this.filter();
+  },
+  genre(e) {
+    this.setData({ genreIndex: Number(e.detail.value) });
     this.filter();
   },
   source(e) {
@@ -182,7 +230,9 @@ P.define({
   },
   details(e) {
     const id = e.currentTarget.dataset.id || this.data.selected?.id;
-    if (this.data.source === "catalog" && id?.startsWith("work:"))
+    if (this.data.kind === "movie" && id?.startsWith("tmdb:"))
+      P.go("work", { movie_id: id, month: this.data.month });
+    else if (this.data.source === "catalog" && id?.startsWith("work:"))
       P.go("work", { id: id.slice(5), month: this.data.month });
     else if (id && !this.data.selected?.personalUpload)
       P.go("work", {

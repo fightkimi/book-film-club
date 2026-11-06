@@ -22,7 +22,8 @@ class PersonalRecords(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
         self.root=Path(self.tmp.name);self.file=self.root/'books.sqlite3'
-        self.env=patch.dict(os.environ,BOOKSTORES_DB=str(self.file),PERSONAL_VAULT_KEY_FILE=str(self.root/'secret.key'))
+        catalog=self.root/'movies.json';catalog.write_text(json.dumps({'movies':[],'genres':[],'as_of':'2026-11-06'}))
+        self.env=patch.dict(os.environ,BOOKSTORES_DB=str(self.file),PERSONAL_VAULT_KEY_FILE=str(self.root/'secret.key'),MOVIE_CATALOG_FILE=str(catalog))
         self.env.start();self.addCleanup(self.env.stop)
         self.db=self.connection();self.addCleanup(self.db.close);b.initialize(self.db)
         self.user={'id':'owner','role':'member','name':'本人'}

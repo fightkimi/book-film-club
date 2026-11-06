@@ -37,3 +37,7 @@ These are the real scene images selected in the local design review, not fabrica
 `miniprogram/assets/motion/club-table.gif` was reduced from 231,242 to 137,783 bytes to keep the total packaged media within WeChat's 200 KB recommendation. Gifsicle 1.98 (`-O3 --careful --resize-width 296 --resize-method mix`) resampled the existing 360 × 218 animation to 296 × 179; this is not lossless. All 60 frames, their 100 ms delays, and the absence of a loop extension are retained. The displayed size and once-per-session playback code are unchanged; white-background comparisons were checked at the rendered size.
 
 Gifsicle is a build-time tool only, not a bundled dependency. Its official source and options are at https://www.lcdf.org/gifsicle/ and https://www.lcdf.org/gifsicle/man.html. The original input is recoverable from Git commit `3911454404a394112f7a2dd3d0937195e7d984b8`.
+
+## TMDB attribution mark — 2026-11-06
+
+`miniprogram/assets/tmdb-logo.svg` is the unmodified TMDB mark by Travis Bell, copied from the [Wikimedia Commons mirror](https://commons.wikimedia.org/wiki/File:Tmdb.new.logo.svg), which identifies the original approved TMDB `blue_square_2` asset. Mirror license: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). SHA-1 `d6f7f0323283bf92471217d16e517181ff203cbf`, 2,577 bytes. Its aspect ratio and colors are preserved. The Settings / Credits section names the author and license and includes the required TMDB API attribution.

@@ -5,5 +5,6 @@
   <view class="fact"><text class="fact-label">登录方式</text><text>微信登录</text></view>
   <view class="section-title">数据与工具</view><mp-cells><mp-cell value="导入的旧记录" link bindtap="importedRecords"/><mp-cell value="数据导入与进阶工具" link bindtap="tools"/></mp-cells>
   <button class="secondary logout" bindtap="logout">退出登录</button>
+  <view class="section-title">资料来源</view><view class="tmdb-credit"><image src="/assets/tmdb-logo.svg" mode="aspectFit"/><view>电影资料来自 TMDB。</view><view class="muted">This product uses the TMDB API but is not endorsed or certified by TMDB.</view><button class="quiet" bindtap="tmdb">复制 TMDB 网站地址</button><text class="muted" bindtap="logoLicense">标识：Travis Bell · CC BY-SA 4.0（未修改）</text></view>
   <view wx:if="{{error}}" class="error">{{error}}</view>
 </view>

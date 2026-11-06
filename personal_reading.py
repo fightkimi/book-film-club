@@ -11,6 +11,7 @@ import time
 import ai
 import personal_vault as vault
 import personal_weread as wr
+import movie_catalog
 from companion import generation_slot
 from domain import Problem,boolean,choice,integer,now,text
 
@@ -471,6 +472,8 @@ def handle(db,op,q,data,user,load_state,load_books,load_book_detail=None):
     from bookstores import require_user,write as write_post
     reader=require_user(user)
     if data is None:
+        if op=='movie-catalog':return movie_catalog.listing(load_state().get('works',[]))
+        if op=='movie-detail':return {'item':movie_catalog.detail(q.get('id'))}
         if op=='connection':return status(db,reader)
         if op=='book-detail':return source_book_detail(db,reader,q,load_state,load_books,load_book_detail)
         if op=='list':seed_existing(db,reader,load_state);return listing(db,reader,q)
@@ -490,9 +493,7 @@ def handle(db,op,q,data,user,load_state,load_books,load_book_detail=None):
             if kind=='book':
                 local={'work:'+w['id']:w for w in load_state().get('works',[]) if w['kind']=='book'}
                 return {'items':[{**b,**(book_view(local[b['id']],b['id']) if b['id'] in local else {'kind':'book'})} for b in load_books()['books']]}
-            return {'items':[{'id':'work:'+w['id'],'title':w['title'],'creator':w.get('creator',''),'image':w.get('image',''),
-                'kind':'movie','description':w.get('description',''),'year':w.get('year',''),'runtime':(w.get('extra') or {}).get('runtime')}
-                for w in load_state().get('works',[]) if w['kind']=='movie']}
+            return {'items':movie_catalog.choices(load_state().get('works',[]),q.get('expanded')=='1')}
         raise Problem('接口不存在',404)
     if op=='connect':return bind(db,reader,data)
     if op=='disconnect':return unbind(db,reader,data)
@@ -516,10 +517,20 @@ def handle(db,op,q,data,user,load_state,load_books,load_book_detail=None):
             if not existing:raise Problem('请先同步个人书架，再选择这本书',404)
             book=json.loads(existing['body'])|{'kind':'book'}
         elif source=='catalog':
-            choices=load_books()['books'] if kind=='book' else [{**w,'id':'work:'+w['id']} for w in load_state().get('works',[]) if w['kind']=='movie']
+            choices=load_books()['books'] if kind=='book' else movie_catalog.choices(load_state().get('works',[]))
+            if kind=='movie' and source_id.startswith('tmdb:'):
+                local=next((b for b in choices if b['id'].startswith('work:') and b.get('provider')=='tmdb' and str(b.get('source_id'))==source_id[5:]),None)
+                if local:source_id=local['id']
             book=next((b for b in choices if b['id']==source_id),None)
+            # A detail link may predate a matching local import; keep its stable public ID valid.
+            if not book and kind=='movie' and source_id.startswith('tmdb:'):book=movie_catalog.detail(source_id)
             if not book:raise Problem('请从书影库重新选择',404)
             book={**book,'kind':kind}
+            if kind=='movie' and book.get('provider')=='tmdb':
+                public_id='tmdb:'+str(book.get('source_id',''))
+                existing=db.execute('SELECT source_id FROM personal_item WHERE reader=? AND source=\'catalog\' AND source_id IN (?,?) ORDER BY CASE WHEN source_id=? THEN 0 ELSE 1 END LIMIT 1',
+                    (reader,source_id,public_id,source_id)).fetchone()
+                if existing:source_id=existing['source_id']
         else:
             source_id=text(data.get('request_id'),80)
             book={'kind':kind,'title':text(data.get('title'),400),'creator':text(data.get('creator',''),300,False)}

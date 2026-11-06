@@ -309,7 +309,7 @@ test("library mixes both media and counts and filters the real collection", asyn
     ),
     {
       require: (name) =>
-        name.endsWith("/page")
+        name.endsWith("/movie-catalog") ? {load:async()=>({movies:[]}),merge:require("../../miniprogram/lib/movie-catalog").merge,orderGenres:require("../../miniprogram/lib/movie-catalog").orderGenres} : name.endsWith("/page")
           ? common
           : name.endsWith("/library-topics")
             ? require("../../miniprogram/lib/library-topics")

@@ -31,9 +31,9 @@ function define(options) {
       options.data || {},
     ),
     onLoad(query) {
-      this.query = query || {};
+      this.query = sharing.decodeQuery(query || {});
       this._gone = false;
-      if (options.onLoad) options.onLoad.call(this, query || {});
+      if (options.onLoad) options.onLoad.call(this, this.query);
     },
     onUnload() {
       this._gone = true;

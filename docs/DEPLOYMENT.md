@@ -105,3 +105,15 @@ sudo systemctl is-active tongpin
 个人列表只增加本人感想的 120 字摘句和长文标记，原文仍通过本人详情读取。短感想扩展成长评更新同一记录，不改变评分或活动完成规则。客户端分享目标采用页面及参数白名单；私密页面仅能分享品牌入口，圈内卡片不带正文、地点或名单。好友/群聊卡片由原生 Canvas 生成临时图片，未增加包内媒体体积。
 
 部署前备份体验库、改动模块与体验服务环境文件，补充上述只读路径后更新 bookstore_events.py、bookstores.py、personal_reading.py 并重启 bookstore-trial。未绑定微信的成员返回空书店报名列表，不借用其他成员身份。服务不可用时前端保留小组活动并给出明确重试入口。回滚恢复旧模块和环境文件即可。
+
+## 1.8.0 电影资料库
+
+`movie_catalog.json` 是 2026-11-06 从现有 TMDB API 采集的电影快照（初始 500 部，补入《马戏之王》后 501 部），原始数据与图片权利归原权利人。用 `scripts/build_movie_catalog.py --output movie_catalog.json --limit 500 --as-of YYYY-MM-DD` 在持有 TMDB 配置的服务端更新；不将令牌传到客户端。脚本按类型轮流选取，按 TMDB ID 去重，跳过未上映、adult 标记或缺少中文简介、导演、封面、类型的资料。遵循原传输限速、429 退避、请求总量上限和断点恢复；资料未齐时不替换最终快照。
+
+部署 `movie_catalog.py`、`movie_catalog.json`、`movie_categories.json` 和 `personal_reading.py` 到独立体验服务目录，备份后只重启 bookstore-trial。没有主库批量写入、schema 迁移或主服务重启。新接口 `/api/bookstores/personal/movie-catalog` 返回短简介索引，`movie-detail?id=tmdb:ID` 返回完整资料，均要求登录；浏览时不调用 TMDB。数据文件位于小程序包之外，电影海报沿用同域 TMDB 图片缓存。
+
+电影选择来源只有新客户端带 `expanded=1` 时才加入扩展片目，旧体验包保持原列表与路由。新片目以 `tmdb:ID` 引用，个人计划仍按成员隔离；已有本地电影按 TMDB ID 去重并保留本地修改。公共电影先进入个人计划后又被导入小组时，后续添加会复用原个人记录。详情、影评、计划及微信分享使用同一电影标识。
+
+浏览分类使用 `movie_categories.json` 中按 TMDB ID 固定的人工分类和保守规则，每片一至两个主要类别；原始 TMDB 标签仍保留为详情题材。音乐与歌舞依据 BFI 资料补足上游遗漏，刷新脚本保留既有片目及指定歌舞片。旧本地电影同样使用服务端返回的分类映射，避免新旧片库口径不同。类别配置变更随独立服务重启生效。
+
+微信导航 query 在页面入口解码一次，避免 `tmdb:ID` 和分享返回路径被重复编码。此处理覆盖作品详情、个人计划及登录后返回；非法返回页面仍被白名单拒绝。
