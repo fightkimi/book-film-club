@@ -1,0 +1,74 @@
+.work-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.browse-sources { display: flex; gap: 24rpx; margin: 0 0 28rpx; }
+.browse-sources navigator { flex: 1; display: flex; align-items: center; justify-content: space-between; min-height: 48px; border-bottom: 1px solid #bac4bd; }
+.browse-sources text { color: #637268; }
+.work-card .cover { display: block; flex: none; }
+.book-title { overflow-wrap: anywhere; }
+/* Both cards stretch to the height of the longer title in this grid row. */
+.work-details { margin-top: auto; }
+.book-creator {
+  min-height: 1.5em;
+  line-height: 1.5;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.work-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6rpx;
+  margin-top: 4rpx;
+  color: #61696c;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+.work-edition {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.work-year { margin-left: 8rpx; }
+.work-status {
+  flex: none;
+  color: #61696c;
+  font-size: 22rpx;
+  line-height: 1;
+}
+.kind-tabs { display: flex; border-bottom: 1px solid #cbd0d1; margin-bottom: 22rpx; }
+.library-page .kind-tab { flex: 1; min-width: 0; width: auto; min-height: 48px; padding: 0 4rpx; display: flex; gap: 8rpx; align-items: center; justify-content: center; border-bottom: 2px solid transparent; background: #fff; color: #51595d; font-size: 17px; font-weight: 400; }
+.library-page .kind-tab.current { color: #172126; border-bottom-color: #172126; font-weight: 600; }
+.kind-count { font-size: 14px; font-variant-numeric: tabular-nums; }
+.library-search { font-size: 16px; }
+.library-actions { display: flex; align-items: stretch; gap: 14rpx; margin: 16rpx 0 24rpx; }
+.library-page .library-actions button { margin: 0; width: auto; min-height: 46px; padding: 8px 10px; font-size: 16px; }
+.library-page .add-action { flex: 1; }
+.result-count { color: #555e61; font-size: 14px; margin-bottom: 12rpx; }
+.library-page .book-title { font-size: 30rpx; }
+.library-page .book-creator { color: #535b5e; font-size: 26rpx; }
+
+.topic-control { display: flex; align-items: center; gap: 16rpx; min-height: 46px; margin: -8rpx 0 16rpx; padding: 0 16rpx; background: #f1f3ef; color: #344339; }
+.topic-label { flex: none; font-size: 14px; }
+.topic-value { min-width: 0; flex: 1; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; }
+
+.library-actions option-picker { align-self: stretch; }
+.library-status { display: flex; align-items: center; gap: 8px; min-height: 48px; font-weight: 500; }
+.topic-label { font-size: 16px; }
+.topic-value { font-size: 17px; }
+
+.no-cover { box-sizing: border-box; padding: 28rpx; display: flex; align-items: center; color: #45524a; background: #efeee8; font-family: "Songti SC", serif; }
+
+.work-content{min-width:0;display:flex;flex-direction:column;flex:1;}
+.film-list .film-card{flex-direction:row;align-items:flex-start;gap:16px;padding:22px 0;border-bottom:0.5px solid #d9d9d9;}
+.film-list .cover{width:92px;height:138px;flex:none;}
+.film-list .no-cover{font-size:15px;padding:12px;}
+.film-list .book-title{font-size:18px;line-height:1.45;margin:0 0 8px;}
+.film-list .work-details{margin-top:0;}
+.movie-synopsis{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;overflow-wrap:anywhere;font-size:14px;line-height:1.65;color:#646464;margin-top:10px;}
+.movie-details{font-size:12px;color:#193b2d;margin-top:10px;}
+.film-list .work-meta{flex-wrap:wrap;}

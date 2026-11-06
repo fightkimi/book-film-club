@@ -1,0 +1,11 @@
+@import "../../lib/personal.wxss";
+
+.source-film,.selected-film-heading{display:flex;align-items:flex-start;gap:14px;}
+.source-film-cover{flex:none;width:76px;height:114px;background:#f0f0f0;}
+.source-film-content,.selected-film-meta{flex:1;min-width:0;}
+.source-film .card-title{font-size:18px;line-height:1.45;}
+.source-synopsis{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;overflow-wrap:anywhere;font-size:14px;line-height:1.65;color:#646464;margin-top:10px;}
+.source-details{display:inline-flex;align-items:center;min-height:40px;font-size:12px;color:#193b2d;}
+
+.source-row-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:8px;}
+.personal-form .source-row-actions button.source-plan-button{flex:none;width:auto;min-height:44px;margin:0;padding:8px 12px;font-size:14px;line-height:1.4;white-space:nowrap;}

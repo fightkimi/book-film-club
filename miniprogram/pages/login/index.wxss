@@ -1,20 +1,34 @@
-.entry-page {
+.page.entry-page {
   box-sizing: border-box;
   min-height: 100vh;
-  display: grid;
-  grid-template-rows: 1fr auto 1fr;
-  padding: 30rpx 44rpx calc(30rpx + env(safe-area-inset-bottom));
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
 }
-.entry-page .club-masthead { align-self: start; padding: 16rpx 0; border: 0; }
+.entry-hero {
+  position: relative;
+  flex: 1;
+  min-height: 400rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40rpx 44rpx 80rpx;
+  overflow: hidden;
+}
+.entry-scene { position: absolute; inset: 0; }
+.entry-still { width: 100%; height: 100%; display: block; }
 .entry-page .club-opening {
+  position: relative;
+  padding: 0;
   text-align: center;
-  padding: 30rpx 0;
-  font-size: 52rpx;
-  line-height: 1.5;
+  font-size: 50rpx;
+  line-height: 1.45;
+  color: #fff;
 }
-.entry-actions { align-self: end; width: 100%; }
-.entry-submit { width: 100%; min-height: 96rpx; background: #252525; }
-.entry-hint, .entry-error { margin: 0 0 20rpx; font-size: 25rpx; text-align: center; }
+.entry-actions { padding: 26rpx 44rpx calc(30rpx + env(safe-area-inset-bottom)); background: #fff; }
+.entry-actions button.entry-submit { width: 100%; min-height: 96rpx; margin: 0; padding: 0 24rpx; background: #252525; display: flex; justify-content: center; align-items: center; }
+.entry-hint, .entry-error { margin: 0 0 20rpx; font-size: 24rpx; text-align: center; }
 .entry-hint { color: #656565; }
 .entry-error { color: #a3322c; }
 .existing-login { width: 100%; min-height: 44px; margin-top: 8rpx; font-size: 28rpx; }

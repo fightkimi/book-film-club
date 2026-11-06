@@ -1,38 +1,14 @@
-<view class="page tab-page library-page">
-  <view class="eyebrow">THE COLLECTION</view>
-  <view class="title">我们的书单与片库</view>
-  <view class="kind-tabs">
-    <button wx:for="{{types}}" wx:key="name" class="kind-tab {{kind === item.kind ? 'current' : ''}}"
-      data-kind="{{item.kind}}" bindtap="kind" aria-label="{{item.name}}{{kind === item.kind ? '，已选中' : ''}}">
-      <text>{{item.name}}</text><text wx:if="{{loaded}}" class="kind-count">{{item.count}}</text>
-    </button>
+<view wx:if="{{authorized}}" class="page tab-page personal-library">
+  <view class="personal-head"><view class="title">我的书影</view><button wx:if="{{items.length}}" class="secondary" bindtap="add" disabled="{{busy}}">＋ 添加</button></view>
+  <view class="personal-tabs"><button wx:for="{{tabs}}" wx:key="id" class="{{view===item.id?'active':''}}" data-id="{{item.id}}" bindtap="tab" disabled="{{busy}}">{{item.label}}</button></view>
+  <view class="library-toolbar">
+    <month-picker wx:if="{{view==='month'}}" class="library-month" value="{{month}}" bindchange="month" aria-label="选择计划月份"><view class="library-month-label">{{monthLabel}}<text class="picker-chevron">⌄</text></view></month-picker>
+    <view wx:else class="library-view-label">{{view==='wish'?'待读待看':'完成记录'}}</view>
+    <view class="library-types"><button wx:for="{{types}}" wx:key="id" class="{{kind===item.id?'selected':''}}" data-id="{{item.id}}" bindtap="kind" disabled="{{busy}}">{{item.label}}</button></view>
   </view>
-  <option-picker grouped="{{true}}" title="按主题浏览" wx:if="{{loaded}}" range="{{topicOptions}}" range-key="label" value="{{topicIndex}}" bindchange="topic" aria-label="按主题浏览">
-    <view class="topic-control">
-      <text class="topic-label">按主题浏览</text>
-      <text class="topic-value">{{topicOptions[topicIndex].label}}</text>
-      <text aria-hidden="true">⌄</text>
-    </view>
-  </option-picker>
-  <input class="field library-search" placeholder="搜索作品、作者、导演、译名" value="{{query}}" bindinput="search"/>
-  <view class="library-actions">
-    <option-picker title="收藏与资料状态" range="{{shelves}}" value="{{shelfIndex}}" bindchange="shelf"><view class="picker library-status">{{shelves[shelfIndex]}}</view></option-picker>
-    <button class="secondary add-action" bindtap="add">{{kind === 'movie' ? '搜索并加入电影' : (kind === 'book' ? '搜索并加入书籍' : '搜索并加入作品')}}</button>
-  </view>
-  <view wx:if="{{loaded}}" class="result-count">共 {{matchCount}} 部作品</view>
-  <view class="book-grid">
-    <view wx:for="{{works}}" wx:key="id" class="work-card" data-page="work" data-id="{{item.id}}" bindtap="open">
-      <image class="cover" src="{{item.image}}" mode="aspectFit" lazy-load="{{index > 1}}"/>
-      <view class="book-title">{{item.title}}</view>
-      <view class="work-details">
-        <view class="book-creator">{{item.creator}}</view>
-        <view class="work-meta">
-          <view class="work-edition">
-            <text>{{item.kindLabel}}</text><text wx:if="{{item.year}}" class="work-year">{{item.year}}</text>
-          </view>
-          <text wx:if="{{item.metadataHint}}" class="work-status">{{item.metadataHint}}</text>
-        </view>
-      </view>
-    </view>
-  </view>
-  <view wx:if="{{loaded && !works.length}}" class="empty">没有符合条件的作品，试着调整筛选。</view><view wx:if="{{error}}" class="error">{{error}}</view></view>
+  <view wx:if="{{view==='month' && (completed.book || completed.movie)}}" class="library-summary">本月读完 {{completed.book||0}} 本，看过 {{completed.movie||0}} 部</view>
+  <view wx:for="{{items}}" wx:key="id" class="personal-row" data-id="{{item.id}}" bindtap="open"><image wx:if="{{item.image}}" class="personal-cover" src="{{item.image}}" mode="aspectFit" lazy-load/><view class="personal-row-main"><view class="personal-status">{{item.kindLabel}}　{{item.statusLabel}}</view><view class="card-title">{{item.title}}</view><view class="muted">{{item.creator}}</view><block wx:if="{{item.kind==='book' && item.status==='reading'}}"><progress class="personal-progress" percent="{{item.progress}}" stroke-width="2" activeColor="#202020"/><view class="muted">读到 {{item.progress}}%</view></block><view wx:if="{{view==='done'}}" class="muted">{{item.last_finished||'完成日期未记录'}}{{item.rating?'　'+item.rating+' / 5':''}}</view></view><text class="row-arrow">›</text></view>
+  <view wx:if="{{!items.length}}" class="personal-empty"><view class="empty-title">{{busy?'正在读取…':view==='month'?'这个月还没有计划':view==='wish'?'还没有想读想看的作品':'还没有完成记录'}}</view><button bindtap="add" disabled="{{busy}}">添加书或电影</button></view>
+  <navigator class="library-catalog" url="/pages/catalog/index"><text>逛逛书影资料库</text><text aria-hidden="true">›</text></navigator>
+  <view wx:if="{{error}}" class="error">{{error}} <text bindtap="load">重试</text></view>
+</view><view wx:if="{{!authorized && error}}" class="error">{{error}} <text bindtap="load">重试</text></view>

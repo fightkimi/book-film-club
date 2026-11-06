@@ -1,9 +1,17 @@
 .club-scene { display: flex; align-items: center; padding: 28rpx 0; gap: 12rpx; border-bottom: 1rpx solid #d2d7d3; }
 .scene-copy { flex: 0 0 46%; color: #24302d; font: 500 38rpx/1.55 "Songti SC", serif; }
-.scene-copy text { display: block; }
 .scene-art { position: relative; flex: 1; min-width: 0; height: 220rpx; }
 .scene-frame { position: absolute; inset: 0; width: 100%; height: 100%; }
 .cycle-heading { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; margin: 26rpx 0; }
-.group-name { min-width: 0; overflow-wrap: anywhere; font-size: 28rpx; color: #4c5650; }
+.group-name { min-width: 0; overflow-wrap: anywhere; font-size: 26rpx; color: #4c5650; }
 .cycle-heading .create-cycle { flex: none; width: auto; min-height: 46px; margin: 0; padding: 10px 18px; }
-@media (prefers-reduced-motion: reduce) { .scene-motion { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) {
+  .scene-still { display: block !important; }
+  .scene-motion { display: none !important; }
+}
+
+@import "../themes/index.wxss";
+.hub-tabs {display:flex; gap:28px; border-bottom:0.5px solid #d9d9d9; margin:12px 0 0;}
+.hub-tabs button{flex:none; width:auto; min-height:48px; margin:0; padding:12px 0; background:transparent; color:#646464; font-size:17px; font-weight:400; border-bottom:0.5px solid transparent;}
+.hub-tabs button.current{color:#202020; border-bottom-color:#202020; font-weight:600;}
+.hub-theme-heading{font:500 26px/1.4 "Songti SC",serif;margin:28px 0 20px;}

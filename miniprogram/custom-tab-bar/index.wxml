@@ -1,4 +1,4 @@
-<view class="bar" role="navigation">
+<view wx:if="{{!covered}}" class="bar" role="navigation">
   <navigator wx:for="{{tabs}}" wx:key="page" open-type="switchTab" url="/{{item.page}}"
     class="tab {{current === item.page ? 'selected' : ''}}" hover-class="pressed"
     aria-role="button" aria-label="{{item.label}}{{current === item.page ? '，已选中' : ''}}">

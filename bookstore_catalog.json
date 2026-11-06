@@ -1,0 +1,785 @@
+[
+  {
+    "id": "duben",
+    "name": "讀本屋",
+    "branch": "少城店",
+    "area": "青羊　少城",
+    "interest": "人文社科",
+    "lead": "廖宇先读几十页，再决定一本书能不能上架。",
+    "address": "青羊区斌升街18号附3号",
+    "hours": "",
+    "sources": [
+      [
+        "YOU成都　斌升街走访",
+        "https://www.sohu.com/a/1053500929_100235589"
+      ],
+      [
+        "YOU成都　门店地址",
+        "https://www.sohu.com/a/894439969_100235589"
+      ],
+      [
+        "锦观新闻　主理人访谈",
+        "https://mobile.chengdu.cn/show/id/697fe95a6c087015867e5cd4"
+      ]
+    ],
+    "photos": [
+      [
+        "https://q0.itc.cn/q_70/images03/20260722/d2185c3eb9044138946c505e8f6f7218.jpeg",
+        "从斌升街看门口",
+        "YOU成都"
+      ],
+      [
+        "https://q5.itc.cn/q_70/images03/20260722/22d08106d9c54512b9f04a805660a2b0.jpeg",
+        "人文书架之间的窄过道",
+        "YOU成都"
+      ],
+      [
+        "https://q4.itc.cn/q_70/images03/20260722/e57590aaf94145329600b15c959ced4c.jpeg",
+        "面向读者陈列的书",
+        "YOU成都"
+      ]
+    ],
+    "city": "成都"
+  },
+  {
+    "id": "sh-bananafish",
+    "city": "上海",
+    "name": "香蕉鱼书店",
+    "branch": "红宝石路店",
+    "area": "长宁　红宝石路",
+    "interest": "艺术家书",
+    "lead": "店内的小图书馆收藏艺术家出版物，可以沿着装订、纸张和印刷去读一本书。",
+    "address": "长宁区红宝石路7号",
+    "hours": "10:00-19:00",
+    "sources": [
+      [
+        "香蕉鱼书店官网",
+        "https://bananafish-books.com/"
+      ],
+      [
+        "店内图书馆",
+        "https://bananafish-books.com/library/"
+      ]
+    ],
+    "photos": [
+      [
+        "https://bananafish-books.com/wp-content/uploads/2026/10/IMG_4908-scaled.jpg",
+        "店内图书馆的阅读长桌",
+        "BANANAFISH"
+      ]
+    ],
+    "hours_source": {
+      "label": "Bananafish official",
+      "url": "https://bananafish-books.com/",
+      "checked": "2026-11-05"
+    }
+  },
+  {
+    "id": "bj-all-sages",
+    "city": "北京",
+    "name": "万圣书园",
+    "branch": "五道口店",
+    "area": "海淀　五道口",
+    "interest": "人文社科",
+    "lead": "“汉译学术名著”和“大家小书”各有专架，可以循着同一套丛书找下去。",
+    "address": "海淀区五道口购物中心三层",
+    "hours": "10:00-22:00",
+    "sources": [
+      [
+        "北京日报　万圣书园重张",
+        "https://www.beijing.gov.cn/renwen/cshd/202401/t20240105_3526544.html"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.beijing.gov.cn/renwen/cshd/202401/W020240105348199891860.jpg",
+        "五道口店的人文书架",
+        "北京日报　路艳霞"
+      ]
+    ],
+    "hours_source": {
+      "label": "Beijing tourism official, 2024-03-12",
+      "url": "https://www.visitbeijing.com.cn/article/4GwqlRLocfI",
+      "checked": "2026-11-05"
+    }
+  },
+  {
+    "id": "nj-avant-garde",
+    "city": "南京",
+    "name": "先锋书店",
+    "branch": "五台山店",
+    "area": "鼓楼　五台山",
+    "interest": "人文阅读",
+    "lead": "从体育馆旧车库的坡道走下去，就能看到一排排书台。",
+    "address": "鼓楼区广州路173号五台山体育馆地下车库",
+    "hours": "",
+    "sources": [
+      [
+        "中国江苏网　先锋书店访谈",
+        "https://jsnews.jschina.com.cn/jsyw/202610/t20261023_s6adb50d3e4b0dc4136976865.shtml"
+      ],
+      [
+        "先锋书店　门店公告",
+        "https://www.sina.cn/news/detail/5249131643938496.html"
+      ]
+    ],
+    "photos": [
+      [
+        "https://jcdn.xhby.net/dams-res/editing/image/202610/23/dhk1SD3ZQJNesMscQYvIBthp.jpeg?image_process=resize,w_800/format,jpg",
+        "五台山总店",
+        "中国江苏网"
+      ]
+    ]
+  },
+  {
+    "id": "baidu",
+    "name": "白读书屋",
+    "branch": "棕北店",
+    "area": "武侯　棕北",
+    "interest": "主题共读",
+    "lead": "从建筑到文学，书封上贴着店里的推荐语。",
+    "address": "武侯区科院街12号附6号2楼",
+    "hours": "",
+    "sources": [
+      [
+        "红星新闻　棕北店探访",
+        "https://static.cdsb.com/micropub/Articles/202604/5f60263e0095ed2fb8b689d2ac5ba430.html"
+      ],
+      [
+        "理想国　活动地址",
+        "https://www.sina.cn/news/detail/5288016962651685.html"
+      ]
+    ],
+    "photos": [
+      [
+        "https://q5.itc.cn/q_70/images03/20260501/33dea43372ad4f9ca60a7ea8fd752139.jpeg",
+        "书桌和自然光里的书架",
+        "白读书屋供图，见红星新闻"
+      ],
+      [
+        "https://q1.itc.cn/q_70/images03/20260501/49779f32017e4bf7b9a04c997dd53caa.jpeg",
+        "夹在书里的推荐语",
+        "红星新闻"
+      ],
+      [
+        "https://q2.itc.cn/q_70/images03/20260501/d908d042ba0e45279c2445105ce79a97.jpeg",
+        "绕过立柱，继续逛书架",
+        "白读书屋供图，见红星新闻"
+      ]
+    ],
+    "city": "成都"
+  },
+  {
+    "id": "dooghood",
+    "name": "野狗商店",
+    "branch": "成都店",
+    "area": "高新　天府四街",
+    "interest": "艺术出版",
+    "lead": "艺术书和插画面朝外陈列，书台旁就是展览空间。",
+    "address": "高新区天府四街668号 此地 CyPARK 3层",
+    "hours": "周一至五 10:00-20:30，周六日 10:00-21:00",
+    "sources": [
+      [
+        "野狗商店　成都门店官网",
+        "https://store.dooghood.com/chengdu"
+      ],
+      [
+        "YOU成都　迁址与书店实拍",
+        "https://www.sohu.com/a/894439969_100235589"
+      ]
+    ],
+    "photos": [
+      [
+        "https://q6.itc.cn/q_70/images03/20250513/dec5fb0751af47ca8b639af591e45366.jpeg",
+        "封面朝外的艺术书架",
+        "YOU成都"
+      ],
+      [
+        "https://q6.itc.cn/q_70/images03/20250513/1a26da66519b467ca2747b22e764f5ea.jpeg",
+        "此地 CyPARK 的店外空间",
+        "YOU成都"
+      ],
+      [
+        "https://q2.itc.cn/q_70/images03/20250513/98bc2d1f7d8d4ca6976b4c2482725545.jpeg",
+        "读者在书台翻看内页",
+        "YOU成都"
+      ]
+    ],
+    "city": "成都",
+    "hours_source": {
+      "label": "DOOGHOOD official Chengdu",
+      "url": "https://store.dooghood.com/chengdu",
+      "checked": "2026-11-05"
+    }
+  },
+  {
+    "id": "zhejiao",
+    "name": "折角书店",
+    "branch": "",
+    "area": "锦江　五昭路",
+    "interest": "文学艺术",
+    "lead": "旧冰箱的门一打开，是店主挑的冷门书。",
+    "address": "五昭路2号附11号",
+    "hours": "",
+    "sources": [
+      [
+        "YOU成都　成都独立书店地图",
+        "https://www.sohu.com/a/894439969_100235589"
+      ]
+    ],
+    "photos": [
+      [
+        "https://q0.itc.cn/q_70/images03/20250513/1408ae2a9fe343679756dc966cef7e26.jpeg",
+        "折角书店实拍",
+        "YOU成都"
+      ]
+    ],
+    "city": "成都"
+  },
+  {
+    "id": "tuibu",
+    "name": "退步集旧书房",
+    "branch": "",
+    "area": "武侯　玉洁巷",
+    "interest": "旧书",
+    "lead": "文学和社科旧书逐本整理，价格贴在书背面。",
+    "address": "玉洁巷8号附12号",
+    "hours": "",
+    "sources": [
+      [
+        "YOU成都　成都独立书店地图",
+        "https://www.sohu.com/a/894439969_100235589"
+      ]
+    ],
+    "photos": [
+      [
+        "https://q9.itc.cn/q_70/images03/20250513/fe7ccafe99dd4670bbf173d5f1e87205.jpeg",
+        "退步集旧书房实拍",
+        "YOU成都"
+      ]
+    ],
+    "city": "成都"
+  },
+  {
+    "id": "wandu",
+    "name": "晚读书店",
+    "branch": "",
+    "area": "金牛　马鞍街",
+    "interest": "社区阅读",
+    "lead": "在书架前挑一本书，上楼临窗坐一会儿。",
+    "address": "马鞍街45号2楼",
+    "hours": "",
+    "sources": [
+      [
+        "YOU成都　成都独立书店地图",
+        "https://www.sohu.com/a/894439969_100235589"
+      ]
+    ],
+    "photos": [
+      [
+        "https://q8.itc.cn/q_70/images03/20250513/4dc4fc0201e747f082097d1f10d5f71a.jpeg",
+        "晚读书店实拍",
+        "YOU成都"
+      ]
+    ],
+    "city": "成都"
+  },
+  {
+    "id": "banzhan",
+    "name": "半盏书店",
+    "branch": "",
+    "area": "金牛　白果林",
+    "interest": "文学新书",
+    "lead": "一间卖文学新书的小店，也有店主读过的二手书。",
+    "address": "金罗路12号附29号",
+    "hours": "",
+    "sources": [
+      [
+        "YOU成都　成都独立书店地图",
+        "https://www.sohu.com/a/894439969_100235589"
+      ]
+    ],
+    "photos": [
+      [
+        "https://q6.itc.cn/q_70/images03/20250513/1fbce3e3ce40420e89363477de522af2.jpeg",
+        "半盏书店实拍",
+        "YOU成都"
+      ]
+    ],
+    "city": "成都"
+  },
+  {
+    "id": "yidian",
+    "name": "小小小一点·书店",
+    "branch": "",
+    "area": "锦江　五昭路",
+    "interest": "场景选书",
+    "lead": "按阅读场景分书架，几步之间，从书房逛到客厅。",
+    "address": "五昭路2号附8号",
+    "hours": "",
+    "sources": [
+      [
+        "YOU成都　成都独立书店地图",
+        "https://www.sohu.com/a/894439969_100235589"
+      ]
+    ],
+    "photos": [
+      [
+        "https://q0.itc.cn/q_70/images03/20250513/ddabf35f8b72427dbbeba09adf040423.jpeg",
+        "小小小一点·书店实拍",
+        "YOU成都"
+      ]
+    ],
+    "city": "成都"
+  },
+  {
+    "id": "sh-fudan-used",
+    "city": "上海",
+    "name": "复旦旧书店",
+    "branch": "",
+    "area": "杨浦　伟德路",
+    "interest": "旧书",
+    "lead": "旧书店从菜市场二楼搬到了伟德路，想找老版本可以顺着书脊慢慢翻。",
+    "address": "杨浦区伟德路88号",
+    "hours": "09:30-21:00",
+    "sources": [
+      [
+        "中国全民阅读网　复旦旧书店",
+        "https://www.nationalreading.gov.cn/ydkj/swsh/202402/t20240229_835426_m.html"
+      ],
+      [
+        "高德　门店地址",
+        "https://www.amap.com/place/B0IGLZ2S57"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.nationalreading.gov.cn/ydkj/swsh/202402/W020240229394764293228.jpg",
+        "复旦旧书店书架",
+        "中国全民阅读网"
+      ]
+    ],
+    "hours_source": {
+      "label": "Fudan student guide, 2026-08-28",
+      "url": "https://www.sohu.com/a/1068787778_121106832",
+      "checked": "2026-11-05"
+    }
+  },
+  {
+    "id": "sh-lekai",
+    "city": "上海",
+    "name": "乐开书店",
+    "branch": "滨港商业中心店",
+    "area": "虹口　滨港商业中心",
+    "interest": "童书与礼物",
+    "lead": "选一本想送人的书，可以从这家以书为礼的小店逛起。",
+    "address": "虹口区滨港商业中心3楼",
+    "hours": "",
+    "sources": [
+      [
+        "中国全民阅读网　新店开业及实拍",
+        "https://www.nationalreading.gov.cn/ydkj/swsh/202603/t20260323_966588.html"
+      ],
+      [
+        "上海虹口　迁址公告",
+        "https://www.shhk.gov.cn/xwzx/002008/002008045/002008045002/20260119/cea0c243-ce8c-4e73-86c9-e363306a3343.html"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.nationalreading.gov.cn/ydkj/swsh/202603/W020260323583992118074.png",
+        "滨港新店的入口和绿色书架",
+        "中国全民阅读网"
+      ],
+      [
+        "https://www.nationalreading.gov.cn/ydkj/swsh/202603/W020260323583992295939.png",
+        "新店开业时的选书陈列",
+        "中国全民阅读网"
+      ]
+    ]
+  },
+  {
+    "id": "sh-giant-potato",
+    "city": "上海",
+    "name": "巨人和土豆书店",
+    "branch": "",
+    "area": "静安　万航渡路",
+    "interest": "儿童绘本",
+    "lead": "店里专为孩子和家庭选书，中英文绘本都能翻。",
+    "address": "静安区万航渡路889号889GLO商场204–205",
+    "hours": "",
+    "sources": [
+      [
+        "上海国际童书展　2026城市联动",
+        "https://ccbookfair.com/cn/category/page-list/detail%21CCBF-2026-city"
+      ],
+      [
+        "中国出版传媒商报　店内绘本分享",
+        "https://www.cbbr.com.cn/contents/533/111471.html"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.cbbr.com.cn/upload/images/2026/8/f5f9c300f46d8d33.png",
+        "作者在店内书架前讲解绘本",
+        "中国出版传媒商报"
+      ],
+      [
+        "https://www.cbbr.com.cn/upload/images/2026/8/3ab97b7af622639f.png",
+        "插画作者与读者分享创作细节",
+        "中国出版传媒商报"
+      ]
+    ]
+  },
+  {
+    "id": "bj-zhengyang",
+    "city": "北京",
+    "name": "正阳书局",
+    "branch": "西四店",
+    "area": "西城　砖塔胡同",
+    "interest": "北京文史",
+    "lead": "进万松老人塔旁的小院，从老地图和地方文史读北京。",
+    "address": "西城区西四南大街43号",
+    "hours": "",
+    "sources": [
+      [
+        "首都之窗　正阳书局",
+        "https://www.beijing.gov.cn/renwen/rwzyd/qxdw/jxndqcqx/zhyshj/202309/t20230918_3261515.html"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.beijing.gov.cn/renwen/rwzyd/qxdw/jxndqcqx/zhyshj/202309/W020231221541312335982.jpg",
+        "西四店院门",
+        "首都之窗"
+      ]
+    ]
+  },
+  {
+    "id": "bj-mofan-poetry",
+    "city": "北京",
+    "name": "模范书局",
+    "branch": "诗空间",
+    "area": "西城　佟麟阁路",
+    "interest": "古典文史与诗歌",
+    "lead": "百年教堂里摆着诗集、文史和设计书，建筑与书的装帧都值得细看。",
+    "address": "西城区佟麟阁路85号",
+    "hours": "",
+    "sources": [
+      [
+        "首都之窗　模范书局诗空间",
+        "https://www.beijing.gov.cn/renwen/sy/whkb/201906/t20190613_1866336.html"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.beijing.gov.cn/renwen/sy/whkb/201906/W020200421412596758791.jpg",
+        "诗空间入口",
+        "首都之窗"
+      ]
+    ]
+  },
+  {
+    "id": "nj-puyue",
+    "city": "南京",
+    "name": "朴阅书店",
+    "branch": "",
+    "area": "鼓楼　挹江门",
+    "interest": "地方文史",
+    "lead": "南京地方史有自己的专区，沿着老街名能翻到城市的过去。",
+    "address": "鼓楼区中山北路346号老学堂创意园东区06栋",
+    "hours": "",
+    "sources": [
+      [
+        "新华日报　朴阅书店",
+        "https://www.nju.edu.cn/info/1056/462961.htm"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.nju.edu.cn/__local/0/A0/51/ABEBE06A056801BB4ECECC54BCA_361ACA50_175A8.jpg",
+        "朴阅书店门头",
+        "新华日报　赵亚玲"
+      ]
+    ]
+  },
+  {
+    "id": "nj-xueren",
+    "city": "南京",
+    "name": "学人书店",
+    "branch": "",
+    "area": "鼓楼　陶谷新村",
+    "interest": "旧书与老物件",
+    "lead": "淘旧书时也会碰到电影海报、明信片和藏书票。",
+    "address": "鼓楼区汉口路48号陶谷新村",
+    "hours": "",
+    "sources": [
+      [
+        "南京大学　学人书店走访",
+        "https://www.nju.edu.cn/info/1056/420171.htm"
+      ],
+      [
+        "钱江晚报　店内老物件",
+        "https://mqjwb.tidenews.com.cn/epaper/article/2024-08-21/4259622"
+      ]
+    ],
+    "photos": [
+      [
+        "https://qjwb.tidenews.com.cn/images/2024-08/21/qjwb20240821a0003v01b008.jpg",
+        "旧书与店内老物件",
+        "钱江晚报"
+      ]
+    ]
+  },
+  {
+    "id": "hz-innocence",
+    "city": "杭州",
+    "name": "纯真年代书吧",
+    "branch": "宝石山店",
+    "area": "西湖　宝石山",
+    "interest": "文学阅读",
+    "lead": "从北山街往山上走，书架和阅读座位藏在半山。",
+    "address": "西湖区保俶塔前山路8号",
+    "hours": "",
+    "sources": [
+      [
+        "中国全民阅读网　宝石山店",
+        "https://www.nationalreading.gov.cn/ydkj/swsh/202407/t20240719_855829.html"
+      ],
+      [
+        "宝石山店地址",
+        "https://touch.travel.qunar.com/poi/5278042"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.nationalreading.gov.cn/ydkj/swsh/202407/W020240719536133984803.jpg",
+        "宝石山店门口",
+        "中国全民阅读网"
+      ]
+    ]
+  },
+  {
+    "id": "hz-xuanxiaoshi",
+    "city": "杭州",
+    "name": "喧嚣事书店",
+    "branch": "",
+    "area": "拱墅　中山北路",
+    "interest": "新书与二手书",
+    "lead": "在同一间街边小店里，一边看新书，一边找二手书。",
+    "address": "拱墅区中山北路229号",
+    "hours": "",
+    "sources": [
+      [
+        "杭州小店志　喧嚣事书店",
+        "https://cwzzz.online/xuanxiaoshi-bookstore/"
+      ],
+      [
+        "杭州网　书店走访",
+        "https://hznews.hangzhou.com.cn/chengshi/content/2023-12/08/content_8656563.htm"
+      ]
+    ],
+    "photos": []
+  },
+  {
+    "id": "hz-xiaofeng",
+    "city": "杭州",
+    "name": "晓风书屋",
+    "branch": "阅见西湖",
+    "area": "西湖　曙光路",
+    "interest": "人文阅读",
+    "lead": "体育场路老店的书正迁入阅见西湖，来访前请确认当日开放安排。",
+    "address": "西湖区曙光路184号",
+    "hours": "10:00-21:00",
+    "sources": [
+      [
+        "杭州网　晓风搬家记",
+        "https://hznews.hangzhou.com.cn/wenti/content/2026-10/18/content_9343868.htm"
+      ],
+      [
+        "杭州政协网　旗舰店迁址",
+        "https://www.hzzx.gov.cn/content/2026-10/08/content_9330069.htm"
+      ]
+    ],
+    "photos": [],
+    "hours_source": {
+      "label": "Xihu district report, 2026-04-23",
+      "url": "https://vapp.tmuyun.com/webDetails/news?id=19770541&tenantId=87",
+      "checked": "2026-11-05"
+    }
+  },
+  {
+    "id": "sz-old-heaven",
+    "city": "深圳",
+    "name": "旧天堂书店",
+    "branch": "",
+    "area": "南山　华侨城",
+    "interest": "人文与独立音乐",
+    "lead": "书和唱片放在一起，逛完人文书架还能挑一张黑胶。",
+    "address": "南山区华侨城创意文化园北区A5栋120",
+    "hours": "",
+    "sources": [
+      [
+        "华侨城创意文化园　旧天堂",
+        "https://www.octloft.cn/parkdetail?channelId=17&contentId=54"
+      ],
+      [
+        "深圳新闻网　探访旧天堂",
+        "https://www.sznews.com/news/content/2021-10/06/content_24623800.htm"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.sznews.com/news/pic/2021-10/06/d7131547-6533-4589-8dde-2b68c3fc0a1c.jpg",
+        "旧天堂书店实拍",
+        "行走的索菲，见深圳新闻网"
+      ]
+    ]
+  },
+  {
+    "id": "sz-enclave",
+    "city": "深圳",
+    "name": "飞地书局",
+    "branch": "",
+    "area": "福田　八卦岭",
+    "interest": "诗歌与艺术",
+    "lead": "从一本诗歌刊物延伸出来的书局，藏在八卦岭的工业楼里。",
+    "address": "福田区八卦岭工业区423栋6楼东",
+    "hours": "",
+    "sources": [
+      [
+        "飞地　关于我们",
+        "https://m.enclavebooks.cn/about.html"
+      ],
+      [
+        "城市惠　门店图",
+        "https://www.cityhui.com/shop/15488.html"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.cityhui.com/uploads/allimg/180519/1-1P5192246250-L.jpg",
+        "飞地书局门口",
+        "城市惠"
+      ]
+    ]
+  },
+  {
+    "id": "sz-dooghood",
+    "city": "深圳",
+    "name": "野狗商店",
+    "branch": "休息日",
+    "area": "龙岗　罗山谷",
+    "interest": "漫画与艺术出版",
+    "lead": "走到罗山谷山顶，书店和展览空间连在一起。",
+    "address": "龙岗区罗山谷山顶B1栋",
+    "hours": "10:00-21:00",
+    "sources": [
+      [
+        "野狗商店　深圳新空间",
+        "https://www.sina.cn/news/detail/5356498047732420.html"
+      ],
+      [
+        "店方动态及地址",
+        "https://www.sina.cn/media/6775898791"
+      ]
+    ],
+    "photos": [],
+    "hours_source": {
+      "label": "DOOGHOOD official Shenzhen",
+      "url": "https://store.dooghood.com/dogday",
+      "checked": "2026-11-05"
+    }
+  },
+  {
+    "id": "gz-xueeryou",
+    "city": "广州",
+    "name": "学而优书店",
+    "branch": "中大店",
+    "area": "海珠　新港西路",
+    "interest": "人文与学术",
+    "lead": "在中大西门旁挑学术书，人文社科读者可以留出慢慢翻架的时间。",
+    "address": "海珠区新港西路93号",
+    "hours": "09:00-20:00",
+    "sources": [
+      [
+        "广州大学图书馆　门店地址",
+        "https://lib.gzhu.edu.cn/tscg/xcxjcglcjgz.htm"
+      ],
+      [
+        "城市惠　门店图",
+        "https://www.cityhui.com/shop/16455.html"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.cityhui.com/uploads/allimg/180828/1-1PRQ61P70-L.jpg",
+        "中大店书架",
+        "城市惠"
+      ]
+    ],
+    "hours_source": {
+      "label": "Guangzhou Daily, 2024-09-19",
+      "url": "https://huacheng.gz-cmc.com/pages/2024/09/19/SF126373868c905a8a5aae4cea81b174.html",
+      "checked": "2026-11-05"
+    }
+  },
+  {
+    "id": "gz-fangsuo",
+    "city": "广州",
+    "name": "方所",
+    "branch": "太古汇店",
+    "area": "天河　石牌桥",
+    "interest": "艺术与设计",
+    "lead": "从书区走到展览与设计陈列，适合把画册、杂志放在一起看。",
+    "address": "天河区天河路383号太古汇MU35",
+    "hours": "10:00-22:00",
+    "sources": [
+      [
+        "广州太古汇　方所门店",
+        "https://www.taikoohui.com/zh-cn/shopping/mu35"
+      ]
+    ],
+    "photos": [
+      [
+        "https://www.taikoohui.com/-/media/images/taikoohui2/shop-image/mobile/mu/mu35.ashx",
+        "太古汇店入口",
+        "广州太古汇"
+      ]
+    ],
+    "hours_source": {
+      "label": "Nanfang News, 2025-08-19",
+      "url": "https://goguangdong.southcn.com/node_21278b5c5f/e35f793e6c.shtml",
+      "checked": "2026-11-05"
+    }
+  },
+  {
+    "id": "gz-migu",
+    "city": "广州",
+    "name": "米谷书店",
+    "branch": "西坊大院店",
+    "area": "番禺　市桥",
+    "interest": "创意阅读",
+    "lead": "西坊大院里的书店把阅读和菜市场放进同一个空间。",
+    "address": "番禺区市桥街西坊大院",
+    "hours": "10:00-20:00",
+    "sources": [
+      [
+        "广州日报　西坊大院米谷书店",
+        "https://huacheng.gz-cmc.com/pages/2025/08/10/30dc1809f1944c499e683aa6ad4a0c83.html"
+      ]
+    ],
+    "photos": [
+      [
+        "https://oss.gz-cmc.com/pgcr/root/huacheng/upload/news/image/2025/08/10/1754838048688012419.jpg?x-oss-process=style%2Fcontent",
+        "西坊大院店内",
+        "广州日报"
+      ]
+    ],
+    "hours_source": {
+      "label": "Guangzhou Daily, 2024-09-19",
+      "url": "https://huacheng.gz-cmc.com/pages/2024/09/19/SF126373868c905a8a5aae4cea81b174.html",
+      "checked": "2026-11-05"
+    }
+  }
+]

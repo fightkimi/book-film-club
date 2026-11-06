@@ -63,19 +63,20 @@ test("readable picker searches labels, keeps source indices and only commits a t
 });
 test("all categorical picker fields use the shared sheet; native dates keep their constraints", () => {
   let fields = 0,
-    dates = 0;
+    dates = 0, times = 0;
   for (const name of fs.readdirSync(path.join(root, "pages"))) {
     const p = path.join(root, "pages", name, "index.wxml");
     if (!fs.existsSync(p)) continue;
     const wxml = fs.readFileSync(p, "utf8");
     fields += (wxml.match(/<option-picker\b/g) || []).length;
     for (const tag of wxml.match(/<picker\b[^>]*>/g) || []) {
-      assert.match(tag, /mode="date"/);
-      dates++;
+      if (name === "bookstore-gathering-edit" && /mode="time"/.test(tag)) times++;
+      else { assert.match(tag, /mode="date"/); dates++; }
     }
   }
   assert.ok(fields >= 20);
-  assert.equal(dates, 2);
+  assert.equal(dates, 4);
+  assert.equal(times, 1);
 });
 
 test("grouped filters open as a directory, then select a single full-width option by original index", () => {

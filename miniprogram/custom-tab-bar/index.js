@@ -3,8 +3,8 @@ Component({
     current: "",
     tabs: [
       { page: "pages/activities/index", label: "活动" },
-      { page: "pages/themes/index", label: "主题" },
       { page: "pages/library/index", label: "书影" },
+      { page: "pages/bookstores/index", label: "树洞" },
       { page: "pages/profile/index", label: "我的" },
     ],
   },

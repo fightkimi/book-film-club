@@ -1,0 +1,13 @@
+<view wx:if="{{authorized && item}}" class="page with-dock personal-form">
+ <view class="muted">仅自己可见</view><view class="title">{{item.title}}</view>
+ <view class="inline-controls"><button wx:if="{{notes_supported}}" class="secondary" bindtap="sync" disabled="{{busy || !can_sync_notes}}">同步划线与想法</button><button class="secondary" bindtap="toggleWriting">记一点想法</button></view>
+ <navigator wx:if="{{notes_supported && !connected}}" class="entry-link" url="/pages/personal-connect/index">连接微信读书 ›</navigator>
+ <view wx:if="{{writing}}"><input class="field" value="{{chapter}}" data-key="chapter" bindinput="input" maxlength="200" placeholder="章节（可选）"/><textarea class="textarea" value="{{body}}" data-key="body" bindinput="input" maxlength="12000" placeholder="写下自己的想法"/><button bindtap="saveNote" disabled="{{busy || !body}}">保存想法</button></view>
+ <block wx:if="{{notesCount}}"><view class="label">原始笔记</view><option-picker title="章节" range="{{chapters}}" value="{{chapterIndex}}" bindchange="chapter"><view class="picker">{{chapters[chapterIndex]}}　{{total}} 条</view></option-picker>
+ <view class="personal-links"><text bindtap="selectVisible">选中当前显示</text><text bindtap="clear">清空选择</text></view>
+ <checkbox-group bindchange="selection"><view wx:for="{{visible}}" wx:key="id" class="personal-note"><label><checkbox value="{{item.id}}" checked="{{item.checked}}" color="#252525"/><view class="note-content"><view class="muted">{{item.typeLabel}}　{{item.chapter||'未分章'}}</view><view wx:if="{{item.quote}}" class="quote message">{{item.quote}}</view><view class="message">{{item.body}}</view></view></label></view></checkbox-group>
+ <button wx:if="{{more}}" class="quiet" bindtap="next">更多笔记</button></block>
+ <view wx:else class="personal-empty">还没有笔记</view>
+ <block wx:if="{{digests.length}}"><view class="section-title">整理记录</view><navigator wx:for="{{digests}}" wx:key="id" url="/pages/personal-digest/index?id={{item.id}}" class="personal-history">{{item.created}}{{item.source_version!==version?'　原笔记有更新':''}} ›</navigator></block>
+ <view wx:if="{{error}}" class="error">{{error}}</view>
+</view><view wx:if="{{authorized}}" class="dock"><button bindtap="generate" disabled="{{busy || !ai_ready || !selectedCount || selectedCount>80}}" loading="{{busy}}">AI 整理{{selectedCount?'　'+selectedCount+' 条':''}}</button></view><view wx:if="{{!authorized && error}}" class="error">{{error}} <text bindtap="load">重试</text></view>

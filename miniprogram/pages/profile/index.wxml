@@ -19,8 +19,9 @@
 
     <view class="section-head"><text class="heading">个人记录</text></view>
     <mp-cells>
-      <mp-cell value="书影档案" footer="{{journalCount ? journalCount + ' 条记录' : ''}}" link bindtap="archive"/>
-      <mp-cell value="书影工具" link bindtap="toolkit"/>
+      <mp-cell value="我的书影" link bindtap="personalBooks"/>
+      <mp-cell value="微信读书连接" link bindtap="personalConnect"/>
+      <mp-cell value="关注的书店" link bindtap="following"/>
     </mp-cells>
 
     <view class="section-head"><text class="heading">小组与账号</text></view>

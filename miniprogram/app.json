@@ -4,6 +4,17 @@
     "pages/activities/index",
     "pages/themes/index",
     "pages/library/index",
+    "pages/booklists/index",
+    "pages/bookstores/index",
+    "pages/bookstore-following/index",
+    "pages/bookstore-recommend/index",
+    "pages/bookstore-gathering-success/index",
+    "pages/bookstore-guide/index",
+    "pages/bookstore/index",
+    "pages/bookstore-forum/index",
+    "pages/bookstore-topic/index",
+    "pages/bookstore-gathering/index",
+    "pages/bookstore-gathering-edit/index",
     "pages/profile/index",
     "pages/theme/index",
     "pages/draw/index",
@@ -25,10 +36,17 @@
     "pages/journal/index",
     "pages/films/index",
     "pages/notebook/index",
-    "pages/import/index"
+    "pages/import/index",
+    "pages/catalog/index",
+    "pages/personal-connect/index",
+    "pages/personal-add/index",
+    "pages/personal-item/index",
+    "pages/personal-notes/index",
+    "pages/personal-digest/index",
+    "pages/personal-share/index"
   ],
   "window": {
-    "navigationBarTitleText": "余响",
+    "navigationBarTitleText": "这桌还没散",
     "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTextStyle": "black",
     "backgroundTextStyle": "dark",
@@ -46,12 +64,12 @@
         "text": "活动"
       },
       {
-        "pagePath": "pages/themes/index",
-        "text": "主题"
-      },
-      {
         "pagePath": "pages/library/index",
         "text": "书影"
+      },
+      {
+        "pagePath": "pages/bookstores/index",
+        "text": "树洞"
       },
       {
         "pagePath": "pages/profile/index",
@@ -66,7 +84,8 @@
     "option-picker": "/components/option-picker/index",
     "mp-cells": "weui-miniprogram/cells/cells",
     "mp-cell": "weui-miniprogram/cell/cell",
-    "mp-toptips": "weui-miniprogram/toptips/toptips"
+    "mp-toptips": "weui-miniprogram/toptips/toptips",
+    "month-picker": "/components/month-picker/index"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",

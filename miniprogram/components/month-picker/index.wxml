@@ -1,0 +1,15 @@
+<view bindtap="open" aria-role="button" aria-label="选择月份，{{value}}" aria-disabled="{{disabled}}"><slot/></view>
+<root-portal wx:if="{{opened}}">
+  <mp-half-screen-dialog show="{{opened}}" title="选择月份" maskClosable="{{true}}" bindclose="close">
+    <view slot="desc" class="month-sheet">
+      <view class="month-year">
+        <view class="year-step {{year===1900?'year-disabled':''}}" data-step="-1" bindtap="year" aria-role="button" aria-disabled="{{year===1900}}" aria-label="上一年" hover-class="month-pressed"><text>‹</text></view>
+        <text class="year-label">{{year}} 年</text>
+        <view class="year-step {{year===2100?'year-disabled':''}}" data-step="1" bindtap="year" aria-role="button" aria-disabled="{{year===2100}}" aria-label="下一年" hover-class="month-pressed"><text>›</text></view>
+      </view>
+      <view class="month-grid">
+        <view wx:for="{{months}}" wx:key="*this" class="month-option" data-month="{{item}}" bindtap="pick" aria-role="radio" aria-label="{{year}}年{{item}}月" aria-checked="{{year===chosenYear && item===chosenMonth}}" hover-class="month-pressed"><text class="month-name {{year===chosenYear && item===chosenMonth?'month-chosen':''}}">{{item}} 月</text></view>
+      </view>
+    </view>
+  </mp-half-screen-dialog>
+</root-portal>

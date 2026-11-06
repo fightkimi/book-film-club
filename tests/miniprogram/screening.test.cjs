@@ -90,7 +90,7 @@ test("draw persists once, even if double-tapped, skipped, hidden, or the animati
   );
   const p = {
     ...config,
-    data: { ...config.data, isAdmin: true },
+    data: { ...config.data, isAdmin: false, canDrawTheme: true },
     setData(o) {
       Object.assign(this.data, o);
     },
@@ -146,7 +146,7 @@ test("draw history starts folded, pages beyond the former limit, and collapses w
     ),
     {
       require: (name) =>
-        name.endsWith("/page")
+        name.endsWith("/theme-browser") ? require("../../miniprogram/lib/theme-browser") : name.endsWith("/page")
           ? {
               define(options) {
                 config = options;

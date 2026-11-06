@@ -1,0 +1,16 @@
+<view wx:if="{{authorized}}" class="page store-form {{home ? 'tab-page' : ''}}">
+  <view class="book-head"><view class="title">{{name}}</view><view class="feed-write-actions"><button wx:if="{{home}}" class="compose-button" bindtap="recommend" disabled="{{busy}}">荐一本书</button><button class="secondary compose-button" bindtap="compose" disabled="{{busy}}">{{compose?'取消':'发帖'}}</button></view></view>
+  <view wx:if="{{home}}" class="feed-tabs"><view class="current">全国</view><navigator url="/pages/bookstore-following/index">我关注的</navigator></view>
+  <view class="book-head"><option-picker wx:if="{{!shop && cities.length}}" title="选择城市" range="{{cities}}" value="{{cityIndex}}" disabled="{{busy || compose}}" bindchange="changeCity"><view class="city-select">{{city}} ⌄</view></option-picker><navigator wx:if="{{home}}" url="/pages/bookstore-guide/index?city={{city}}">逛书店 ›</navigator></view>
+  <view wx:if="{{compose}}" class="card">
+    <option-picker title="分类" value="{{kind}}" range="{{kinds}}" data-key="kind" bindchange="pick"><view class="picker">{{kinds[kind]}}</view></option-picker>
+    <option-picker wx:if="{{!shop}}" title="关联书店" value="{{storeIndex}}" range="{{stores}}" range-key="name" data-key="storeIndex" bindchange="pick"><view class="picker">{{stores[storeIndex].name}}</view></option-picker>
+    <view class="label">标题</view><input class="field" value="{{title}}" data-key="title" bindinput="edit" maxlength="60"/>
+    <view class="label">正文</view><textarea class="area" value="{{body}}" data-key="body" bindinput="edit" maxlength="1200"/>
+    <button disabled="{{busy || !title || !body}}" bindtap="submit">{{shop?'发到本店圈内':'发到书店树洞'}}</button>
+  </view>
+  <view class="muted" wx:if="{{!posts.length && !busy && !error && !compose}}">暂无话题</view>
+  <navigator wx:for="{{posts}}" wx:key="id" class="topic" url="/pages/bookstore-topic/index?id={{item.id}}"><text class="muted">{{item.city}}　{{item.kind}}　{{item.shop_name}}</text><text class="card-title">{{item.title}}</text><text wx:if="{{item.kind==='一句话荐书'}}" class="message">{{item.body}}</text><text class="muted">{{item.replies}} 条回复</text></navigator>
+  <button wx:if="{{more}}" bindtap="next" disabled="{{busy}}" class="quiet">更多话题</button>
+</view>
+<view wx:if="{{error}}" class="error">{{error}} <text bindtap="load">重试</text></view>

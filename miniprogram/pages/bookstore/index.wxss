@@ -1,0 +1,20 @@
+@import "../../lib/bookstore.wxss";
+.store-heading { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; margin: 18rpx 0 22rpx; }
+.store-heading .title { margin: 0; min-width: 0; }
+.store-heading .manage-entry,
+.owner-actions navigator {
+  display: flex; align-items: center; justify-content: center; box-sizing: border-box;
+  margin: 0; padding: 0 24rpx; min-height: 44px; white-space: nowrap; font-weight: 600;
+}
+.store-heading .manage-entry, .owner-primary { background: #252525; color: #fff; }
+.manage-entry { flex: none; }
+.owner-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; margin: 30rpx 0 26rpx; }
+.owner-secondary { border: 1rpx solid #bac4bd; }
+.manager-pressed { opacity: .78; }
+.owner-tools .owner-row, .owner-tools .issued-code {
+  display:flex; width:100%; justify-content:space-between; align-items:center;
+  min-height:48px; margin:0; padding:12rpx 0; background:#fff; color:#252525;
+  border:0; border-bottom:1rpx solid #d5dadd; font-weight:500;
+}
+.owner-tools .issued-code { background:#f5f5f4; padding:0 16rpx; border:0; }
+.owner-editor { padding:18rpx 0; }

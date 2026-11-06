@@ -52,10 +52,31 @@ class HttpBoundaries(unittest.TestCase):
         self.assertIn("connect-src 'self';",policy)
     def test_setup_is_one_time(self):
         self.assertEqual(self.request('/api/setup',{})[0],409)
+    def test_mini_state_revision_is_authenticated_and_viewer_scoped(self):
+        from urllib.parse import urlencode
+        _,before,_=self.request('/api/state',cookie=self.member_auth)
+        self.assertTrue(before['user']['can_create_theme'] and before['user']['can_start_activity'])
+        path='/api/state?'+urlencode({'since':before['revision'],'viewer':before['user']['id']+':member'})
+        def read(cookie):
+            conn=http.client.HTTPConnection('127.0.0.1',self.port,timeout=5)
+            conn.request('GET',path,headers={'X-Club-View':'mini', 'Cookie':cookie})
+            r=conn.getresponse();result=r.status,json.loads(r.read());conn.close();return result
+        self.assertTrue(read(self.member_auth)[1]['unchanged'])
+        self.assertIn('state',read(self.auth)[1])
+        self.assertEqual(read('')[0],401)
+
     def test_member_cannot_admin(self):
         _,s,_=self.request('/api/state',cookie=self.member_auth)
-        status,_,_=self.request('/api/action',{'revision':s['revision'],'action':'theme.save','payload':{'title':'forbidden'}},self.member_auth)
+        status,_,_=self.request('/api/action',{'revision':s['revision'],'action':'theme.save','payload':{'id':s['state']['themes'][0]['id'],'title':'forbidden'}},self.member_auth)
         self.assertEqual(status,403)
+    def test_authenticated_member_can_draw(self):
+        _,snapshot,_=self.request('/api/state',cookie=self.member_auth)
+        self.assertTrue(snapshot['user']['can_draw_theme'])
+        body={'revision':snapshot['revision'],'action':'theme.draw','payload':{'mode':'random'}}
+        self.assertEqual(self.request('/api/action',body)[0],401)
+        status,updated,_=self.request('/api/action',body,self.member_auth)
+        self.assertEqual(status,200)
+        self.assertEqual(updated['state']['draws'][-1]['user_id'],snapshot['user']['id'])
     def test_stale_revision_does_not_overwrite(self):
         status,_,_=self.request('/api/action',{'revision':-1,'action':'theme.save','payload':{'title':'stale'}},self.auth)
         self.assertEqual(status,409)

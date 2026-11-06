@@ -1,0 +1,13 @@
+<block wx:if="{{authorized && loaded}}">
+  <view wx:if="{{!stores.length}}" class="following-empty">
+    <image src="{{scene}}" mode="aspectFill" class="following-scene" aria-hidden="true"/>
+    <view class="empty-copy"><view class="title">下一家想去的书店</view><view class="muted">还没有关注的书店</view><navigator class="film-action" url="/pages/bookstore-guide/index">去逛逛 ›</navigator></view>
+  </view>
+  <view wx:else class="page store-form">
+    <view class="book-head"><view class="title">我关注的</view><navigator url="/pages/bookstore-guide/index">发现书店 ›</navigator></view>
+    <view wx:for="{{stores}}" wx:key="id" class="following-store"><navigator url="/pages/bookstore/index?id={{item.id}}"><view class="muted">{{item.city}}</view><view class="shop-name">{{item.name}}</view></navigator><button size="mini" class="secondary follow-button" disabled="{{busy}}" bindtap="unfollow" data-id="{{item.id}}">已关注</button></view>
+    <view class="section-title">店里近况</view><view wx:if="{{!updates.length}}" class="muted">暂时没有新动态</view>
+    <navigator wx:for="{{updates}}" wx:key="cursor" class="topic" url="{{item.url}}"><view class="muted">{{item.shop_name}}　{{item.label}}</view><view class="card-title">{{item.title}}</view><view class="message">{{item.body}}</view></navigator>
+    <button wx:if="{{nextCursor}}" class="quiet" disabled="{{busy}}" bindtap="next">更多动态</button>
+  </view>
+</block><view wx:if="{{error}}" class="error">{{error}} <text bindtap="load">重试</text></view>

@@ -1,0 +1,2 @@
+@import "../../lib/bookstore.wxss";
+.directory-store{padding-bottom:40rpx;margin-bottom:44rpx;border-bottom:1rpx solid #dedede}.directory-store:last-of-type{border-bottom:0}.shop-image-link{display:block}.directory-meta{font-size:24rpx;line-height:1.5;color:#737373;margin:18rpx 0 12rpx}.directory-title-row{display:flex;align-items:center;justify-content:space-between;gap:24rpx}.shop-name-link{flex:1;min-width:0}.directory-title-row .shop-name{font-size:38rpx;line-height:1.4;margin:0}.directory-title-row button.follow-button{margin:0}

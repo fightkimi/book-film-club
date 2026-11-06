@@ -31,6 +31,9 @@ Component({
   methods: {
     open() {
       if (this.data.disabled || !this.data.range?.length) return;
+      const pages = typeof getCurrentPages === "function" ? getCurrentPages() : [];
+      this.overlayTabBar = pages[pages.length - 1]?.getTabBar?.();
+      this.overlayTabBar?.setData({ covered: true });
       this.setData({ opened: true, query: "", section: "" });
       this.updateRows("");
     },
@@ -99,6 +102,8 @@ Component({
       this.updateRows(e.detail.value);
     },
     close() {
+      this.overlayTabBar?.setData({ covered: false });
+      this.overlayTabBar = null;
       this.setData({
         opened: false,
         query: "",

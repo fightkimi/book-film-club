@@ -6,7 +6,7 @@
 .op-list { width: 100%; display: block; max-height: 48vh; }
 .op-row { box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; min-height: 54px; padding: 12px; margin: 0; border: 0; border-bottom: 1px solid #e0e3e0; border-radius: 0; background: white; color: #28322d; text-align: left; font-size: 18px; line-height: 1.45; font-weight: 400; }
 
-.op-name { display: block; flex: 1; min-width: 0; white-space: nowrap; overflow-x: auto; scrollbar-width: none; }
+.op-name { display: block; flex: 1; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
 .op-name::-webkit-scrollbar { display: none; }
 .op-count { flex: none; min-width: 2ch; text-align: right; font-size: 16px; font-variant-numeric: tabular-nums; color: #4a5951; }
 .op-current { background: #eaf0e9; color: #213828; font-weight: 600; }

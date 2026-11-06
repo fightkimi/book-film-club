@@ -1,0 +1,10 @@
+<view wx:if="{{authorized}}" class="page">
+  <view class="book-head"><option-picker title="选择城市" range="{{cities}}" value="{{cityIndex}}" bindchange="pickCity"><view class="city-select">{{city}} ⌄</view></option-picker></view>
+  <view wx:if="{{areas.length > 2}}" class="book-filters"><button wx:for="{{areas}}" wx:key="*this" size="mini" class="district-filter {{area === item ? '' : 'secondary'}}" aria-label="{{item}}{{area === item ? '，已选中' : ''}}" bindtap="filter" data-area="{{item}}"><text class="district-label">{{item}}</text></button></view>
+  <view wx:if="{{busy}}" class="muted">加载中…</view>
+  <view wx:for="{{visible}}" wx:key="id" class="shop-item directory-store"><navigator class="shop-image-link" url="/pages/bookstore/index?id={{item.id}}">
+    <image wx:if="{{item.photos.length}}" lazy-load class="shop-photo" src="{{item.photos[0][0]}}" mode="aspectFill" />
+    </navigator><view class="directory-meta">{{item.city}}　{{item.district}}　{{item.interest}}</view><view class="directory-title-row"><navigator class="shop-name-link" url="/pages/bookstore/index?id={{item.id}}"><view class="shop-name">{{item.name}}</view></navigator><button size="mini" class="secondary follow-button" data-id="{{item.id}}" bindtap="follow" disabled="{{busy}}"><text class="follow-label">{{item.following?'已关注':'＋ 关注'}}</text></button></view>
+  </view>
+</view>
+<view wx:if="{{error}}" class="error" bindtap="load">{{error}}　重试</view>

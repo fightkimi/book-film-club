@@ -1,0 +1,7 @@
+@import "../../lib/personal.wxss";
+
+.review-notes-section{margin:28px 0;} .review-notes-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;} .review-notes-heading .section-title{margin:0;} .personal-form .review-notes-heading button{flex:none;width:auto;margin:0;font-size:12px;padding:8px 0;}
+.review-note{display:flex;align-items:flex-start;gap:10px;padding:14px 0;border-bottom:0.5px solid #d9d9d9;} .review-note checkbox{flex:none;transform:scale(.85);transform-origin:left top;} .review-note>view{min-width:0;flex:1;} .review-note-body{font-size:14px;line-height:1.7;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;}
+
+.personal-form button.record-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:14px 0;margin:8px 0 24px;border-bottom:0.5px solid #d9d9d9;background:transparent;color:#646464;font-size:12px;font-weight:400;} .record-toggle>text:first-child{color:#202020;font-size:15px;} .review-latest{margin-top:16px;color:#646464;} .personal-form button.note-materials{width:auto;margin:8px 0 0;padding:6px 0;font-size:12px;}
+.plan-month-field{position:relative;justify-content:center;padding-left:32px;padding-right:32px;white-space:nowrap;} .plan-month-field:after{position:absolute;right:12px;}

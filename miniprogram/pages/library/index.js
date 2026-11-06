@@ -1,126 +1,107 @@
-const C = require("../../lib/page");
-const D = require("../../lib/data");
-
-const { libraryTopics } = require("../../lib/library-topics");
-
-const PAGE_SIZE = 20;
-const types = [
-  { kind: "", name: "全部" },
-  { kind: "book", name: "书籍" },
-  { kind: "movie", name: "电影" },
-];
-const shelves = ["全部状态", "想读 / 想看", "进行中", "已完成", "待补全或核对"];
-
-C.define({
+const P = require("../../lib/personal-api");
+P.define({
   data: {
-    query: "",
+    month: P.currentMonth(),
+    view: "month",
     kind: "",
-    shelfIndex: 0,
-    types,
-    shelves,
-    loaded: false,
-    topicIndex: 0,
-    topicOptions: [],
+    items: [],
+    nextOffset: null,
+    connection: null,
+    completed: {},
+    tabs: [
+      { id: "month", label: "本月计划" },
+      { id: "wish", label: "想读想看" },
+      { id: "done", label: "已读已看" },
+    ],
+    types: [
+      { id: "", label: "全部" },
+      { id: "book", label: "书籍" },
+      { id: "movie", label: "电影" },
+    ],
   },
-  ready() {
-    const previous = this.data.topicOptions[this.data.topicIndex]?.key;
-    const topics = libraryTopics(C.api.get().state);
-    this.topicGroups = topics.groups;
-    const topicIndex = Math.max(
-      0,
-      topics.options.findIndex((o) => o.key === previous),
-    );
-    this.setData({ topicOptions: topics.options, topicIndex });
-    this.filter(true);
+  async read(more = false) {
+    const r = await P.call("list", undefined, {
+      month: this.data.month,
+      view: this.data.view,
+      kind: this.data.kind,
+      offset: more ? this.data.nextOffset : 0,
+    });
+    this.setData({
+      ...r,
+      monthLabel:
+        r.month.slice(0, 4) + " 年 " + Number(r.month.slice(5)) + " 月",
+      items: more
+        ? this.data.items.concat(r.items.map(P.present))
+        : r.items.map(P.present),
+      nextOffset: r.next,
+    });
   },
-  topic(e) {
-    this.setData({ topicIndex: Number(e.detail.value) });
-    this.filter();
+  load() {
+    const pending = getApp().globalData.personalLibraryFocus;
+    if (pending) {
+      delete getApp().globalData.personalLibraryFocus;
+      if (
+        /^\d{4}-\d{2}$/.test(pending.month) &&
+        ["month", "wish"].includes(pending.view)
+      )
+        this.setData({
+          month: pending.month,
+          view: pending.view,
+          kind: pending.kind === "movie" ? "movie" : "book",
+        });
+    }
+    return this.read();
   },
-  search(e) {
-    this.setData({ query: e.detail.value });
-    this.filter();
+  tab(e) {
+    return P.run(this, async () => {
+      this.setData({ view: e.currentTarget.dataset.id });
+      await this.read();
+    });
   },
   kind(e) {
-    this.setData({ kind: e.currentTarget.dataset.kind });
-    this.filter();
+    return P.run(this, async () => {
+      this.setData({ kind: e.currentTarget.dataset.id });
+      await this.read();
+    });
   },
-  shelf(e) {
-    this.setData({ shelfIndex: Number(e.detail.value) });
-    this.filter();
+  month(e) {
+    return P.run(this, async () => {
+      this.setData({ month: e.detail.value.slice(0, 7) });
+      await this.read();
+    });
   },
-  filter(keepPage = false) {
-    const snapshot = C.api.get();
-    if (!snapshot) return;
-    const { state, user } = snapshot;
-    const { query, kind, shelfIndex } = this.data;
-    const shelf = ["", "wish", "reading", "done", "pending"][shelfIndex];
-    const selected = new Set(
-      state.shelves
-        .filter((s) => s.user_id === user.id && s.status === shelf)
-        .map((s) => s.work_id),
-    );
-    const topicKey = this.data.topicOptions[this.data.topicIndex]?.key;
-    const topicIds = this.topicGroups?.get(topicKey)?.ids;
-    const matches = D.filterWorks(state.works, "", query).filter(
-      (w) =>
-        (!topicIds || topicIds.has(w.id)) &&
-        (!shelf || (shelf === "pending" ? !w.complete : selected.has(w.id))),
-    );
-    const books = matches.filter((w) => w.kind === "book").reverse();
-    const movies = matches.filter((w) => w.kind === "movie").reverse();
-    const counts = {
-      "": matches.length,
-      book: books.length,
-      movie: movies.length,
-    };
-    let visible;
-    if (kind) {
-      visible = kind === "book" ? books : movies;
-    } else {
-      visible = [];
-      for (
-        let index = 0;
-        index < Math.max(books.length, movies.length);
-        index++
-      ) {
-        if (books[index]) visible.push(books[index]);
-        if (movies[index]) visible.push(movies[index]);
-      }
-    }
-    this.rows = visible.map(
-      ({ id, title, creator, year, coverUrl, kindLabel, metadataHint }) => ({
-        id,
-        title,
-        creator,
-        year: String(year || "").slice(0, 4),
-        image: coverUrl,
-        kindLabel,
-        metadataHint,
-      }),
-    );
-    this.setData({
-      loaded: true,
-      works: this.rows.slice(
-        0,
-        keepPage
-          ? Math.max(PAGE_SIZE, this.data.works?.length || 0)
-          : PAGE_SIZE,
-      ),
-      matchCount: this.rows.length,
-      types: types.map((t) => ({ ...t, count: counts[t.kind] })),
+  step(e) {
+    return P.run(this, async () => {
+      const [y, m] = this.data.month.split("-").map(Number);
+      const next = new Date(
+        Date.UTC(y, m - 1 + Number(e.currentTarget.dataset.step), 1),
+      )
+        .toISOString()
+        .slice(0, 7);
+      this.setData({ month: next });
+      await this.read();
+    });
+  },
+  add() {
+    P.go("personal-add", {
+      month: this.data.month,
+      kind: this.data.kind || "book",
+      source:
+        this.data.kind === "movie"
+          ? "catalog"
+          : this.data.connection?.connected
+            ? "weread"
+            : "catalog",
+    });
+  },
+  open(e) {
+    P.go("personal-item", {
+      id: e.currentTarget.dataset.id,
+      month: this.data.month,
     });
   },
   onReachBottom() {
-    const start = this.data.works?.length || 0;
-    if (!this.rows || start >= this.rows.length) return;
-    const update = {};
-    this.rows.slice(start, start + PAGE_SIZE).forEach((row, offset) => {
-      update["works[" + (start + offset) + "]"] = row;
-    });
-    this.setData(update);
-  },
-  add() {
-    C.go("metadata", this.data.kind ? { kind: this.data.kind } : {});
+    if (this.data.nextOffset !== null)
+      return P.run(this, () => this.read(true));
   },
 });

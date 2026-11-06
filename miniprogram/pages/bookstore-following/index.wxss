@@ -1,0 +1,2 @@
+@import "../../lib/bookstore.wxss";
+.following-scene{display:block;width:100%;height:460rpx}.empty-copy{text-align:center;padding:44rpx 40rpx}.empty-copy .title{font-size:46rpx}.empty-copy .film-action{margin:48rpx auto;width:320rpx}.following-store{display:flex;align-items:center;justify-content:space-between;gap:24rpx;border-bottom:1rpx solid #ddd;padding:18rpx 0}.following-store navigator{flex:1;min-width:0;margin:0}

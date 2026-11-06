@@ -1,25 +1,30 @@
+<import src="../../templates/brand-masthead.wxml"/>
+<import src="../../templates/theme-browser.wxml"/>
 <view class="page tab-page">
-  <view class="club-masthead" aria-label="un eco"><image class="club-signature" src="/assets/un-eco.png" mode="aspectFit"/></view>
+  <template is="brand-masthead"/>
+  <view class="hub-tabs"><button class="{{hubTab==='activities'?'current':''}}" data-tab="activities" bindtap="hub">活动</button><button class="{{hubTab==='themes'?'current':''}}" data-tab="themes" bindtap="hub">主题记录</button></view>
+  <block wx:if="{{hubTab==='activities'}}">
   <view class="club-scene">
-    <view class="scene-copy"><text>合上书，散了场</text><text>我们接着聊</text></view>
+    <view class="scene-copy"><view>合上书，散了场</view><view>我们接着聊</view></view>
     <view class="scene-art">
-      <image class="scene-frame" src="/assets/motion/club-table.jpg" mode="aspectFit" aria-hidden="true"/>
+      <image class="scene-frame scene-still" style="{{playIntro ? 'display:none' : ''}}" src="/assets/motion/club-table.jpg" mode="aspectFit" aria-hidden="true"/>
       <image wx:if="{{playIntro}}" class="scene-frame scene-motion" src="/assets/motion/club-table.gif" mode="aspectFit" binderror="settleIntro" aria-hidden="true"/>
     </view>
   </view>
   <view class="cycle-heading">
     <view class="group-name">{{group}}</view>
-    <button wx:if="{{isAdmin}}" class="create-cycle" bindtap="create">发起活动</button>
+    <button wx:if="{{canStartActivity}}" class="create-cycle" bindtap="create">发起活动</button>
   </view>
-  <view wx:if="{{!cycles.length}}" class="empty">还没有活动，先选一个想聊的主题。</view>
+  <view wx:if="{{loaded && !cycles.length && !error}}" class="empty">还没有活动</view>
   <view wx:for="{{cycles}}" wx:key="id" class="card cover-row" data-page="cycle" data-id="{{item.id}}" bindtap="open">
     <activity-cover cover="{{item.cover}}" title="{{item.title}}"/>
     <view class="grow">
       <view class="between"><text class="tag">{{item.statusLabel}}</text><text class="muted">{{item.kindLabel}}</text></view>
       <view class="card-title">{{item.title}}</view>
-      <view>{{item.theme.title}}</view>
+      <view>{{item.theme.title || "待抽取主题"}}</view>
       <view class="muted">{{item.startLabel}} — {{item.endLabel}}{{item.joined?' · 我已参与':''}}</view>
     </view>
   </view>
+  </block><template wx:else is="theme-browser" data="{{themes,canDrawTheme,canCreateTheme,historyOpen,historyTotal,draws,choosingTheme}}"/>
   <view wx:if="{{error}}" class="error">{{error}}</view>
 </view>

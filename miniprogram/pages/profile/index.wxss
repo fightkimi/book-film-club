@@ -1,14 +1,14 @@
 .profile { padding-top: 28rpx; }
 .identity { padding: 8rpx 0 32rpx; border-bottom: 2rpx solid #263338; }
 .member-name { font: 500 52rpx/1.2 "Songti SC", Georgia, serif; overflow-wrap: anywhere; }
-.affiliation { display: flex; align-items: baseline; gap: 16rpx; margin-top: 14rpx; font-size: 27rpx; color: #424b4e; overflow-wrap: anywhere; }
+.affiliation { display: flex; align-items: baseline; gap: 16rpx; margin-top: 14rpx; font-size: 26rpx; color: #424b4e; overflow-wrap: anywhere; }
 .group-label, .count, .period-progress { flex: none; color: #626a6b; font-size: 24rpx; }
 .section-head, .period-top { display: flex; align-items: baseline; justify-content: space-between; gap: 20rpx; }
 .section-head { margin: 36rpx 0 14rpx; }
 .heading { font: 500 36rpx/1.3 "Songti SC", serif; }
-.empty-period { display: flex; justify-content: space-between; align-items: center; gap: 12rpx; padding: 4rpx 20rpx; background: #f2f3ef; color: #4d5759; font-size: 27rpx; }
+.empty-period { display: flex; justify-content: space-between; align-items: center; gap: 12rpx; padding: 4rpx 20rpx; background: #f2f3ef; color: #4d5759; font-size: 26rpx; }
 .browse { display: flex; align-items: center; gap: 10rpx; min-height: 48px; padding: 0 4rpx; color: #243438; font-weight: 600; }
 .period { padding: 20rpx 0; border-bottom: 1rpx solid #d9dcda; }
-.period-name { font-size: 30rpx; overflow-wrap: anywhere; }
+.period-name { font-size: 28rpx; overflow-wrap: anywhere; }
 .period-state { flex: none; font-size: 24rpx; color: #404e50; }
 .row-pressed { background: #f0f1ee; }

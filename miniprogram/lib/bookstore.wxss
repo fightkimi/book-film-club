@@ -1,0 +1,119 @@
+.book-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16rpx;
+  margin: 0 0 28rpx;
+}
+.book-head .title {
+  min-width: 0;
+  margin: 0;
+}
+.city-nav {
+  display: flex;
+  gap: 26rpx;
+  align-items: center;
+  margin: 20rpx 0 28rpx;
+}
+.city-nav navigator {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #777;
+}
+.shop-item {
+  display: block;
+  margin: 0 0 40rpx;
+}
+.shop-photo {
+  width: 100%;
+  height: 310rpx;
+  display: block;
+  background: #f4f4f0;
+}
+.shop-name {
+  font-family: "Songti SC", serif;
+  font-size: 40rpx;
+  line-height: 1.4;
+  margin: 9rpx 0;
+}
+.shop-photo + .muted {
+  margin-top: 12rpx;
+}
+.photo-strip {
+  white-space: nowrap;
+  margin: 22rpx 0;
+}
+.photo-strip image {
+  width: 80%;
+  height: 320rpx;
+  display: inline-block;
+  margin-right: 12rpx;
+}
+.area {
+  box-sizing: border-box;
+  min-height: 120rpx;
+  width: 100%;
+  border: 1rpx solid #ccc;
+  padding: 16rpx;
+}
+.topic {
+  display: block;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #ddd;
+}
+.topic text {
+  display: block;
+}
+.store-form button,
+.store-form navigator,
+.entry-link {
+  margin-top: 18rpx;
+}
+.entry-link {
+  display: block;
+  padding: 16rpx 0;
+  color: #345647;
+}
+.message {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.code {
+  font-family: monospace;
+  letter-spacing: 3rpx;
+}
+.book-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 12rpx;
+  margin: 24rpx 0;
+}
+.book-filters button.district-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  min-height: 58rpx;
+  margin: 0;
+  padding: 0 16rpx;
+  font-size: 25rpx;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.book-filters .district-label { display: block; line-height: 1.25; }
+.book-head .compose-button {
+  flex: none;
+  width: auto;
+  min-width: 64px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 14px;
+  border: 1px solid #bcc4bd;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.city-select { padding: 12rpx 16rpx 12rpx 0; font-size: 34rpx; font-weight: 500; }
+.feed-write-actions{display:flex;align-items:center;gap:12rpx;flex:none}.feed-write-actions button.compose-button{min-width:0;font-size:25rpx;padding:0 18rpx}.feed-tabs{display:flex;gap:40rpx;border-bottom:1rpx solid #ddd;margin:0 0 24rpx}.feed-tabs>view,.store-form .feed-tabs navigator{padding:16rpx 0;margin:0;font-size:28rpx}.feed-tabs .current{border-bottom:3rpx solid #252525}.shop-follow-row{display:flex;align-items:center;justify-content:space-between;gap:20rpx}.shop-follow-row>view{min-width:0;flex:1}.page button.follow-button,.store-form button.follow-button{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;margin:0;flex:none;width:auto;min-width:0;height:68rpx;min-height:68rpx;padding:0 20rpx;font-size:24rpx;line-height:1.2;text-align:center;border:1rpx solid #ccc;white-space:nowrap}.follow-button .follow-label{display:block;line-height:1.2}.film-action{display:flex;align-items:center;justify-content:center;background:#252525;color:white;min-height:88rpx;padding:20rpx 28rpx;box-sizing:border-box;font-size:28rpx;font-weight:600}.store-form .repeat-entry{display:inline-block;padding:12rpx 18rpx;border:1rpx solid #ccc;font-size:26rpx;margin-top:16rpx}.store-heading{flex-wrap:wrap}.store-heading .title{flex:1 1 100%}

@@ -25,6 +25,15 @@ C.define({
   archive() {
     C.go("toolkit", { tab: "archive" });
   },
+  personalBooks() {
+    wx.switchTab({ url: "/pages/library/index" });
+  },
+  personalConnect() {
+    C.go("personal-connect");
+  },
+  following() {
+    C.go("bookstore-following");
+  },
   toolkit() {
     C.go("toolkit");
   },

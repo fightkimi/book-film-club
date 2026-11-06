@@ -1,0 +1,42 @@
+<view class="page library-page">
+  <view class="title">书影资料库</view>
+  <view class="browse-sources">
+    <navigator url="/pages/booklists/index">成员书单 <text>›</text></navigator>
+    <navigator url="/pages/booklists/index?tab=rank">微信读书榜单 <text>›</text></navigator>
+  </view>
+  <view class="kind-tabs">
+    <button wx:for="{{types}}" wx:key="name" class="kind-tab {{kind === item.kind ? 'current' : ''}}"
+      data-kind="{{item.kind}}" bindtap="kind" aria-label="{{item.name}}{{kind === item.kind ? '，已选中' : ''}}">
+      <text>{{item.name}}</text><text wx:if="{{loaded}}" class="kind-count">{{item.count}}</text>
+    </button>
+  </view>
+  <option-picker grouped="{{true}}" title="按主题浏览" wx:if="{{loaded}}" range="{{topicOptions}}" range-key="label" value="{{topicIndex}}" bindchange="topic" aria-label="按主题浏览">
+    <view class="topic-control">
+      <text class="topic-label">按主题浏览</text>
+      <text class="topic-value">{{topicOptions[topicIndex].label}}</text>
+      <text aria-hidden="true">⌄</text>
+    </view>
+  </option-picker>
+  <input class="field library-search" placeholder="搜索作品、作者、导演、译名" value="{{query}}" bindinput="search"/>
+  <view class="library-actions">
+    <option-picker title="收藏与资料状态" range="{{shelves}}" value="{{shelfIndex}}" bindchange="shelf"><view class="picker library-status">{{shelves[shelfIndex]}}</view></option-picker>
+    <button class="secondary add-action" bindtap="add">{{kind === 'movie' ? '搜索并加入电影' : (kind === 'book' ? '搜索并加入书籍' : '搜索并加入作品')}}</button>
+  </view>
+  <view wx:if="{{groupStatus}}" class="muted">{{groupStatus}}</view>
+  <view wx:if="{{loaded && !groupStatus}}" class="result-count">共 {{matchCount}} 部作品</view>
+  <view class="film-list">
+    <view wx:for="{{works}}" wx:key="id" class="work-card film-card" data-index="{{index}}" bindtap="openBook">
+      <image wx:if="{{item.image}}" class="cover" src="{{item.image}}" mode="aspectFit" lazy-load="{{index > 3}}" binderror="coverError" data-index="{{index}}" data-id="{{item.id}}"/><view wx:else class="cover no-cover">{{item.title}}</view>
+      <view class="work-content"><view class="book-title">{{item.title}}</view>
+      <view class="work-details">
+        <view class="book-creator">{{item.creator}}</view>
+        <view class="work-meta">
+          <view class="work-edition">
+            <text>{{item.kindLabel}}</text><text wx:if="{{item.runtime}}">　{{item.runtime}} 分钟</text><text wx:if="{{item.year}}" class="work-year">{{item.year}}</text>
+          </view>
+          <text wx:if="{{item.metadataHint}}" class="work-status">{{item.metadataHint}}</text>
+        </view>
+      </view><view wx:if="{{item.description}}" class="movie-synopsis">{{item.description}}</view><view wx:if="{{!item.personalUpload}}" class="movie-details">{{item.description?'完整简介':'查看简介'}} ›</view></view>
+    </view>
+  </view>
+  <view wx:if="{{loaded && !groupStatus && !works.length}}" class="empty">没有符合条件的作品，试着调整筛选。</view><view wx:if="{{error}}" class="error">{{error}}</view></view>

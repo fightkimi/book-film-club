@@ -21,6 +21,31 @@ class ClubRules(unittest.TestCase):
         return self.do('record.save',{'cycle_id':self.c['id'],'work_id':(w or self.work)['id'],'progress':progress},user or self.u)
     def review(self,w=None,user=None):
         return self.do('review.save',{'cycle_id':self.c['id'],'work_id':(w or self.work)['id'],'body':'我的感想','rating':4},user or self.u)
+    def test_members_draw_in_their_own_name_without_theme_edit_rights(self):
+        for role in ('member','organizer','admin'):
+            user = dict(self.u, role=role)
+            result = self.do('theme.draw', {'mode':'random'}, user)
+            self.assertEqual(self.s['draws'][-1]['id'], result['id'])
+            self.assertEqual(result['user_id'], user['id'])
+        added=self.do('theme.save', {'title':'新主题'}, self.u)
+        self.assertEqual(added['title'],'新主题')
+        with self.assertRaises(Problem):
+            self.do('theme.save', {'id':self.theme['id'],'title':'测试'}, self.u)
+    def test_draft_then_participant_draw_and_owner_publish(self):
+        p=dict(title='先发起',start='2026-11-01',end='2026-11-30',member_ids=['reader','admin'],work_ids=[self.work['id']])
+        cy=self.do('cycle.save',p,self.u)
+        self.assertFalse(cy['theme_id'])
+        with self.assertRaises(Problem):self.do('cycle.transition',dict(id=cy['id'],status='active'),self.u)
+        draw=dict(cycle_id=cy['id'],mode='random')
+        with self.assertRaises(Problem):self.do('theme.draw',draw,{'role':'member','id':'outside'})
+        result=self.do('theme.draw',draw,self.a)
+        self.assertEqual(cy['theme']['id'],result['theme_id'])
+        before=len(self.s['draws'])
+        with self.assertRaises(Problem):self.do('theme.draw',draw,self.u)
+        self.assertEqual(len(self.s['draws']),before)
+        self.do('cycle.transition',dict(id=cy['id'],status='active'),self.u)
+        with self.assertRaises(Problem):self.do('theme.draw',draw,self.u)
+
     def test_all_requires_each_work_review_and_discussion(self):
         self.rec();self.review();self.rec(self.other);self.review(self.other)
         self.assertEqual(report(self.s,self.c,'reader')['status'],'in_progress')

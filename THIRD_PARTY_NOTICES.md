@@ -32,3 +32,8 @@ RogerEbert.com is the user-selected visual reference. Its articles, brand logo, 
 本次新增能力使用自编写的适配器和格式解析器，没有新增第三方运行包或复制同名 Skill 源码。微信读书接口依据 Tencent/WeChatReading（Apache-2.0）官方 Skill 1.0.5 文档；豆瓣 CSV 兼容 cosformula/douban-sync-skill（MIT）；其余开源架构参考、官方 API 及许可证边界详见 docs/research/2026-11-02-media-sources.md。
 
 Open Library、微信读书、Google Books、TMDB、Trakt 等数据及图片遵循各自来源条款；客户端代码许可证不授予内容再分发权。OMDb 网站注明内容采用 CC BY-NC 4.0，作为可选非商业评分来源；应用在界面标明经 OMDb 获取，不合并或冒称原站直接提供的评分。
+
+
+## Creative Ideation methods
+
+Activity theme ideation adapts methods from [Creative Ideation](https://github.com/NousResearch/hermes-agent/tree/main/optional-skills/creative/creative-ideation), Copyright (c) 2025 Nous Research, MIT. The app-specific Chinese adaptation is in `theme_ideation.py`; selection and adaptations are documented in `docs/THEME-IDEATION.md`. The permission notice is retained in `docs/licenses/creative-ideation-MIT.txt`. No external scripts are installed or executed.

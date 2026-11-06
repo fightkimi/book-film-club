@@ -1,0 +1,28 @@
+<view class="page store-form"><view wx:if="{{error}}" class="error">{{error}} <text bindtap="load">刷新</text></view>
+<block wx:if="{{authorized && v}}">
+ <view wx:if="{{v.state==='deleted'}}" class="empty">{{v.title}}</view>
+ <block wx:else>
+ <view class="muted">{{v.shop_name}}　{{v.audience==='circle'?'圈友专场':'微信读者可看'}}</view><view class="title">{{v.title}}</view>
+ <view wx:if="{{v.state!=='open'}}" class="note-box">{{v.state==='cancelled'?(v.kind==='notice'?'已撤下':'已取消'):'已散场'}}</view>
+ <block wx:if="{{v.kind==='meet'}}"><view>{{v.starts}}　{{v.place}}</view><view class="muted">已报名 {{v.booked}} / {{v.capacity}}</view></block>
+ <view class="section-title">{{v.kind==='meet'?'这次聊什么':'店里说'}}</view><view class="message">{{v.description}}</view>
+ <block wx:if="{{v.signup_open}}"><block wx:if="{{!v.joined}}"><input class="field" value="{{nickname}}" placeholder="群里怎么称呼你？" maxlength="32" data-key="nickname" bindinput="input"/><button disabled="{{busy || !nickname || v.booked>=v.capacity}}" data-op="sign" bindtap="rsvp">{{v.booked>=v.capacity?'满座了':'给我留把椅子'}}</button></block><button wx:else class="quiet" disabled="{{busy}}" data-op="leave" bindtap="rsvp">已报名，取消留座</button></block>
+ <view wx:if="{{v.kind==='meet' && !v.signup_open && v.state==='open'}}" class="muted">报名已截止</view>
+ <view class="actions"><button open-type="share" class="secondary">分享给微信朋友</button><button class="secondary" bindtap="copy">复制群文案</button></view>
+ <block wx:if="{{v.kind==='meet' && v.state==='ended' && v.joined && !v.recap}}"><view class="section-title">散场后留句话</view><textarea class="area" value="{{note}}" maxlength="800" data-key="note" bindinput="input"/><checkbox-group bindchange="consent"><label class="check"><checkbox value="yes" checked="{{allow}}"/>同意这条感想用于 AI 起草活动回顾</label></checkbox-group><button class="secondary" disabled="{{busy}}" bindtap="note">保存感想</button></block>
+ <block wx:if="{{v.recap}}"><view class="section-title">散场小记</view><view class="message">{{v.recap}}</view></block>
+ <block wx:if="{{v.can_manage}}">
+  <view wx:if="{{v.roster.length}}" class="section-title">留座的书友</view><text wx:for="{{v.roster}}" wx:key="index">{{item}}　</text>
+  <block wx:if="{{v.state==='open'}}"><navigator class="entry-link" url="/pages/bookstore-gathering-edit/index?shop={{v.shop}}&id={{v.id}}">{{v.kind==='meet'?'编辑活动':'编辑告示'}} ›</navigator><button wx:if="{{v.kind==='meet'}}" disabled="{{busy}}" data-op="end" class="secondary" bindtap="state">散场了？</button><button class="quiet" disabled="{{busy}}" data-op="cancel" bindtap="state">{{v.kind==='meet'?'取消活动':'撤下告示'}}</button></block>
+  <block wx:if="{{v.state==='ended' && v.kind==='meet'}}"><view class="section-title">写回顾</view>
+    <block wx:if="{{v.ai_ready}}"><view class="label">给 AI 的现场记录</view><textarea class="area" value="{{hostNotes}}" data-key="hostNotes" bindinput="input" maxlength="3000" placeholder="聊到哪本书？哪句话让大家停了一下？"/><view class="muted">一起参考 {{v.shared_note_count}} 条已同意使用的感想</view><button class="secondary" disabled="{{busy || (!hostNotes && !v.shared_note_count)}}" bindtap="generateRecap">帮我写一版散场小记</button></block>
+    <view wx:if="{{suggestion}}" class="note-box"><view class="muted">AI 草稿</view><view class="message">{{suggestion}}</view><button class="secondary" bindtap="adopt">采用后再改</button></view>
+    <textarea class="area" value="{{recapDraft}}" data-key="recapDraft" bindinput="input" maxlength="6000" placeholder="写下这次聚会想留下的东西"/>
+    <button disabled="{{busy || !recapDraft}}" bindtap="publishRecap">发布回顾</button><button wx:if="{{editingRecap}}" bindtap="resetDraft" class="quiet">放弃草稿并刷新</button>
+  </block>
+  <navigator wx:if="{{v.kind==='meet'}}" class="film-action" url="/pages/bookstore-gathering-edit/index?shop={{v.shop}}&repeat={{v.id}}">再约一场 ›</navigator>
+  <button wx:if="{{v.can_delete}}" class="quiet" disabled="{{busy}}" data-op="delete" bindtap="state">删除{{v.kind==='meet'?'活动':'告示'}}</button>
+  <view wx:if="{{error}}" class="error">{{error}}</view>
+ </block>
+ </block>
+</block></view>

@@ -18,6 +18,8 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 import ai
+import booklists
+import bookstores
 import companion
 import imports
 import studies
@@ -53,6 +55,8 @@ def init_db():
         ''')
         c.executescript(wechat_login.SCHEMA)
         c.execute('INSERT OR IGNORE INTO state VALUES(1,0,?)',(json.dumps(empty_state()),))
+    with bookstores.connect(DB_PATH) as books:
+        bookstores.initialize(books)
     os.chmod(DB_PATH,0o600)
 
 
@@ -85,7 +89,7 @@ def save_state(c,revision,state):
     c.execute('UPDATE state SET revision=?,body=? WHERE id=1',(revision+1,json.dumps(state,ensure_ascii=False)))
 
 
-def snapshot(c,user):
+def snapshot(c,user,mini=False):
     rev,s=load_state(c)
     for key in ('journals','studies'):
         s[key]=[r for r in s.get(key,[]) if r['user_id']==user['id']]
@@ -96,7 +100,17 @@ def snapshot(c,user):
             if r['user_id']!=user['id']:
                 r.pop('note',None)
         s['shelves']=[r for r in s['shelves'] if r['user_id']==user['id']]
-    return dict(revision=rev,state=s,users=public_users(c),user={k:user[k] for k in ['id','name','username','role']},services={'ai':ai.configured(),'tmdb':bool(os.environ.get('TMDB_TOKEN')),'googlebooks':bool(os.environ.get('GOOGLE_BOOKS_KEY')),'trakt':bool(os.environ.get('TRAKT_CLIENT_ID')),'omdb':bool(os.environ.get('OMDB_KEY')),'weread':bool(os.environ.get('WEREAD_API_KEY'))})
+    if mini:
+        s.pop('imported_booklists',None)
+        s.pop('audit',None)
+        for work in [*s['works'], *(w for cy in s['cycles'] for w in cy['works'])]:
+            extra = work.get('extra') or {}
+            work['extra'] = {k:extra[k] for k in ('aliases','original_title','runtime') if k in extra}
+    return dict(revision=rev,state=s,users=public_users(c),**session_info(user))
+
+
+def session_info(user):
+    return dict(user={**{k:user[k] for k in ['id','name','username','role']}, 'can_draw_theme':True,'can_create_theme':True,'can_start_activity':True},services={'ai':ai.configured(),'tmdb':bool(os.environ.get('TMDB_TOKEN')),'googlebooks':bool(os.environ.get('GOOGLE_BOOKS_KEY')),'trakt':bool(os.environ.get('TRAKT_CLIENT_ID')),'omdb':bool(os.environ.get('OMDB_KEY')),'weread':bool(os.environ.get('WEREAD_API_KEY'))})
 
 
 def create_user(c,p,role='member'):
@@ -199,10 +213,22 @@ class Handler(BaseHTTPRequestHandler):
                     user=self.user(c,False)
                     self.send({'initialized':bool(c.execute('SELECT 1 FROM users LIMIT 1').fetchone()),'user':{k:user[k] for k in ['id','name','username','role']} if user else None})
                     return
+                if parsed.path.startswith('/api/bookstores/'):
+                    bookstores.serve(self,parsed.path,parse_qs(parsed.query),self.user(c,False),club_db=DB_PATH); return
                 if parsed.path.startswith('/api/'):
                     user=self.user(c)
                     if parsed.path=='/api/state':
-                        self.send(snapshot(c,user)); return
+                        mini = self.headers.get('X-Club-View') == 'mini'
+                        query = parse_qs(parsed.query)
+                        if mini and query.get('viewer') == [user['id'] + ':' + user['role']] and 'since' in query:
+                            revision=c.execute('SELECT revision FROM state WHERE id=1').fetchone()[0]
+                            if query['since'] == [str(revision)]:
+                                self.send(dict(unchanged=True,revision=revision,**session_info(user))); return
+                        self.send(snapshot(c,user,mini)); return
+                    if parsed.path=='/api/booklists/group':
+                        self.send(booklists.group(load_state(c)[1])); return
+                    if parsed.path=='/api/booklists':
+                        self.send(booklists.directory(load_state(c)[1])); return
                     if parsed.path=='/api/toolkit':
                         self.send({'glossary':studies.GLOSSARY}); return
                     if parsed.path=='/api/personal-export':
@@ -249,7 +275,13 @@ class Handler(BaseHTTPRequestHandler):
                     token=issue_session(c,member_id)
                     c.commit()
                     self.send({'ok':True},cookie=token); return
+                if path.startswith('/api/bookstores/'):
+                    bookstores.serve(self,path,{},self.user(c,False),p,club_db=DB_PATH,ip=client_ip(self.client_address[0],self.headers)); return
                 user=self.user(c)
+                if path=='/api/booklists/member':
+                    self.send(booklists.member(p.get('name'),load_state(c)[1])); return
+                if path=='/api/booklists/rank':
+                    self.send(booklists.rank(p.get('id'))); return
                 if path=='/api/wechat/invite':
                     admin(user)
                     c.execute('BEGIN IMMEDIATE')
@@ -382,7 +414,7 @@ class Handler(BaseHTTPRequestHandler):
                     result=mutate(s,user,action,args,public_users(c))
                 save_state(c,rev,s)
                 c.commit()
-                self.send({'result':result,**snapshot(c,user)})
+                self.send({'result':result,**snapshot(c,user,self.headers.get('X-Club-View')=='mini')})
         except Problem as e:
             self.send({'error':e.message},e.status)
         except sqlite3.IntegrityError:

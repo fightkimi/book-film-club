@@ -1,0 +1,23 @@
+[Unit]
+Description=Independent bookstores trial
+After=network.target tongpin.service
+
+[Service]
+User=ubuntu
+WorkingDirectory=/opt/tongpin/bookstores-trial
+Environment=PYTHONPATH=/opt/tongpin/bookstores-trial:/opt/tongpin/current
+Environment=CLUB_ORIGIN=https://yuxiang.wegaas.cn
+Environment=CLUB_TRUST_PROXY=1
+EnvironmentFile=/etc/tongpin/bookstore-trial.env
+Environment=BOOKSTORES_DB=/var/lib/tongpin-bookstores-trial/bookstores.sqlite3
+StateDirectory=tongpin-bookstores-trial
+ExecStart=/opt/tongpin/bookstores-venv-160/bin/python -B /opt/tongpin/bookstores-trial/bookstore_trial.py
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

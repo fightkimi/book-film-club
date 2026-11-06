@@ -31,6 +31,7 @@ C.define({
     }
     this.setData({
       form,
+      maySave: old ? this.data.isAdmin : this.data.canCreateTheme,
       posterOptions,
       posterIndex: Math.max(
         0,

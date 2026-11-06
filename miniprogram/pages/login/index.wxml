@@ -1,6 +1,10 @@
-<import src="../../templates/brand-intro.wxml"/>
 <view class="page entry-page">
-  <template is="brand-intro"/>
+  <view class="entry-hero">
+    <view class="entry-scene">
+      <image class="entry-still" src="/assets/film/hirayama-reading-room.jpg" mode="aspectFill" aria-hidden="true"/>
+    </view>
+    <view class="club-opening"><text>合上书，散了场</text><text>我们接着聊</text></view>
+  </view>
   <view class="entry-actions">
     <view wx:if="{{error}}" class="entry-error">{{error}}</view>
     <view wx:elif="{{invited}}" class="entry-hint">首次登录将绑定邀请对应的小组成员。</view>
