@@ -31,3 +31,9 @@ Retrieved for the mini-program trial on 2026-11-04. The login background extends
 - `miniprogram/assets/film/sisters.jpg`: *Our Little Sister* (2015), sisters at the table, [Sony Pictures Classics gallery image 2](https://www.sonyclassics.com/ourlittlesister/img/gallery/2.jpg). Used only after publishing an invitation.
 
 These are the real scene images selected in the local design review, not fabricated bookstore photos. Source attribution is retained here; public redistribution rights have not been independently established.
+
+## Mini-program animation size — 2026-11-06
+
+`miniprogram/assets/motion/club-table.gif` was reduced from 231,242 to 137,783 bytes to keep the total packaged media within WeChat's 200 KB recommendation. Gifsicle 1.98 (`-O3 --careful --resize-width 296 --resize-method mix`) resampled the existing 360 × 218 animation to 296 × 179; this is not lossless. All 60 frames, their 100 ms delays, and the absence of a loop extension are retained. The displayed size and once-per-session playback code are unchanged; white-background comparisons were checked at the rendered size.
+
+Gifsicle is a build-time tool only, not a bundled dependency. Its official source and options are at https://www.lcdf.org/gifsicle/ and https://www.lcdf.org/gifsicle/man.html. The original input is recoverable from Git commit `3911454404a394112f7a2dd3d0937195e7d984b8`.

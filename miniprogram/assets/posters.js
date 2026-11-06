@@ -1,10 +1,12 @@
+const { themePosters } = require("../lib/static-assets");
+
 module.exports = [
   {
     id: "cinema-paradiso",
     theme: "离开故乡之后",
     title: "天堂电影院",
     year: "1988",
-    image: "/assets/themes/cinema-paradiso.jpg",
+    image: themePosters["cinema-paradiso"],
     source:
       "https://posteritati.com/poster/6022/cinema-paradiso-original-1988-french-petite-movie-poster",
     reason: "离乡、重返与记忆中的故乡",
@@ -14,7 +16,7 @@ module.exports = [
     theme: "不可靠的讲述者",
     title: "罗生门",
     year: "1950",
-    image: "/assets/themes/rashomon.jpg",
+    image: themePosters["rashomon"],
     source: "https://filmartgallery.com/products/rashomon-1",
     reason: "互相矛盾的讲述与真相的距离",
   },
@@ -23,7 +25,7 @@ module.exports = [
     theme: "普通人的一次反抗",
     title: "楚门的世界",
     year: "1998",
-    image: "/assets/themes/the-truman-show.jpg",
+    image: themePosters["the-truman-show"],
     source:
       "https://pastposters.com/products/the-truman-show-original-one-sheet-movie-poster-jr-ac-1",
     reason: "普通人对既定生活的怀疑与出走",
@@ -33,7 +35,7 @@ module.exports = [
     theme: "时间留下的痕迹",
     title: "花样年华",
     year: "2000",
-    image: "/assets/themes/in-the-mood-for-love.jpg",
+    image: themePosters["in-the-mood-for-love"],
     source: "https://filmartgallery.com/products/in-the-mood-for-love",
     reason: "时间、记忆与未说出口的情感",
   },
@@ -42,7 +44,7 @@ module.exports = [
     theme: "另一种亲密关系",
     title: "她",
     year: "2013",
-    image: "/assets/themes/her.jpg",
+    image: themePosters["her"],
     source:
       "https://medium.com/jiokgian/her-%E9%9B%B2%E7%AB%AF%E6%83%85%E4%BA%BA-%E8%A7%B8%E4%B8%8D%E5%88%B0%E7%9A%84%E5%A5%B9-45869b16a8d7",
     reason: "超出熟悉形式的亲密、陪伴与边界",
@@ -52,7 +54,7 @@ module.exports = [
     theme: "城市里的陌生人",
     title: "迷失东京",
     year: "2003",
-    image: "/assets/themes/lost-in-translation.jpg",
+    image: themePosters["lost-in-translation"],
     source: "https://filmartgallery.com/products/lost-in-translation-6",
     reason: "陌生城市中的孤独与短暂相遇",
   },

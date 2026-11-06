@@ -91,3 +91,9 @@ sudo systemctl is-active tongpin
 ## 1.6.2 新主题生成
 
 新接口 `/api/bookstores/activity-theme-ai` 部署在已授权的独立体验服务，读取主服务提供的当前成员资料快照后只选取公开书目和主题名。生成阶段不写主库；用户确认采用后由客户端调用原有 `theme.save`。本轮无需修改或重启主服务。服务更新包括 `bookstores.py`、`ai.py`、`ai_writing.py` 和 `theme_ideation.py`，并保留 MIT 方法来源声明。
+
+## 1.6.3 图片与动画体积
+
+微信工具按包内图片、音频的累计大小检查 200 KB。首页桌边动画保留本地，压缩到 137,783 字节，60 帧、6 秒和单次播放行为不变。品牌图、分享头像、动画静帧也保留本地；包内媒体合计 194,314 字节。
+
+登录海报、六张主题海报和旧抽签页动画使用已有静态路径下的 `/mini-assets/v161/v163/`，对应服务器目录 `/opt/tongpin/mini-assets/v161/v163/`。源图仍在仓库，由 `packOptions.ignore` 排除上传。上传小程序前先核对全部 8 个 HTTPS 资源的哈希；保持旧目录，不覆盖已有 URL 内容。本次无需改 Nginx、重启服务或更新数据库。

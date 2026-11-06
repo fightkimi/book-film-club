@@ -1,4 +1,5 @@
 const C = require("../../lib/page");
+const artwork = require("../../lib/static-assets");
 
 const kinds = [
   { value: "mixed", label: "书影联动" },
@@ -21,6 +22,7 @@ const modes = [
 
 C.define({
   data: {
+    themeProjector: artwork.themeProjector,
     kinds,
     modes,
     kindIndex: 0,
