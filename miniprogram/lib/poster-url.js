@@ -1,6 +1,11 @@
 const config = require("../config");
 
 function posterUrl(image, size = "w342") {
+  const own = config.baseUrl + "/media/tmdb/";
+  if (typeof image === "string" && image.startsWith(own)) {
+    const match = /^w(?:342|500)\/([A-Za-z0-9_-]{1,100}\.jpg)$/.exec(image.slice(own.length));
+    if (match) return own + (size === "w500" ? "w500" : "w342") + "/" + match[1];
+  }
   const poster =
     /^https:\/\/image\.tmdb\.org\/t\/p\/(?:w\d+|original)\/([A-Za-z0-9_-]{1,100}\.jpg)$/.exec(
       image || "",

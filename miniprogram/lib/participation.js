@@ -79,7 +79,7 @@ async function load(state, user) {
   let events = [],
     error = "";
   try {
-    events = (await api.request("/api/bookstores/gather-mine")).events;
+    events = (await api.readCached("/api/bookstores/gather-mine")).events;
   } catch (e) {
     if (e.status === 401) throw e;
     error = "书店邀约暂未载入，请重试";

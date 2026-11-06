@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "为这次相聚选片",
-  "enablePullDownRefresh": false
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
 }

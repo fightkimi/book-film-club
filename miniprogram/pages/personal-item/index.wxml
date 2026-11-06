@@ -11,7 +11,7 @@
  <text wx:if="{{!writing && reflection}}" class="reflection-full" selectable>{{reflection}}</text>
  <button wx:if="{{!writing && reflection}}" class="secondary continue-writing" bindtap="continueWriting">继续写</button>
  <block wx:if="{{writing}}">
-  <textarea class="textarea reflection-editor {{reviewExpanded?'expanded':''}}" value="{{reflection}}" bindinput="editReflection" maxlength="12000" auto-height disabled="{{busy}}" placeholder="写下一句话，也可以慢慢写成长评" cursor-spacing="150"/>
+ <view class="reflection-field {{reviewExpanded?'expanded':''}}"><textarea class="reflection-editor" value="{{reflection}}" bindinput="editReflection" maxlength="12000" auto-height disable-default-padding disabled="{{busy}}" placeholder="写下一句话，也可以慢慢写成长评" placeholder-class="reflection-placeholder" cursor-spacing="150"/></view>
   <view class="reflection-toolbar"><button class="quiet" bindtap="toggleReview" aria-expanded="{{reviewExpanded}}">{{reviewExpanded?'收起写作工具':item.kind==='book'?'展开写书评':'展开写影评'}}</button><text class="muted">{{reflection.length}} / 12000</text></view>
   <block wx:if="{{reviewExpanded}}">
    <view wx:if="{{item.kind==='book'}}" class="review-notes-section"><view class="review-notes-heading"><view class="section-title">阅读笔记{{note_count?'（'+note_count+'）':''}}</view><button wx:if="{{can_sync_notes}}" class="quiet" bindtap="syncNotes" disabled="{{busy}}">更新笔记</button></view>

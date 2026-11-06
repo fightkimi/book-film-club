@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "登记进度",
-  "enablePullDownRefresh": false
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
 }

@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "编辑主题",
-  "enablePullDownRefresh": false
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
 }

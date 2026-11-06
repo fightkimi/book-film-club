@@ -8,7 +8,7 @@ function tomorrow() {
   const d = new Date(Date.now() + 86400000 + 8 * 3600000);
   return d.toISOString().slice(0, 10);
 }
-Page({
+require("../../lib/bookstore-api").define({
   data: {
     busy: false,
     error: "",
@@ -40,9 +40,6 @@ Page({
   },
   onShow() {
     this.load();
-  },
-  onHide() {
-    this.setData({ authorized: false });
   },
   reloadForm() {
     this.loaded = false;

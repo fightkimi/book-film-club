@@ -5,8 +5,11 @@ const sharing = require("../../lib/sharing");
 
 Page({
   onShareAppMessage: sharing.message,
-  onReady() { sharing.enable(); sharing.prepare(this); },
+  onReady() { sharing.enable(); sharing.schedule(this); },
+  onHide() { this._visible = false; sharing.cancel(this); },
+  onUnload() { this._gone = true; sharing.cancel(this); },
   onShow() {
+    this._visible = true;
     if (this.returnTarget && api.hasSession()) sharing.resume(this.returnTarget);
   },
   data: { busy: false, error: "", invited: false, entryArtwork: artwork.login },

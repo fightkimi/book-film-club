@@ -81,13 +81,6 @@
   "useExtendedLib": {
     "weui": true
   },
-  "usingComponents": {
-    "option-picker": "/components/option-picker/index",
-    "mp-cells": "weui-miniprogram/cells/cells",
-    "mp-cell": "weui-miniprogram/cell/cell",
-    "mp-toptips": "weui-miniprogram/toptips/toptips",
-    "month-picker": "/components/month-picker/index"
-  },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"

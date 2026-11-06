@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "导入个人档案",
-  "enablePullDownRefresh": false
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
 }

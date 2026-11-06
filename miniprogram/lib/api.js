@@ -17,6 +17,9 @@ function createClient(runtime, config) {
     snapshot = null;
   let epoch = 0, touched = 0, refreshing = null;
   const lists = new Map();
+  const reads = new Map(), listeners = new Set();
+  let base;
+  function invalidateReads() { reads.clear(); }
   function clear() {
     epoch++;
     touched = 0;
@@ -24,20 +27,22 @@ function createClient(runtime, config) {
     lists.clear();
     cookie = "";
     snapshot = null;
+    invalidateReads();
+    for (const listener of listeners) listener(epoch);
   }
   function request(path, body, eventTicket) {
     const session = epoch;
     if (!/^\/api\/[a-zA-Z0-9_./-]+(?:\?.*)?$/.test(path))
       return Promise.reject(new Error("无效的接口路径"));
-    let base;
     try {
-      base = normalizeBase(
+      base ||= normalizeBase(
         config.baseUrl,
-        runtime.getSystemInfoSync().platform,
+        (runtime.getDeviceInfo?.() || runtime.getSystemInfoSync()).platform,
       );
     } catch (e) {
       return Promise.reject(e);
     }
+    if (body !== undefined) invalidateReads();
     return new Promise((resolve, reject) =>
       runtime.request({
         url: base + path,
@@ -51,6 +56,7 @@ function createClient(runtime, config) {
         timeout: 120000,
         success(response) {
           if (session !== epoch) return reject(new Error("登录状态已更新，请重新进入页面"));
+          if (body !== undefined) invalidateReads();
           const headers = response.header || {};
           const raw = Object.keys(headers)
             .filter((k) => k.toLowerCase() === "set-cookie")
@@ -73,6 +79,20 @@ function createClient(runtime, config) {
         },
       }),
     );
+  }
+  // Only opt-in, read-only views use this short, memory-only session cache.
+  function readCached(path, ttl = 30000) {
+    if (!cookie) return Promise.reject(Object.assign(new Error("请先微信登录"), {status:401}));
+    const saved = reads.get(path);
+    if (saved && Date.now() - saved.at < ttl) return saved.promise;
+    if (reads.size >= 40) reads.delete(reads.keys().next().value);
+    const entry = {at: Date.now()};
+    entry.promise = request(path).catch(error => {
+      if (reads.get(path) === entry) reads.delete(path);
+      throw error;
+    });
+    reads.set(path, entry);
+    return entry.promise;
   }
   function refresh(force = true) {
     if (!force && snapshot && Date.now()-touched < 30000) return Promise.resolve(snapshot);
@@ -129,6 +149,9 @@ function createClient(runtime, config) {
     refresh,
     groupBooks,
     readList,
+    readCached,
+    invalidateReads,
+    onSessionChange(listener) { listeners.add(listener); return () => listeners.delete(listener); },
     action,
     clear,
     get: () => snapshot,

@@ -5,7 +5,7 @@ const {
   writeBookstore,
   task,
 } = require("../../lib/bookstore-api");
-Page({
+require("../../lib/bookstore-api").define({
   data: {
     scene:artwork.paterson,
     authorized: false,
@@ -26,9 +26,6 @@ Page({
     this.city = q.city || "全国";
     this.req =
       Date.now().toString(36) + "-" + Math.random().toString(36).slice(2);
-  },
-  onHide() {
-    this.setData({ authorized: false });
   },
   onShow() {
     this.load();

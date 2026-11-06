@@ -4,7 +4,7 @@ const {
   writeBookstore,
   task,
 } = require("../../lib/bookstore-api");
-Page({
+require("../../lib/bookstore-api").define({
   onShareAppMessage: sharing.message,
   data: { busy: false, error: "", replies: [], body: "", more: false },
   onLoad(q) {
@@ -22,9 +22,6 @@ Page({
           encodeURIComponent(b.id) +
           "&kind=book",
       });
-  },
-  onHide() {
-    this.setData({ authorized: false });
   },
   onShow() {
     sharing.enable();

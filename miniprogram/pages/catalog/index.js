@@ -28,10 +28,13 @@ C.define({
     if (q.kind === "movie") this.setData({ kind: "movie" });
   },
   async ready(snapshot, force) {
+    if (!force && this.catalogRevision === snapshot.revision && Date.now() - (this.catalogLoadedAt || 0) < 30000) return;
     this.catalogState = snapshot.state;
-    this.collection = snapshot.state.works;
-    this.updateTopics();
-    this.filter(true);
+    if (!this.collection) {
+      this.collection = snapshot.state.works;
+      this.updateTopics();
+      this.filter(true);
+    }
     const local = new Map(snapshot.state.works.map((w) => [w.id, w]));
     let books = snapshot.state.works.filter((w) => w.kind === "book"),
       movieRows = [],
@@ -90,6 +93,10 @@ C.define({
             this.setData({ movieStatus: "扩展片库暂未加载，下拉可重试" });
         }),
     ]);
+    if (!this.data.groupStatus && !this.data.movieStatus) {
+      this.catalogRevision = snapshot.revision;
+      this.catalogLoadedAt = Date.now();
+    }
   },
 
   updateTopics() {

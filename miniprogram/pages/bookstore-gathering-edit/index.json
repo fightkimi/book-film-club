@@ -1,1 +1,6 @@
-{"navigationBarTitleText":"店里有约"}
+{
+  "navigationBarTitleText": "店里有约",
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
+}

@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "查找资料与封面",
-  "enablePullDownRefresh": false
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
 }

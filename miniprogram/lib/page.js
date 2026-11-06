@@ -1,5 +1,6 @@
 const api = require("./api");
 const sharing = require("./sharing");
+const {retain} = require("./page-lifecycle");
 function fail(page, error) {
   page.setData({ error: error.message || "暂时无法完成操作" });
   if (error.status === 401) wx.reLaunch({ url: "/pages/login/index" });
@@ -63,10 +64,11 @@ function define(options) {
           canStartActivity: data.user.can_start_activity ?? ["admin", "organizer"].includes(data.user.role),
         });
         if (options.ready) await options.ready.call(this, data, force);
-        sharing.prepare(this);
+        sharing.schedule(this);
       });
     },
     async onPullDownRefresh() {
+      api.invalidateReads();
       try {
         await this.load(true);
       } finally {
@@ -89,7 +91,7 @@ function define(options) {
     },
   });
   delete config.ready;
-  Page(config);
+  Page(retain(config));
 }
 function confirm(content, options = {}) {
   return new Promise((resolve) =>

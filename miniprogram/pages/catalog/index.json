@@ -1,1 +1,7 @@
-{"navigationBarTitleText": "书影资料库", "enablePullDownRefresh": true}
+{
+  "navigationBarTitleText": "书影资料库",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
+}

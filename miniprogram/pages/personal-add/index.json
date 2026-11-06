@@ -1,1 +1,7 @@
-{"navigationBarTitleText": "加入我的书影"}
+{
+  "navigationBarTitleText": "加入我的书影",
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index",
+    "month-picker": "/components/month-picker/index"
+  }
+}
