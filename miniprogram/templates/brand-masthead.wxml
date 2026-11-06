@@ -1,9 +1,5 @@
-<template name="brand-intro">
+<template name="brand-masthead">
   <view class="club-masthead" aria-label="un eco">
     <image class="club-signature" src="/assets/un-eco.png" mode="aspectFit"/>
-  </view>
-  <view class="club-opening">
-    <text>合上书，散了场</text>
-    <text>我们接着聊</text>
   </view>
 </template>

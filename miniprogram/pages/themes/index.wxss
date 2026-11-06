@@ -6,6 +6,6 @@
 .history-chevron.up { transform: rotate(225deg); margin-bottom: -4px; }
 .history-item { padding: 12px 0; border-top: 1rpx solid #d6dcd7; }
 .history-title, .history-date { display: block; }
-.history-title { font-size: 17px; color: #26342a; overflow-wrap: anywhere; }
+.history-title { font-size: 16px; color: #26342a; overflow-wrap: anywhere; }
 .history-empty { padding: 12px 0; color: #59615c; }
 .history-more { width: 100%; min-height: 48px; font-size: 16px; }

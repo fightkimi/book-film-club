@@ -1,4 +1,4 @@
-"""Tencent WeRead Agent Gateway, public book metadata only. No shelf/note APIs."""
+"""Tencent WeRead Agent Gateway. Shared shelves use the selected owner's key."""
 import datetime as dt
 import os
 import re
@@ -14,6 +14,10 @@ def gateway(api_name, **params):
         raise Problem('仅开放微信读书的书籍搜索与详情接口')
     key=os.environ.get('WEREAD_API_KEY')
     if not key: raise Problem('微信读书尚未配置 WEREAD_API_KEY，可先选择其他书籍来源',503)
+    return _request(api_name, key, params)
+
+
+def _request(api_name, key, params):
     data=read_json('https://i.weread.qq.com/api/agent/gateway',{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
                    payload=dict(api_name=api_name,skill_version=SKILL_VERSION,**params))
     if not isinstance(data,dict): raise Problem('微信读书返回格式无效',502)
@@ -24,12 +28,16 @@ def gateway(api_name, **params):
     return data
 
 
+def shared_shelf(key):
+    return _request('/shelf/sync', key, {})
+
+
 def safe_link(value, image=False):
     if not isinstance(value,str): return ''
     parsed=urlsplit(value)
     host=parsed.hostname or ''
     allowed=host=='weread.qq.com' or host.endswith('.weread.qq.com')
-    if image: allowed=allowed or host=='qpic.cn' or host.endswith('.qpic.cn') or host.endswith('.qlogo.cn')
+    if image: allowed=allowed or host=='wfqqreader-1252317822.image.myqcloud.com' or host=='qpic.cn' or host.endswith('.qpic.cn') or host.endswith('.qlogo.cn')
     if not allowed or '@' in parsed.netloc or parsed.port not in (None,443) or parsed.scheme not in (('http','https') if image else ('https',)):
         return ''
     return urlunsplit(parsed._replace(scheme='https'))
@@ -69,4 +77,6 @@ def search(query):
 def detail(source_id):
     if not isinstance(source_id,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,100}',source_id):
         raise Problem('微信读书书籍编号无效')
+    if source_id.startswith('CB_'):
+        raise Problem('个人导入书仅共享书目',403)
     return book_item(gateway('/book/info',bookId=source_id))

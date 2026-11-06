@@ -1,5 +1,7 @@
 {
-  "usingComponents": { "activity-cover": "/components/activity-cover/index" },
-  "navigationBarTitleText": "筹备活动",
+  "usingComponents": {
+    "activity-cover": "/components/activity-cover/index"
+  },
+  "navigationBarTitleText": "发起活动",
   "enablePullDownRefresh": false
 }

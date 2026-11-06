@@ -1,0 +1,15 @@
+<block wx:if="{{authorized}}">
+  <view class="recommend-scene"><image src="{{scene}}" mode="widthFix" aria-hidden="true"/><view class="title">荐一本书</view></view>
+  <view class="page store-form recommend-form">
+    <block wx:if="{{books.length}}">
+      <option-picker title="选一本书" range="{{books}}" range-key="label" value="{{bookIndex}}" bindchange="choose" disabled="{{busy}}"><view class="book-choice"><view><view class="muted">这次想推荐</view><view class="card-title">{{book.title}}</view><view class="muted">{{book.creator}}</view></view><text class="entry-link">换一本 ›</text></view></option-picker>
+      <view wx:if="{{partial}}" class="muted">部分书架暂未加载，可稍后重试</view>
+      <view class="label">你为什么想把它递给别人？</view><textarea class="area" value="{{body}}" bindinput="edit" maxlength="140" placeholder="不必写书评，一句话就好。" adjust-position="{{true}}" cursor-spacing="120"/><view class="counter">{{count}} / 140</view>
+      <view class="label">关联书店</view><option-picker title="关联书店" range="{{stores}}" range-key="label" value="{{storeIndex}}" disabled="{{busy}}" bindchange="store"><view class="picker">{{stores[storeIndex].label}}</view></option-picker>
+      <view class="muted audience-note">全国书友可见</view>
+    </block>
+    <view wx:else class="empty">书影库还没有可选书籍<navigator url="/pages/library/index" open-type="switchTab" class="entry-link">去书影补一本书 ›</navigator></view>
+    <view wx:if="{{error}}" class="error">{{error}} <text bindtap="load">重试</text></view>
+  </view>
+  <view wx:if="{{books.length}}" class="dock"><button disabled="{{busy || !book || !body || count>140}}" loading="{{busy}}" bindtap="publish">发到书店树洞</button></view>
+</block><view wx:if="{{!authorized && error}}" class="error">{{error}} <text bindtap="load">重试</text></view>

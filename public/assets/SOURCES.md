@@ -17,3 +17,17 @@ The following are user-requested illustrative film posters, not app-owned film a
 - Lost in Translation: https://filmartgallery.com/cdn/shop/files/Lost-In-Translation-Vintage-Movie-Poster-Original_ab74d287.jpg?height=1024&v=1741317131&width=1024
 
 Retrieved 2026-10-28. No member ratings, viewing history or metadata-service success is inferred from these illustrative assets.
+
+## Mini-program entry artwork
+
+- `miniprogram/assets/film/hirayama-reading-room.jpg` — portrait-format AI extension of the scene of Hirayama reading at home in *Perfect Days* (2023), based on the original still reproduced in [The Washington Post](https://www.washingtonpost.com/entertainment/movies/2024/02/14/perfect-days-wim-wenders-movie-review/).
+
+Retrieved for the mini-program trial on 2026-11-04. The login background extends the room vertically for a phone screen. The activity frame retains its original framing. Source rights remain with their respective owners.
+
+## Bookstore feature artwork — 2026-11-05
+
+- `miniprogram/assets/film/bookshop.jpg`: *The Bookshop* (2017), the bookshop reading scene, from [Portugal's National Cinema Plan](https://pnc.gov.pt/praticas/livraria-novo-filme-na-plataforma). Used only for the empty followed-bookstores page.
+- `miniprogram/assets/film/paterson.jpg`: *Paterson* (2016), writing on a bench, from [The GATE](https://www.thegate.ca/film/027763/review-paterson-starring-adam-driver/). Used above the recommendation form with the subject's head and notebook retained.
+- `miniprogram/assets/film/sisters.jpg`: *Our Little Sister* (2015), sisters at the table, [Sony Pictures Classics gallery image 2](https://www.sonyclassics.com/ourlittlesister/img/gallery/2.jpg). Used only after publishing an invitation.
+
+These are the real scene images selected in the local design review, not fabricated bookstore photos. Source attribution is retained here; public redistribution rights have not been independently established.

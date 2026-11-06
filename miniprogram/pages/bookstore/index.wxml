@@ -1,0 +1,46 @@
+<template name="store-gatherings">
+    <view wx:if="{{gatherings.length}}" class="section-title">店里有约</view>
+    <view wx:for="{{gatherings}}" wx:key="id" class="topic"><navigator url="/pages/bookstore-gathering/index?id={{item.id}}&circle={{item.audience==='circle'?'1':'0'}}"><text class="muted">{{item.state==='cancelled'?'已取消':item.state==='ended'?'已散场':item.kind==='notice'?'小告示':item.starts}}</text><text>{{item.title}} ›</text></navigator><navigator wx:if="{{manage && item.kind==='meet'}}" class="repeat-entry" url="/pages/bookstore-gathering-edit/index?shop={{storeId}}&repeat={{item.id}}">再约一场 ›</navigator></view>
+</template>
+<view class="page store-form">
+  <view wx:if="{{error}}" class="error">{{error}} <text bindtap="load">重试</text></view>
+  <block wx:if="{{authorized && store}}">
+    <view class="muted">{{store.city}}　{{store.area}}　{{store.interest}}</view>
+    <view class="store-heading">
+      <view class="title">{{store.name}} {{store.branch}}</view>
+      <button wx:if="{{!managing}}" size="mini" class="secondary follow-button" disabled="{{busy}}" bindtap="follow">{{following?'已关注':'＋ 关注'}}</button>
+      <navigator wx:if="{{manage && !managing}}" class="manage-entry" url="/pages/bookstore/index?id={{store.id}}&view=manage" hover-class="manager-pressed">店主管理</navigator>
+    </view>
+    <block wx:if="{{!managing}}">
+    <view>{{store.lead}}</view>
+    <navigator class="entry-link" url="/pages/bookstore-recommend/index?shop={{store.id}}">荐一本书 ›</navigator>
+    <scroll-view wx:if="{{store.photos.length}}" scroll-x class="photo-strip"><image wx:for="{{store.photos}}" wx:key="0" src="{{item[0]}}" data-src="{{item[0]}}" bindtap="photo" mode="aspectFill"/></scroll-view>
+    <view>{{store.address}}</view><text class="entry-link" data-value="{{store.city}}{{store.address}}" bindtap="copy">复制地址</text><view class="muted">营业时间　{{store.hours || '待确认'}}</view>
+    <view wx:if="{{store.id === 'duben'}}" class="entry-link" data-src="{{board}}" bindtap="photo">十月销售榜 ›</view>
+    <view wx:if="{{arrivals.length}}" class="section-title">书店上新</view><view wx:for="{{arrivals}}" wx:key="index" class="topic"><text class="muted">{{item.published}}</text><text class="message">{{item.body}}</text></view>
+    <template is="store-gatherings" data="{{gatherings:gatherings,manage:manage,storeId:store.id}}"/>
+    <block wx:if="{{online}}"><view class="section-title">到店读者圈</view>
+    <block wx:if="{{member}}"><view wx:if="{{pinned}}" class="note-box message">置顶　{{pinned}}</view><navigator url="/pages/bookstore-forum/index?shop={{store.id}}">进入本店圈子 ›</navigator></block>
+    <block wx:else><input class="field" placeholder="输入本店到店码" maxlength="64" bindinput="edit" data-key="code" value="{{code}}"/><button disabled="{{busy || !code}}" data-op="join" bindtap="act">加入圈子</button></block>
+    <button wx:if="{{!manage && signed && !claimed}}" class="quiet" disabled="{{pending || busy}}" data-op="claim" bindtap="act">{{pending?'认领审核中':'店主认领'}}</button>
+    </block>
+    </block>
+    <view wx:elif="{{manage}}" class="owner-tools">
+      <view class="owner-actions">
+        <navigator class="owner-primary" url="/pages/bookstore-gathering-edit/index?shop={{store.id}}" hover-class="manager-pressed">约一场活动</navigator>
+        <navigator class="owner-secondary" url="/pages/bookstore-gathering-edit/index?shop={{store.id}}&kind=notice" hover-class="manager-pressed">写张告示</navigator>
+      </view>
+      <button class="owner-row" data-op="issue" bindtap="act" disabled="{{busy}}"><text>生成到店码</text><text aria-hidden="true">›</text></button>
+      <button class="owner-row" data-panel="voice" bindtap="togglePanel" aria-expanded="{{panel==='voice'}}"><text>书店语气</text><text aria-hidden="true">{{panel==='voice'?'−':'＋'}}</text></button>
+      <view wx:if="{{panel==='voice'}}" class="owner-editor"><textarea class="area" aria-label="书店写作偏好" maxlength="600" bindinput="edit" data-key="voice" value="{{voice}}" placeholder="写下本店惯用的口吻，也可以放一小段自己的文案"/><button class="secondary" disabled="{{busy || !voiceDirty}}" data-op="voice" bindtap="act">保存语气</button></view>
+      <button wx:if="{{issued}}" class="issued-code" data-value="{{issued}}" bindtap="copy"><text class="code">{{issued}}</text><text>复制</text></button>
+      <view wx:if="{{issued}}" class="muted">限本店使用一次，24 小时有效</view>
+      <button class="owner-row" data-panel="arrival" bindtap="togglePanel" aria-expanded="{{panel==='arrival'}}"><text>书店上新</text><text aria-hidden="true">{{panel==='arrival'?'−':'＋'}}</text></button>
+      <view wx:if="{{panel==='arrival'}}" class="owner-editor"><textarea class="area" aria-label="公开上新" maxlength="400" bindinput="edit" data-key="body" value="{{body}}" placeholder="书名和选书理由"/><button class="secondary" disabled="{{busy || !body}}" data-op="arrival" bindtap="act">发布上新</button></view>
+      <button class="owner-row" data-panel="pin" bindtap="togglePanel" aria-expanded="{{panel==='pin'}}"><text>圈内置顶</text><text aria-hidden="true">{{panel==='pin'?'−':'＋'}}</text></button>
+      <view wx:if="{{panel==='pin'}}" class="owner-editor"><textarea class="area" aria-label="圈内置顶" maxlength="400" bindinput="edit" data-key="pin" value="{{pin}}"/><button class="secondary" disabled="{{busy || !pinDirty}}" data-op="pin" bindtap="act">保存置顶</button></view>
+      <template is="store-gatherings" data="{{gatherings:gatherings,manage:manage,storeId:store.id}}"/>
+      <view wx:if="{{claims.length}}" class="label">认领申请</view><button wx:for="{{claims}}" wx:key="reader" data-op="approve" data-name="{{item.name}}" data-reader="{{item.reader}}" disabled="{{busy}}" bindtap="act">核实并交给 {{item.name}}</button>
+    </view>
+  </block>
+</view>

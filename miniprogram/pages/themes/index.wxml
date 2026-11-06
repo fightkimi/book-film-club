@@ -1,17 +1,1 @@
-<view class="page tab-page"><view class="eyebrow">THE NEXT CONVERSATION</view><view class="title">下一次，
-我们聊什么？</view><view class="actions" wx:if="{{isAdmin}}"><button bindtap="draw">随机抽取主题</button><button class="secondary" bindtap="create">新增主题</button></view><view wx:for="{{themes}}" wx:key="id" class="theme-card" data-page="theme" data-id="{{item.id}}" bindtap="open"><image wx:if="{{item.poster}}" class="theme-backdrop" src="{{item.poster.image}}" mode="aspectFill" lazy-load="{{index > 1}}"/><view class="theme-words"><view class="theme-number">{{item.number}} · {{item.enabled?'候选主题':'暂不考虑'}}</view><view class="theme-title">{{item.title}}</view><view class="theme-description">{{item.description}}</view><view class="small">使用 {{item.uses}} 次 →</view><view wx:if="{{item.poster}}" class="small">视觉选片 / {{item.poster.title}}</view></view></view>
-<view class="history">
-  <button class="history-toggle" bindtap="toggleHistory" aria-expanded="{{historyOpen}}" aria-label="抽取历史，共 {{historyTotal}} 次，{{historyOpen ? '收起' : '展开'}}">
-    <text class="history-heading">抽取历史</text>
-    <text class="history-count">{{historyTotal}} 次</text>
-    <text class="history-chevron {{historyOpen ? 'up' : ''}}" aria-hidden="true"></text>
-  </button>
-  <block wx:if="{{historyOpen}}">
-    <view wx:for="{{draws}}" wx:key="id" class="history-item">
-      <text class="history-title">{{item.title}}</text><text class="history-date">{{item.time}}</text>
-    </view>
-    <view wx:if="{{!historyTotal}}" class="history-empty">尚无抽取记录</view>
-    <button wx:if="{{historyTotal > draws.length}}" class="quiet history-more" bindtap="moreHistory">查看更多（剩余 {{historyTotal - draws.length}} 条）</button>
-  </block>
-</view>
-<view wx:if="{{error}}" class="error">{{error}}</view></view>
+<import src="../../templates/theme-browser.wxml"/><view class="page"><template is="theme-browser" data="{{themes}}"/><view wx:if="{{error}}" class="error">{{error}}</view></view>

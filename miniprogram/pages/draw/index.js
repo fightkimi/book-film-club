@@ -32,6 +32,12 @@ C.define({
   },
   ready({ state }) {
     this.hidden = false;
+    const cycleId = this.query?.cycle_id;
+    if (cycleId) {
+      const cycle = state.cycles.find(c => c.id === cycleId);
+      if (!cycle) throw new Error("活动不存在");
+      this.setData({cycleId, cycleTitle:cycle.title, kindIndex:kinds.findIndex(k => k.value === cycle.kind)});
+    }
     this.themes = state.themes;
     this.used = state.cycles
       .filter((c) => c.status !== "draft")
@@ -63,7 +69,7 @@ C.define({
   draw() {
     if (
       this.data.busy ||
-      !this.data.isAdmin ||
+      !this.data.canDrawTheme ||
       !this.data.candidateCount ||
       this.data.phase === "drawing"
     )
@@ -72,6 +78,7 @@ C.define({
       const r = await C.api.action("theme.draw", {
         kind: kinds[this.data.kindIndex].value,
         mode: modes[this.data.modeIndex].value,
+        ...(this.data.cycleId ? {cycle_id:this.data.cycleId} : {}),
       });
       if (this._gone) return;
       const theme = this.themes.find((t) => t.id === r.result.theme_id);
@@ -102,6 +109,7 @@ C.define({
   adjust() {
     if (!this.data.busy) this.setData({ phase: "idle", result: null });
   },
+  backToCycle() { wx.navigateBack(); },
   openResult() {
     C.go("theme", { id: this.data.result.theme_id });
   },

@@ -11,7 +11,7 @@ C.define({
     results: null,
     preview: null,
   },
-  ready({ state, services }) {
+  async ready({ state, services }) {
     if (this.initialized) return;
     this.initialized = true;
     const work = state.works.find((w) => w.id === this.query.work_id);
@@ -26,6 +26,10 @@ C.define({
             ? 0
             : 1,
     });
+    if (this.query.weread_id) {
+      const r = await C.api.request("/api/metadata/detail", {provider:"weread", source_id:this.query.weread_id});
+      this.setData({preview:r, previewCover:posterUrl(r.item.image,"w500")});
+    }
   },
   kind(e) {
     this.setData({

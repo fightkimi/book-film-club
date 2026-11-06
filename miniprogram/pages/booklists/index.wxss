@@ -1,0 +1,3 @@
+.book-row { display: flex; gap: 20rpx; align-items: center; padding: 18rpx 0; border-bottom: 1rpx solid #ddd; }
+.thumb { width: 68rpx; height: 92rpx; flex: none; background: #f5f5f4; }
+.position { width: 40rpx; text-align: right; color: #616961; font-variant-numeric: tabular-nums; }

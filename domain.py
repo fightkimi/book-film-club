@@ -115,7 +115,8 @@ def ready_work(w):
 def mutate(s, user, action, p, users):
     stamp, result = now(), None
     if action == 'theme.save':
-        admin(user)
+        if p.get('id'):
+            admin(user)
         old = find(s['themes'], p['id']) if p.get('id') else None
         item = dict(id=old['id'] if old else uid(), title=text(p.get('title')), description=text(p.get('description', ''), 4000, False), kind=choice(p.get('kind', 'mixed'), ['book','movie','mixed']), angles=text(p.get('angles',''),6000,False), tags=text(p.get('tags',''),300,False), weight=integer(p.get('weight',1),1,10), enabled=boolean(p.get('enabled',True)), created_at=old['created_at'] if old else stamp, updated_at=stamp, source=old.get('source','manual') if old else 'manual',poster_key=choice(p.get('poster_key',old.get('poster_key','') if old else ''),[*POSTER_KEYS,'none','']))
         if old:
@@ -124,9 +125,15 @@ def mutate(s, user, action, p, users):
             s['themes'].append(item)
         result = item
     elif action == 'theme.draw':
-        admin(user)
         mode = choice(p.get('mode','fresh'), ['fresh','continue','random'])
         kind = choice(p.get('kind','mixed'), ['book','movie','mixed'])
+        cycle = find(s['cycles'],p['cycle_id']) if p.get('cycle_id') else None
+        if cycle:
+            if user['role'] != 'admin' and cycle.get('created_by') != user['id'] and user['id'] not in cycle['participants']:
+                raise Problem('仅本期成员可为活动抽取主题',403)
+            if cycle['status'] != 'draft' or cycle.get('theme_id'):
+                raise Problem('本期已确定主题或已发布，请刷新活动',409)
+            kind = cycle['kind']
         used = [c['theme_id'] for c in sorted(s['cycles'], key=lambda c:c.get('published_at',''), reverse=True) if c['status'] != 'draft']
         candidates = [t for t in s['themes'] if t['enabled'] and (kind == 'mixed' or t['kind'] in [kind,'mixed'])]
         if mode == 'fresh':
@@ -137,6 +144,9 @@ def mutate(s, user, action, p, users):
             raise Problem('没有符合条件的主题，请调整抽取模式或新增主题')
         winner = secrets.SystemRandom().choices(candidates, weights=[t['weight'] for t in candidates])[0]
         result = dict(id=uid(), theme_id=winner['id'], theme_title=winner['title'], mode=mode, kind=kind, candidates=[dict(id=t['id'],title=t['title'],weight=t['weight']) for t in candidates], at=stamp, user_id=user['id'])
+        if cycle:
+            cycle.update(theme_id=winner['id'],theme=copy.deepcopy(winner))
+            result['cycle_id'] = cycle['id']
         s['draws'].append(result)
     elif action == 'work.save':
         old = find(s['works'],p['id']) if p.get('id') else None
@@ -163,11 +173,13 @@ def mutate(s, user, action, p, users):
             s['works'].append(item)
             result = item
     elif action == 'cycle.save':
-        admin(user)
         old = find(s['cycles'],p['id']) if p.get('id') else None
+        if old and user['role'] != 'admin' and old.get('created_by') != user['id']:
+            raise Problem('仅管理员或该活动的发起人可编辑筹备活动',403)
         if old and old['status'] != 'draft':
             raise Problem('活动已发布，主题、作品和规则已冻结',409)
-        theme = find(s['themes'],p.get('theme_id'))
+        theme_id = p.get('theme_id', old['theme_id'] if old else '')
+        theme = find(s['themes'],theme_id) if theme_id else {'id':'', 'title':'', 'description':'', 'angles':''}
         start, end = date(p.get('start')), date(p.get('end'))
         if end < start:
             raise Problem('截止日期不能早于开始日期')
@@ -187,16 +199,20 @@ def mutate(s, user, action, p, users):
         if old:
             old.update(item)
         else:
+            item['created_by'] = user['id']
             s['cycles'].append(item)
         result = item
     elif action == 'cycle.transition':
-        admin(user)
         c = find(s['cycles'],p.get('id'))
         target = p.get('status')
+        if not (c.get('created_by') == user['id'] and c['status'] == 'draft' and target == 'active'):
+            admin(user)
         allowed = {'draft':['active'],'active':['closed'],'closed':['active','archived'],'archived':[]}
         if target not in allowed[c['status']]:
             raise Problem('不允许这样更改活动状态',409)
         if target == 'active' and c['status'] == 'draft':
+            if not c.get('theme_id'):
+                raise Problem('发布前请先抽取或选择本期主题')
             if not c['works']:
                 raise Problem('请至少确定一部作品')
             # Re-read canonical metadata at publish; draft snapshots may be outdated.

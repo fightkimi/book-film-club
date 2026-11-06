@@ -16,10 +16,10 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         raise Problem('数据源发生重定向，请稍后重试',502)
 
 
-def fetch_json(url, headers=None, payload=None):
+def fetch_json(url, headers=None, payload=None, timeout=20):
     request = urllib.request.Request(url, data=json.dumps(payload).encode() if payload is not None else None, headers={'User-Agent':os.environ.get('METADATA_USER_AGENT','Tongpin/0.2 (personal book and film club)'), 'Accept':'application/json', **(headers or {})})
     try:
-        with urllib.request.build_opener(NoRedirect()).open(request,timeout=20) as response:
+        with urllib.request.build_opener(NoRedirect()).open(request,timeout=timeout) as response:
             raw = response.read(2_000_001)
             if len(raw) > 2_000_000:
                 raise Problem('数据源返回内容过大',502)

@@ -1,7 +1,7 @@
 <view class="page screening">
   <block wx:if="{{phase !== 'revealed'}}">
   <view class="screen-heading">
-    <view class="screen-label">主题放映室</view>
+    <view class="screen-label">{{cycleTitle || "主题放映室"}}</view>
     <view class="screen-title">这次，聊什么？</view>
   </view>
   <view class="screen-panel">
@@ -18,7 +18,7 @@
   <view class="controls">
     <view class="control-label">活动类型</view>
     <view class="choice-row">
-      <button wx:for="{{kinds}}" wx:key="value" class="choice {{kindIndex === index ? 'chosen' : ''}}" data-field="kindIndex" data-index="{{index}}" bindtap="choose" disabled="{{!poolReady || busy || phase === 'drawing'}}">{{item.label}}</button>
+      <button wx:for="{{kinds}}" wx:key="value" class="choice {{kindIndex === index ? 'chosen' : ''}}" data-field="kindIndex" data-index="{{index}}" bindtap="choose" disabled="{{cycleId || !poolReady || busy || phase === 'drawing'}}">{{item.label}}</button>
     </view>
     <view class="control-label">抽取方式</view>
     <view class="choice-row">
@@ -26,8 +26,8 @@
     </view>
     <view class="hint">{{modes[modeIndex].hint}}</view>
     <button wx:if="{{phase === 'drawing'}}" class="screen-action secondary" bindtap="reveal">直接查看结果</button>
-    <button wx:else class="screen-action" loading="{{busy}}" disabled="{{busy || !isAdmin || !candidateCount}}" bindtap="draw">抽取主题</button>
-    <view wx:if="{{poolReady}}" class="pool-note">{{!isAdmin ? '由小组管理员抽取' : (candidateCount ? candidateCount + ' 个候选主题' : '暂无候选主题，可更换类型或抽取方式')}}</view>
+    <button wx:else class="screen-action" loading="{{busy}}" disabled="{{busy || !canDrawTheme || !candidateCount}}" bindtap="draw">抽取主题</button>
+    <view wx:if="{{poolReady}}" class="pool-note">{{candidateCount ? candidateCount + ' 个候选主题' : '暂无候选主题，可更换类型或抽取方式'}}</view>
   </view>
 
   </block>
@@ -37,14 +37,15 @@
       <view class="result-title">“{{result.theme_title}}”</view>
       <view wx:if="{{result.description}}" class="result-description">{{result.description}}</view>
     </view>
-    <view class="result-note">已存入抽取历史</view>
+    <view class="result-note">{{cycleId ? "已设为本期主题，并存入抽取历史" : "已存入抽取历史"}}</view>
     <view class="result-actions">
       <button class="secondary" bindtap="openResult">查看主题</button>
-      <button wx:if="{{isAdmin}}" bindtap="create">用这个主题发起活动</button>
+      <button wx:if="{{cycleId}}" bindtap="backToCycle">返回本期活动</button>
+      <button wx:elif="{{canStartActivity}}" bindtap="create">用这个主题发起活动</button>
     </view>
-    <view wx:if="{{isAdmin}}" class="retry-row">
+    <view wx:if="{{canDrawTheme && !cycleId}}" class="retry-row">
       <button class="quiet again" disabled="{{busy}}" bindtap="adjust">调整抽取条件</button>
-      <button class="quiet again" disabled="{{busy || !candidateCount}}" loading="{{busy}}" bindtap="draw">再抽一次</button>
+      <button class="quiet again" disabled="{{busy || !canDrawTheme || !candidateCount}}" loading="{{busy}}" bindtap="draw">再抽一次</button>
     </view>
   </view>
   <view wx:if="{{error}}" class="error">{{error}}</view>

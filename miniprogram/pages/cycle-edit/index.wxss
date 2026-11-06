@@ -1,1 +1,20 @@
+.form-step{font-size:14px;color:#646464;}
+.theme-context{margin:16px 0 24px;line-height:1.7;color:#646464;overflow-wrap:anywhere;}
+.work-choice{padding:12px 0;align-items:flex-start;border-bottom:0.5px solid #d9d9d9;}
+.work-choice checkbox{flex:none;}
+.work-choice>text{min-width:0;overflow-wrap:anywhere;}
+.activity-dates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;}
+.activity-dates .picker{font-size:15px;white-space:nowrap;}
+.form-expand{display:flex;justify-content:space-between;align-items:center;width:100%;padding:14px 0;margin:20px 0 8px;color:#202020;background:transparent;border-bottom:0.5px solid #d9d9d9;font-size:16px;}
+.activity-form button.form-expand{width:100%;margin-left:0;margin-right:0;}
 
+.activity-theme-choice{display:flex;align-items:stretch;gap:12px;} .activity-form .activity-theme-choice button{flex:none;width:auto;min-width:92px;margin:0;padding:10px 14px;font-size:15px;} .activity-theme-choice option-picker{min-width:0;flex:1;} .activity-theme-choice .picker{height:100%;font-size:15px;} .new-theme-entry{display:inline-flex;align-items:center;min-height:44px;font-size:12px;color:#193b2d;}
+
+.activity-form .activity-theme-choice .selected-theme{color:#193b2d;font-weight:600;font-size:16px;}
+.activity-form .theme-description{font-size:15px;line-height:1.8;color:#202020;margin-top:16px;}
+
+.theme-alternatives{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+.theme-suggestion{margin:18px 0 24px;padding:18px 0;border-top:0.5px solid #d9d9d9;border-bottom:0.5px solid #d9d9d9;}
+.suggestion-title{font:600 22px/1.45 "Songti SC",serif;color:#193b2d;margin:10px 0;overflow-wrap:anywhere;}
+.suggestion-angles{font-size:14px;line-height:1.8;white-space:pre-wrap;color:#646464;overflow-wrap:anywhere;}
+.theme-suggestion .actions{margin-bottom:0;}

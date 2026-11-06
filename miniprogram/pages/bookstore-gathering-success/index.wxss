@@ -1,0 +1,1 @@
+.success-head{text-align:center;padding:68rpx 40rpx 44rpx}.success-head .title{font-size:64rpx;margin:20rpx 0 0}.success-scene{width:100%;display:block}.success-info{text-align:center;padding:16rpx 40rpx 220rpx}.success-info .section-title{margin:28rpx 0 22rpx}.success-info>view:not(.section-title){color:#656565}

@@ -14,6 +14,13 @@ C.define({
     );
     this.setData({
       cycle: c,
+      canPublish: raw.created_by === user.id && raw.status === "draft",
+      mayDraw:
+        raw.status === "draft" &&
+        !raw.theme_id &&
+        (user.role === "admin" ||
+          raw.created_by === user.id ||
+          !!raw.participants[user.id]),
       works: c.works.map(D.workView),
       reports,
       me: c.participants[user.id] || null,
@@ -52,6 +59,17 @@ C.define({
   },
   review() {
     C.go("review", { id: this.query.id });
+  },
+  drawTheme() {
+    return C.run(this, async () => {
+      const r = await C.api.action("theme.draw", {
+        cycle_id: this.query.id,
+        mode: "random",
+      });
+      const c = r.state.cycles.find((c) => c.id === this.query.id);
+      this.setData({ cycle: D.cycleView(c), mayDraw: false });
+      wx.showToast({ title: "已抽取主题", icon: "none" });
+    });
   },
   edit() {
     C.go("cycle-edit", { id: this.query.id });

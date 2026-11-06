@@ -47,20 +47,24 @@ function define(options) {
       }
       await this.load();
     },
-    async load() {
+    async load(force = false) {
       return run(this, async () => {
-        const data = await api.refresh();
+        const data = await api.refresh(force);
+        if (this._gone) return;
         this.setData({
           user: data.user,
           services: data.services,
           isAdmin: data.user.role === "admin",
+          canDrawTheme: data.user.can_draw_theme ?? (data.user.role === "admin"),
+          canCreateTheme: data.user.can_create_theme ?? (data.user.role === "admin"),
+          canStartActivity: data.user.can_start_activity ?? ["admin", "organizer"].includes(data.user.role),
         });
-        if (options.ready) await options.ready.call(this, data);
+        if (options.ready) await options.ready.call(this, data, force);
       });
     },
     async onPullDownRefresh() {
       try {
-        await this.load();
+        await this.load(true);
       } finally {
         wx.stopPullDownRefresh();
       }
@@ -83,13 +87,16 @@ function define(options) {
   delete config.ready;
   Page(config);
 }
-function confirm(content) {
+function confirm(content, options = {}) {
   return new Promise((resolve) =>
     wx.showModal({
-      title: "请确认",
+      title: options.title || "请确认",
       content,
+      confirmText: options.confirmText || "确定",
+      cancelText: options.cancelText || "取消",
       confirmColor: "#252525",
       success: (r) => resolve(r.confirm),
+      fail: () => resolve(false),
     }),
   );
 }

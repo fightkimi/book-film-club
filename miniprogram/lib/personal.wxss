@@ -1,0 +1,421 @@
+/* Radix Gray / Green light tokens, from the installed @radix-ui/colors palette. */
+page {
+  --personal-bg: #fcfcfc;
+  --personal-surface: #f9f9f9;
+  --personal-soft: #f0f0f0;
+  --personal-line: #d9d9d9;
+  --personal-control: #cecece;
+  --personal-muted: #646464;
+  --personal-text: #202020;
+  --personal-link: #193b2d;
+  background: var(--personal-bg);
+  color: var(--personal-text);
+  font-size: 15px;
+}
+.page {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.title {
+  font-size: 28px;
+  overflow-wrap: anywhere;
+}
+.section-title,
+.card-title {
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+.subtitle,
+.label,
+.picker,
+.field,
+.textarea,
+button {
+  font-size: 15px;
+}
+.muted,
+.small,
+.private-hint {
+  font-size: 12px;
+  color: var(--personal-muted);
+}
+button {
+  width: 100%;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  background: var(--personal-text);
+  color: var(--personal-bg);
+}
+button.secondary {
+  background: var(--personal-bg);
+  color: var(--personal-text);
+  border: 0.5px solid var(--personal-control);
+}
+button.quiet {
+  background: transparent;
+  color: var(--personal-muted);
+  font-weight: 400;
+}
+button[disabled] {
+  background: var(--personal-soft) !important;
+  color: var(--personal-muted) !important;
+}
+.field,
+.picker,
+.textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  border: 0.5px solid var(--personal-control);
+  background: var(--personal-bg);
+  box-sizing: border-box;
+}
+.field {
+  height: 48px;
+  padding: 0 12px;
+}
+.picker {
+  min-height: 48px;
+  padding: 12px;
+  gap: 12px;
+  overflow-wrap: anywhere;
+}
+.picker:after {
+  flex: none;
+  color: var(--personal-muted);
+}
+.textarea {
+  line-height: 1.7;
+  padding: 12px;
+}
+.error {
+  background: #fff7f7;
+  color: #ce2c31;
+  overflow-wrap: anywhere;
+}
+.personal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20rpx;
+  min-height: 48px;
+  margin-bottom: 24rpx;
+}
+.personal-head .title {
+  min-width: 0;
+  margin: 0;
+}
+.personal-head button {
+  flex: none;
+  width: auto;
+  padding: 8px 14px;
+  margin: 0;
+}
+.personal-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 0.5px solid var(--personal-line);
+  margin: 0 0 24rpx;
+}
+.personal-tabs button {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 0;
+  min-height: 48px;
+  padding: 12px 2px;
+  background: transparent;
+  color: var(--personal-muted);
+  font-weight: 400;
+  border-bottom: 0.5px solid transparent;
+  white-space: nowrap;
+}
+.personal-tabs button.active {
+  color: var(--personal-text);
+  font-weight: 600;
+  border-bottom-color: var(--personal-text);
+}
+.personal-tabs button[disabled] {
+  background: transparent !important;
+}
+.source-tabs button {
+  font-size: 12px;
+}
+.library-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 12px;
+}
+.library-month {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+.library-month-label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+  white-space: nowrap;
+  font-size: 15px;
+}
+.picker-chevron {
+  color: var(--personal-muted);
+}
+.library-view-label {
+  font-size: 12px;
+  color: var(--personal-muted);
+}
+.library-types {
+  display: flex;
+  flex: none;
+  gap: 4px;
+}
+.library-types button {
+  flex: none;
+  min-width: 40px;
+  width: auto;
+  min-height: 40px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--personal-muted);
+  background: transparent;
+  white-space: nowrap;
+}
+.library-types button.selected {
+  color: var(--personal-text);
+  background: var(--personal-soft);
+  font-weight: 600;
+}
+.library-summary {
+  font-size: 12px;
+  color: var(--personal-muted);
+  margin: 8px 0 12px;
+}
+.personal-row {
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+  padding: 28rpx 0;
+  border-bottom: 0.5px solid var(--personal-line);
+}
+.personal-cover {
+  flex: none;
+  width: 92rpx;
+  height: 132rpx;
+  background: var(--personal-soft);
+}
+.personal-row-main {
+  flex: 1;
+  min-width: 0;
+}
+.personal-row .card-title {
+  margin: 4rpx 0 10rpx;
+  line-height: 1.45;
+}
+.personal-progress {
+  margin: 12rpx 0;
+}
+.personal-status,
+.row-arrow {
+  font-size: 12px;
+  color: var(--personal-muted);
+}
+.row-arrow {
+  flex: none;
+}
+.personal-empty {
+  min-height: 200px;
+  padding: 36px 8px 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 22px;
+}
+.empty-title {
+  font:
+    400 20px/1.5 "Songti SC",
+    serif;
+  color: var(--personal-muted);
+}
+.personal-empty button {
+  width: auto;
+  min-width: 150px;
+  margin: 0;
+}
+.library-catalog {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  min-height: 48px;
+  padding: 14px 0;
+  border-top: 0.5px solid var(--personal-line);
+  font-size: 12px;
+  color: var(--personal-link);
+}
+.personal-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+  color: var(--personal-link);
+  font-size: 15px;
+}
+.personal-links navigator,
+.personal-links text {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.personal-label {
+  display: block;
+  font-size: 15px;
+  margin: 28rpx 0 12rpx;
+}
+.personal-form button {
+  width: 100%;
+  margin-top: 16px;
+}
+.personal-form .textarea {
+  min-height: 160px;
+}
+.personal-form .digest-editor {
+  min-height: 320px;
+}
+.personal-note {
+  padding: 22rpx 0;
+  border-bottom: 0.5px solid var(--personal-line);
+}
+.personal-note .message,
+.digest-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.85;
+}
+.personal-note .quote {
+  padding: 12px;
+  color: var(--personal-muted);
+  background: var(--personal-soft);
+  margin: 12px 0;
+}
+.personal-note .muted {
+  margin: 6rpx 0 12rpx;
+}
+.personal-note label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.personal-note .note-content {
+  flex: 1;
+  min-width: 0;
+}
+.personal-note checkbox {
+  flex: none;
+  transform: scale(0.85);
+  transform-origin: left top;
+}
+.personal-counter {
+  text-align: right;
+  font-size: 12px;
+  color: var(--personal-muted);
+  margin: 10rpx 0;
+}
+.digest-source {
+  display: block;
+  color: var(--personal-link);
+  font-size: 12px;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+}
+.private-hint {
+  margin: 12px 0;
+}
+.personal-form .switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 24px 0;
+}
+.switch-row text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.switch-row switch {
+  flex: none;
+}
+.personal-history {
+  padding: 18rpx 0;
+  border-bottom: 0.5px solid var(--personal-line);
+}
+.inline-controls {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.inline-controls > button,
+.inline-controls > picker,
+.inline-controls > month-picker {
+  min-width: 0;
+  flex: 1 1 0;
+  width: 0;
+  margin: 0;
+}
+.inline-controls .picker {
+  height: 100%;
+}
+.personal-key input {
+  font-family: monospace;
+}
+.source-book {
+  padding: 22rpx 0;
+  border-bottom: 0.5px solid var(--personal-line);
+  overflow-wrap: anywhere;
+}
+.source-book .card-title {
+  margin: 0 0 8rpx;
+}
+.personal-selection {
+  background: var(--personal-soft);
+  padding: 16px;
+  margin: 16px 0;
+  overflow-wrap: anywhere;
+}
+.personal-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+.personal-filters button {
+  display: inline-flex;
+  flex: none;
+  width: auto;
+  min-width: 64px;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 14px;
+}
+.note-box {
+  background: var(--personal-soft);
+}
+@media (max-width: 350px) {
+  .library-types button {
+    min-width: 36px;
+    padding: 8px 6px;
+  }
+  .library-toolbar {
+    gap: 8px;
+  }
+}

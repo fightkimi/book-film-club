@@ -25,7 +25,7 @@
 .result-signature { font: italic 32rpx/1 Georgia, serif; }
 .result-spread { min-height: 40vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24rpx; padding: 40rpx 12rpx; box-sizing: border-box; text-align: center; }
 .result-title { font: 500 68rpx/1.35 "Songti SC", "Noto Serif CJK SC", serif; color: #1c2922; overflow-wrap: anywhere; line-break: strict; }
-.result-description { font-size: 30rpx; line-height: 1.65; color: #49534c; overflow-wrap: anywhere; }
+.result-description { font-size: 28rpx; line-height: 1.65; color: #49534c; overflow-wrap: anywhere; }
 .result-note { padding-top: 12rpx; border-top: 1rpx solid #cbd1cb; text-align: right; color: #58625a; font-size: 24rpx; }
 @keyframes show-result { from { opacity: .25; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .result { animation: none; } }

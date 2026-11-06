@@ -1,0 +1,21 @@
+<view class="page">
+  <view class="segment">
+    <button class="{{tab==='member'?'':'secondary'}}" data-tab="member" bindtap="switchTab" disabled="{{busy}}">成员书单</button>
+    <button class="{{tab==='rank'?'':'secondary'}}" data-tab="rank" bindtap="switchTab" disabled="{{busy}}">微信读书榜单</button>
+  </view>
+  <option-picker wx:if="{{options.length}}" title="{{tab==='member'?'选择成员':'选择榜单'}}" range="{{options}}" range-key="name" value="{{selected}}" bindchange="select" disabled="{{busy}}"><view class="picker">{{options[selected].name}}</view></option-picker>
+  <option-picker wx:if="{{folders.length>1}}" title="书架分组" range="{{folders}}" range-key="name" value="{{folder}}" bindchange="filterFolder"><view class="picker">{{folders[folder].name}}</view></option-picker>
+  <view class="muted" wx:if="{{busy}}">正在读取书目…</view>
+  <view class="error" wx:elif="{{error}}">{{error}}</view>
+  <view class="empty" wx:elif="{{!connected}}">{{options.length?'这位成员还没有接入书单。':'暂无成员书单。'}}</view>
+  <block wx:else>
+    <view class="subtitle">{{tab==='rank'?'来自微信读书公开榜单 · 前 '+count+' 本':(scope==='group'?'全组去重书目':scope==='import'?'已导入的书目':scope==='full'?'架主共享的完整电子书架':'公开电子书')+' · '+count+' 本'}}</view>
+    <view wx:if="{{partial}}" class="muted">{{partial}}的书架暂未加载，下拉可重试</view>
+    <view wx:if="{{!count}}" class="empty">暂无可展示的电子书。</view>
+    <view wx:for="{{rows}}" wx:key="id" class="book-row" data-index="{{index}}" bindtap="detail">
+      <text wx:if="{{tab==='rank'}}" class="position">{{index+1}}</text>
+      <image wx:if="{{item.cover}}" class="thumb" src="{{item.thumbnail}}" mode="aspectFit" lazy-load="{{index > 3}}" data-index="{{index}}" data-id="{{item.id}}" binderror="coverError"/>
+      <view class="grow"><view>{{item.title}}</view><view class="muted">{{item.author}}</view></view>
+    </view>
+  </block>
+</view>

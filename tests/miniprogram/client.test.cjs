@@ -121,7 +121,7 @@ test("all declared pages and handlers exist, and there is no web-view or persist
     path = require("node:path");
   const root = path.resolve(__dirname, "../../miniprogram");
   const app = JSON.parse(fs.readFileSync(path.join(root, "app.json")));
-  assert.equal(app.tabBar.list.length, 4);
+  assert.deepEqual(app.tabBar.list.map((tab) => tab.text), ["活动", "书影", "树洞", "我的"]);
   assert.ok(app.pages.length >= 20);
   for (const page of app.pages) {
     for (const ext of ["js", "json", "wxml", "wxss"])
@@ -143,7 +143,8 @@ test("all declared pages and handlers exist, and there is no web-view or persist
     };
     vm.runInNewContext(js, {
       require: (name) =>
-        name.includes("/page")
+        name.endsWith("/theme-browser") ? require("../../miniprogram/lib/theme-browser") : name.endsWith("/bookstore-feed") ? require("../../miniprogram/lib/bookstore-feed") :
+        name.endsWith("/personal-api") ? {...common,currentMonth:()=>"2026-11",today:()=>"2026-11-05"} : name.includes("/page")
           ? common
           : name.includes("/data")
             ? D
@@ -272,17 +273,18 @@ test("work cards distinguish missing metadata from a complete record awaiting re
   );
 });
 
-test("library mixes both media and counts and filters the real collection", () => {
+test("library mixes both media and counts and filters the real collection", async () => {
   const fs = require("node:fs"),
     vm = require("node:vm");
   const data = [
     { id: "b1", title: "书一", kind: "book" },
     { id: "b2", title: "书二", kind: "book" },
-    { id: "m1", title: "电影", kind: "movie" },
+    { id: "m1", title: "电影", kind: "movie", description:"来源中已有的电影简介。", extra:{runtime:103} },
   ];
   let config;
   const common = {
     api: {
+      groupBooks: async () => ({unavailable:[], books:[...data.filter(w=>w.kind==="book").map(w=>({id:w.id, workId:w.id})), {id:"external",title:"另一位的书",author:"作者"}]}),
       get: () => ({ state: { works: data, shelves: [] }, user: { id: "me" } }),
     },
     define: (page) => {
@@ -291,7 +293,7 @@ test("library mixes both media and counts and filters the real collection", () =
   };
   vm.runInNewContext(
     fs.readFileSync(
-      require.resolve("../../miniprogram/pages/library/index"),
+      require.resolve("../../miniprogram/pages/catalog/index"),
       "utf8",
     ),
     {
@@ -300,7 +302,7 @@ test("library mixes both media and counts and filters the real collection", () =
           ? common
           : name.endsWith("/library-topics")
             ? require("../../miniprogram/lib/library-topics")
-            : D,
+            : name.endsWith("/poster-url") ? require("../../miniprogram/lib/poster-url") : D,
     },
   );
   const page = {
@@ -310,23 +312,27 @@ test("library mixes both media and counts and filters the real collection", () =
       Object.assign(this.data, next);
     },
   };
-  page.ready();
+  await page.ready(common.api.get());
+  assert.deepEqual(Array.from(page.data.works,w=>w.id), ["shelf:external","b2","b1"]);
+  page.kind({currentTarget:{dataset:{kind:""}}});
   assert.deepEqual(
     Array.from(page.data.works, (w) => w.id),
-    ["b2", "m1", "b1"],
+    ["shelf:external", "m1", "b2", "b1"],
   );
   assert.deepEqual(
     Array.from(page.data.types, (t) => t.count),
-    [3, 2, 1],
+    [4, 3, 1],
   );
   page.kind({ currentTarget: { dataset: { kind: "movie" } } });
   assert.deepEqual(
     Array.from(page.data.works, (w) => w.id),
     ["m1"],
   );
+  assert.equal(page.data.works[0].description,"来源中已有的电影简介。");
+  assert.equal(page.data.works[0].runtime,103);
   for (let i = 0; i < 30; i++)
     data.push({ id: "new" + i, title: "新电影" + i, kind: "movie" });
-  page.ready();
+  await page.ready(common.api.get());
   assert.equal(page.data.matchCount, 31);
   assert.equal(page.data.works.length, 20);
   let patch;
@@ -387,4 +393,108 @@ test("an invited visitor can explicitly use their own binding after a mismatch",
   await page.submit({ currentTarget: { dataset: { identity: "existing" } } });
   assert.deepEqual(attempts, ["member-invite-fixture", ""]);
   assert.deepEqual(destinations, ["/pages/activities/index"]);
+});
+
+test("page navigation shares fresh state; forced checks use revisions; logout drops shelf cache", async () => {
+  let transfers=0, checks=0, shelves=0;
+  const client=createClient(runtime(o=>{
+    let data={},header={};
+    if(o.url.endsWith("/wechat/login")) header["Set-Cookie"]="club_session=fixture; Path=/";
+    if(o.url.endsWith("/state")){
+      transfers++;data={revision:1,user:{id:"me",role:"member"},state:{works:[]},services:{}};
+    } else if(o.url.includes("/state?since=1&viewer=me%3Amember")){
+      checks++;data={revision:1,unchanged:true,user:{id:"me",role:"member"},services:{}};
+    } else if(o.url.endsWith("/booklists/group")){
+      shelves++;data={books:[],unavailable:[]};
+    }
+    o.success({statusCode:200,data,header});
+  }),{baseUrl:"http://localhost:8787"});
+  await client.loginWithWeChat();
+  for(let i=0;i<5;i++) await client.refresh(false);
+  assert.equal(transfers,1);assert.equal(checks,0);
+  await Promise.all([client.refresh(true),client.refresh(true)]);
+  assert.equal(checks,1);assert.deepEqual(client.get().state.works,[]);
+  await Promise.all([client.groupBooks(),client.groupBooks()]);assert.equal(shelves,1);
+  await client.logout();await client.loginWithWeChat();await client.groupBooks();
+  assert.equal(shelves,2);assert.equal(transfers,2);
+});
+
+test("the trial tree entry and a stale session redirect to login before showing content", async () => {
+  const fs = require("node:fs"), vm = require("node:vm");
+  const api = {hasSession: () => false};
+  const destinations = [];
+  const ctx = { require: () => api, module: {exports:{}}, wx:{reLaunch: e=>destinations.push(e.url)} };
+  vm.runInNewContext(fs.readFileSync(require.resolve("../../miniprogram/lib/bookstore-api"),"utf8"),ctx);
+  const page = {data:{}, setData(update){Object.assign(this.data,update)}};
+  let reads=0;
+  await ctx.module.exports.task(page, async()=>{ reads++; });
+  assert.equal(reads,0);
+  assert.equal(page.data.authorized,false);
+  assert.equal(destinations[0],"/pages/login/index?next=tree");
+  api.hasSession=()=>true;
+  page.data.authorized=true;
+  await ctx.module.exports.task(page, async()=>{throw Object.assign(new Error("expired"),{status:401})});
+  assert.equal(page.data.authorized,false);
+  assert.equal(destinations.length,2);
+  const markup = fs.readFileSync(require.resolve("../../miniprogram/pages/login/index.wxml"),"utf8");
+  assert.doesNotMatch(markup,/<navigator|逛书店|成都书店/);
+  const home = fs.readFileSync(require.resolve("../../miniprogram/pages/bookstores/index"),"utf8");
+  assert.match(home,/forumPage\(true\)/);
+});
+
+test("opening a tree QR continues to the tree only after successful WeChat login", async () => {
+  const fs=require("node:fs"), vm=require("node:vm"), routes=[];
+  let page, allowed=false;
+  vm.runInNewContext(fs.readFileSync(require.resolve("../../miniprogram/pages/login/index"),"utf8"),{
+    Page(def){page=def}, require:()=>({async loginWithWeChat(){if(!allowed)throw new Error("拒绝登录")}}),
+    wx:{switchTab:({url})=>routes.push(url)}
+  });
+  page.setData=u=>Object.assign(page.data,u); page.onLoad({scene:"tree"});
+  await page.submit({currentTarget:{dataset:{}}});
+  assert.deepEqual(routes,[]);
+  allowed=true;
+  await page.submit({currentTarget:{dataset:{}}});
+  assert.deepEqual(routes,["/pages/bookstores/index"]);
+});
+
+test("a personal WeChat activity card requires login and returns to that activity", async () => {
+  const fs=require("node:fs"), vm=require("node:vm");
+  const id="0123456789abcdef01234567", actions=[], routes=[];
+  const api={async loginWithWeChat(){actions.push("club")}};
+  const events={valid:x=>x===id,async verify(x){actions.push(x)}};
+  let page;
+  vm.runInNewContext(fs.readFileSync(require.resolve("../../miniprogram/pages/login/index"),"utf8"),{
+    Page:p=>{page=p},require:name=>name.endsWith("gatherings")?events:api,
+    wx:{redirectTo:q=>routes.push(q.url),switchTab:q=>routes.push(q.url)}
+  });
+  page.setData=o=>Object.assign(page.data,o);
+  page.onLoad({event:id,circle:"0"});await page.submit({currentTarget:{dataset:{}}});
+  assert.deepEqual(actions,[id]);assert.equal(routes[0],"/pages/bookstore-gathering/index?id="+id+"&circle=0");
+  page.onLoad({event:id,circle:"1"});await page.submit({currentTarget:{dataset:{}}});
+  assert.deepEqual(actions,[id,"club",id]);assert.match(routes[1],/circle=1$/);
+});
+
+test("activity intro plays once and settles without a duplicate still or film banner", () => {
+  const fs = require("node:fs"), vm = require("node:vm");
+  let page; const globalData={};
+  vm.runInNewContext(fs.readFileSync(require.resolve("../../miniprogram/pages/activities/index"),"utf8"), {
+    getApp:()=>({globalData}),
+    require: name => name.endsWith("/theme-browser") ? require("../../miniprogram/lib/theme-browser") : name.endsWith("/page") ? {define:p=>{page=p}} : {cycleView:c=>c},
+  });
+  const screen = {data:{...page.data},setData(d){Object.assign(this,d);Object.assign(this.data,d)}};
+  page.onLoad.call(screen);
+  assert.equal(screen.playIntro,true);
+  assert.equal(screen.loaded,undefined);
+  page.ready.call(screen,{state:{group:"组",cycles:[]},user:{id:"one"}});
+  assert.equal(screen.loaded,true);assert.equal(screen.cycles.length,0);
+  page.ready.call(screen,{state:{group:"组",cycles:[{id:"past",start:"2026-01-01",participants:{},status:"archived"}]},user:{id:"one"}});
+  assert.equal(screen.cycles.length,1);
+  assert.equal(screen.playIntro,true);
+  page.settleIntro.call(screen);assert.equal(screen.playIntro,false);
+  page.onLoad.call(screen);assert.equal(screen.playIntro,false);
+  const layout=fs.readFileSync(require.resolve("../../miniprogram/pages/activities/index.wxml"),"utf8");
+  assert.match(layout,/class="scene-frame scene-still" style="{{playIntro \? 'display:none' : ''}}"/);
+  assert.match(layout,/wx:if="{{playIntro}}"[^>]+club-table\.gif/);
+  assert.doesNotMatch(layout,/poets-classroom|film-banner/);
+  assert.match(layout,/wx:if="{{loaded && !cycles.length && !error}}" class="empty"/);
 });

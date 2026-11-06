@@ -1,0 +1,6 @@
+<view class="page store-form"><view class="error" wx:if="{{error}}">{{error}} <text bindtap="load">重试</text></view>
+  <block wx:if="{{authorized && post}}"><view class="muted">{{post.scope==='circle'?'仅圈内可见':'书店树洞（公开）'}}　{{post.city}}　{{post.kind}}</view><view class="title">{{post.title}}</view><view wx:if="{{post.book}}" class="muted">{{post.book.creator}}</view><view wx:if="{{post.ai_assisted}}" class="muted">由作者选编 · AI 辅助整理</view><button wx:if="{{post.spoiler && !revealed}}" class="quiet" bindtap="reveal">含剧透，点击展开</button><view wx:else class="message">{{post.body}}</view><button wx:if="{{post.book}}" class="secondary" bindtap="plan">加入我的书影计划</button>
+    <navigator wx:if="{{post.shop}}" url="/pages/bookstore/index?id={{post.shop}}" class="entry-link">{{post.shop_name}} ›</navigator><block wx:if="{{!post.spoiler || revealed}}"><view class="section-title">回复</view>
+    <view wx:for="{{replies}}" wx:key="id" class="topic"><text class="muted">{{item.published}}</text><text class="message">{{item.body}}</text></view><button wx:if="{{more}}" class="quiet" disabled="{{busy}}" bindtap="next">更多回复</button>
+    <textarea class="area" placeholder="写回复" value="{{body}}" maxlength="600" bindinput="edit"/><button disabled="{{busy || !body}}" bindtap="reply">回复</button>
+  </block></block></view>

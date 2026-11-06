@@ -8,6 +8,7 @@ C.define({
     draft: null,
     videoSrc: "",
     original: null,
+    evidenceOpen: false,
   },
   ready({ state }) {
     if (this.initialized) return;
@@ -24,9 +25,13 @@ C.define({
       work,
       mode,
       notes: old?.notes || "",
+      evidenceOpen: !!old?.notes,
       shots: old?.shots || [],
       reflection: old?.reflection || "",
     });
+  },
+  toggleEvidence() {
+    this.setData({ evidenceOpen: !this.data.evidenceOpen });
   },
   chooseVideo() {
     wx.chooseMedia({

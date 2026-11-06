@@ -48,6 +48,25 @@ sudo /opt/tongpin/venv/bin/python /opt/tongpin/current/scripts/check_movie_sourc
 
 当前代码只允许 `api.themoviedb.org` 和 `api.tmdb.org`，不允许任意镜像转发密钥。2026-11-02 目标服务器实测前者连接超时，后者在未认证请求下正常返回 401；后者根路径跳转到 TMDB 自己的 API 文档。未认证连通性不等于已完成中文资料验收，仍需要实际 Token。
 
+## DeepSeek 模型配置
+
+在运行这桌还没散 Python 后端的服务器上执行 `sudoedit /etc/tongpin/tongpin.env`。找到或添加以下三项，在 `AI_API_KEY=` 后粘贴自己的 DeepSeek 官方 Key。保留文件中已有的其他配置，文件由 root 持有，权限为 0600。[DeepSeek 密钥管理](https://platform.deepseek.com/api_keys) · [官方接口与模型名称](https://api-docs.deepseek.com/zh-cn/) · [JSON 输出](https://api-docs.deepseek.com/zh-cn/guides/json_mode/)
+
+```ini
+AI_CHAT_URL=https://api.deepseek.com/chat/completions
+AI_MODEL=deepseek-flash
+AI_API_KEY=
+```
+
+保存后在服务器执行以下命令，让服务读取配置。
+
+```sh
+sudo systemctl restart tongpin
+sudo systemctl is-active tongpin
+```
+
+服务返回 `active` 后，重新进入小程序「我的 → 书影工具 → 资料来源」。AI 显示「已可用」表示后端读到了三个配置项。再到「书影」打开一部作品，进入「读前导赏」或「观前导赏」，点「生成这部作品的导赏」。出现「AI 导赏草稿」才说明密钥、模型和网络都已打通，这一步会使用 DeepSeek 账户额度。
+
 ## 操作边界
 
 部署不自动复制本机的其他服务密钥。迁移某一枚已有密钥需要明确指定凭据及目标服务器的授权。不要将 `.env`、数据库、SSH 凭据或证书私钥提交 Git。定期备份应使用应用的 SQLite backup 脚本，而非只复制正在写入的数据库主文件。
@@ -57,3 +76,18 @@ sudo /opt/tongpin/venv/bin/python /opt/tongpin/current/scripts/check_movie_sourc
 将 `deploy/tmdb-cache.http.conf` 安装到 `/etc/nginx/conf.d/uneco-cover-cache.conf`，将 `deploy/media.server.conf` 安装到 `/etc/nginx/snippets/uneco-media.conf`。给 nginx 工作进程创建可写的 `/var/cache/nginx/uneco-covers` 目录，在小程序域名的 HTTPS server 块中 include 该 snippet，检查配置后 reload。
 
 小程序通过同域 `/media/tmdb/w342/<海报文件名>.jpg` 或 `w500` 访问列表图和详情图。此入口只允许固定的 TMDB 图片源站和文件名格式，不接收任意远程 URL。首次回源后复用磁盘缓存，重复请求可检查 `X-Cover-Cache`。JSON 启用传输压缩，账号和会话接口仍保持原有的缓存策略。
+
+
+## 1.6.0 个人书影与写作规则
+
+隔离服务使用 `/opt/tongpin/bookstores-venv-160`，依赖锁定在 `requirements.txt`；主服务虚拟环境不变。部署前备份旧代码、systemd 单元、体验库和已有个人凭证主密钥，先对库副本重复执行初始化并比对旧表内容。`ai.py`、`ai_writing.py` 在主服务和书店服务同时更新，以覆盖所有 AI 入口。书店路由 `proxy_read_timeout 110s`，匹配个人笔记模型请求 90 秒上限和小程序 120 秒请求上限。
+
+个人凭证主密钥默认在书店状态目录中，首次绑定时原子生成并限制为 0600。不可用新密钥替代已有密钥；备份需要同时包含数据库与密钥，但不得输出、提交或传回客户端。
+
+
+1.6.1 将 8 张已有公开图片放在 `/opt/tongpin/mini-assets/v161/`，由书店 Nginx 片段中的 `/mini-assets/v161/` 提供静态访问。前端 `static-assets.js` 统一引用，`project.config.json` 从上传包排除对应本地图片；源文件仍保留。新图片必须先上传并校验 HTTPS 内容与原文件哈希，再上传小程序。登录图、首页动画保留本地。备份和回滚应保留版本化资源目录，避免旧体验包资源失效。
+
+
+## 1.6.2 新主题生成
+
+新接口 `/api/bookstores/activity-theme-ai` 部署在已授权的独立体验服务，读取主服务提供的当前成员资料快照后只选取公开书目和主题名。生成阶段不写主库；用户确认采用后由客户端调用原有 `theme.save`。本轮无需修改或重启主服务。服务更新包括 `bookstores.py`、`ai.py`、`ai_writing.py` 和 `theme_ideation.py`，并保留 MIT 方法来源声明。

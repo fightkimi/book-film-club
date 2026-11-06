@@ -15,4 +15,11 @@ function posterUrl(image, size = "w342") {
   );
 }
 
-module.exports = { posterUrl };
+function coverThumbnail(url) {
+  if (/^https:\/\/cdn\.weread\.qq\.com\/[^?#]+\/t9_[^/?#]+$/.test(url))
+    return url.replace(/\/t9_([^/]+)$/, "/t6_$1");
+  if (/^https:\/\/wfqqreader-1252317822\.image\.myqcloud\.com\/[^?#]+\.jpe?g$/i.test(url))
+    return url + "?imageMogr2/thumbnail/180x240%3E";
+  return posterUrl(url);
+}
+module.exports = { posterUrl, coverThumbnail };

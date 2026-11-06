@@ -1,0 +1,15 @@
+<view class="page store-form"><view wx:if="{{error}}" class="error">{{error}} <text bindtap="reloadForm">重新载入</text></view>
+<block wx:if="{{authorized}}">
+  <view wx:if="{{repeating}}" class="title">再约一场</view>
+  <view class="label">标题</view><input class="field" value="{{title}}" data-key="title" bindinput="input" maxlength="70" placeholder="{{kind==='meet'?'这次想一起读什么？':'想告诉大家什么？'}}"/>
+  <block wx:if="{{kind==='meet'}}"><view class="label">什么时候</view><view class="row event-time-row"><picker mode="date" value="{{date}}" bindchange="input" data-key="date"><view class="picker">{{date}}</view></picker><picker mode="time" value="{{time}}" bindchange="input" data-key="time"><view class="picker">{{time}}</view></picker></view>
+  <view class="label">在哪见</view><input class="field" value="{{place}}" maxlength="160" bindinput="input" data-key="place"/>
+  <view class="label">留几把椅子</view><input class="field" type="number" maxlength="3" value="{{capacity}}" bindinput="input" data-key="capacity"/></block>
+  <view class="label">给谁看</view><option-picker disabled="{{editing || repeating}}" title="给谁看" range="{{options}}" value="{{audience==='circle'?1:0}}" bindchange="audience"><view class="picker">{{audience==='circle'?'本店圈友':'已登录的微信读者'}}</view></option-picker>
+  <view class="label">{{kind==='meet'?'聊些什么':'告示正文'}}</view><textarea class="area" value="{{description}}" bindinput="input" data-key="description" maxlength="4000"/>
+  <view class="label">发到群里的一句话</view><textarea class="area" value="{{blurb}}" bindinput="input" data-key="blurb" maxlength="350"/>
+  <button wx:if="{{aiReady}}" class="secondary" disabled="{{busy || !title}}" bindtap="generate">让 AI 帮我起草</button>
+  <view wx:if="{{suggestedIntro}}" class="note-box"><view class="muted">AI 草稿</view><view class="prewrap">{{suggestedIntro}}</view><view class="prewrap">{{suggestedShare}}</view><button class="secondary" bindtap="adopt">放进编辑框</button></view>
+  <view wx:if="{{repeating}}" class="muted">新一场重新报名</view>
+  <button disabled="{{busy || !title || !description}}" loading="{{busy}}" bindtap="save">{{editing?'保存更改':kind==='notice'?'贴出告示':'发出邀约'}}</button>
+</block></view>

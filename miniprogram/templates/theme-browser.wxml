@@ -1,0 +1,5 @@
+<template name="theme-browser">
+<view class="hub-theme-heading">主题记录</view>
+<view wx:if="{{!themes.length}}" class="empty">还没有关联活动的主题</view>
+<view wx:for="{{themes}}" wx:key="id" class="theme-card" data-page="theme" data-id="{{item.id}}" bindtap="open"><image wx:if="{{item.poster}}" class="theme-backdrop" src="{{item.poster.image}}" mode="aspectFill" lazy-load="{{index>1}}"/><view class="theme-words"><view class="theme-number">{{item.uses}} 场活动</view><view class="theme-title">{{item.title}}</view><view class="theme-description">{{item.description}}</view><view class="small">回看活动与讨论 ›</view></view></view>
+</template>

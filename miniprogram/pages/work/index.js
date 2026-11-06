@@ -1,18 +1,27 @@
 const C = require("../../lib/page"),
   D = require("../../lib/data");
+const P = require("../../lib/personal-api");
 const { posterUrl } = require("../../lib/poster-url");
 C.define({
-  data: {
-    shelfIndex: 0,
-    shelves: ["未收藏", "想读 / 想看", "进行中", "已完成"],
-  },
-  ready({ state, users, user }) {
-    const work = state.works.find((w) => w.id === this.query.id);
+  async ready({ state, users }) {
+    let work;
+    const bibliographicOnly = !!(this.query.book_id || this.query.weread_id);
+    if (this.query.weread_id || this.query.book_source === "public") {
+      const r = await C.api.request("/api/metadata/detail", {
+        provider: "weread",
+        source_id: this.query.weread_id || this.query.book_id,
+      });
+      work = r.item;
+    } else if (bibliographicOnly) {
+      const r = await P.call("book-detail", undefined, {
+        id: this.query.book_id,
+        source: this.query.book_source,
+      });
+      work = r.book;
+    } else work = state.works.find((w) => w.id === this.query.id);
     if (!work) throw new Error("作品不存在");
-    const shelf = state.shelves.find(
-      (s) => s.user_id === user.id && s.work_id === work.id,
-    );
     this.setData({
+      bibliographicOnly,
       work: D.workView(work),
       coverUrl: posterUrl(work.image, "w500"),
       sourceName: {
@@ -22,28 +31,44 @@ C.define({
         googlebooks: "Google Books",
         manual: "手工资料",
       }[work.provider],
-      shelfIndex: ["none", "wish", "reading", "done"].indexOf(
-        shelf?.status || "none",
-      ),
-      reviews: state.reviews
+      reviews: (bibliographicOnly ? [] : state.reviews)
         .filter((r) => r.work_id === work.id)
         .map((r) =>
           Object.assign({}, r, {
             name: (users.find((u) => u.id === r.user_id) || {}).name,
           }),
         ),
-      cycles: state.cycles
+      cycles: (bibliographicOnly ? [] : state.cycles)
         .filter((c) => c.works.some((w) => w.id === work.id))
         .map(D.cycleView),
     });
   },
-  shelf(e) {
+  personal() {
+    C.go("personal-add", {
+      book:
+        this.query.weread_id || this.query.book_id || "work:" + this.query.id,
+      month: this.query.month || P.currentMonth(),
+      source: this.query.weread_id
+        ? "public"
+        : this.query.book_source || "catalog",
+      kind: this.data.work.kind,
+    });
+  },
+  writeReview() {
     C.run(this, async () => {
-      await C.api.action("shelf.save", {
-        work_id: this.query.id,
-        status: ["none", "wish", "reading", "done"][e.detail.value],
+      const source =
+        this.query.book_source === "notebooks"
+          ? "weread"
+          : this.query.weread_id
+            ? "public"
+            : this.query.book_source || "catalog";
+      const r = await P.call("add", {
+        source,
+        source_id:
+          this.query.weread_id || this.query.book_id || "work:" + this.query.id,
+        kind: this.data.work.kind,
       });
-      this.setData({ shelfIndex: Number(e.detail.value) });
+      C.go("personal-item", { id: r.item.id });
     });
   },
   guide() {

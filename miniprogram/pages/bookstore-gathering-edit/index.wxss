@@ -1,0 +1,4 @@
+@import "../../lib/bookstore.wxss";
+.event-time-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; }
+.event-time-row picker { min-width:0; }
+.event-time-row .picker { font-size:15px; white-space:nowrap; }

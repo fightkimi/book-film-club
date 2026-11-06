@@ -1,9 +1,9 @@
 {
-  "description": "un eco 读书与观影小组",
+  "description": "这桌还没散读书与观影小组",
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
   "appid": "wxe8ba0f388fd0353f",
-  "projectname": "un eco",
+  "projectname": "这桌还没散",
   "libVersion": "latest",
   "setting": {
     "es6": true,
@@ -33,6 +33,38 @@
       {
         "value": "README.md",
         "type": "file"
+      },
+      {
+        "type": "file",
+        "value": "assets/film/paterson.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/film/sisters.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/film/bookshop.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/bookstores/sh-giant-potato-2.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/bookstores/sh-lekai-2.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/bookstores/sh-giant-potato-1.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/bookstores/sh-lekai-1.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/bookstores/october.jpg"
       }
     ],
     "include": []
