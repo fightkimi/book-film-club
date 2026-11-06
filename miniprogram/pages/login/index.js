@@ -12,6 +12,7 @@ Page({
   data: { busy: false, error: "", invited: false, entryArtwork: artwork.login },
 
   onLoad(options) {
+    options = sharing.decodeQuery(options);
     this.returnTarget = sharing.validate(options.target);
     this.invite = options.invite || "";
     this.eventId = options.event && gatherings.valid(options.event) ? options.event : "";

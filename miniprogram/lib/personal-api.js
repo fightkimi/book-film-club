@@ -37,7 +37,7 @@ function define(options) {
     onShareAppMessage: sharing.message,
     data: { authorized: false, busy: false, error: "", ...options.data },
     onLoad(q) {
-      this.q = q || {};
+      this.q = sharing.decodeQuery(q || {});
       this._gone = false;
       options.onLoad?.call(this, this.q);
     },

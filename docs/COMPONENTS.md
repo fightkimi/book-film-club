@@ -72,3 +72,9 @@ Text Animate 来源下载于 2026-10-28；变更为按字素拆分、响应减�
 分享使用[微信官方 Page 类型契约](https://github.com/wechat-miniprogram/api-typings/blob/master/types/wx/lib.wx.page.d.ts)中的 onShareAppMessage 与异步图片返回能力，支持好友和群聊；本轮不启用朋友圈单页模式。参考[微信官方 Canvas 2D 示例](https://github.com/wechat-miniprogram/miniprogram-demo/blob/master/miniprogram/packageComponent/pages/canvas/canvas-2d/canvas-2d.js)的原生图片绘制 API，按需生成 600×480 构图、1200×960 导出图片，作品、活动、书店、公开话题及品牌入口分别设计。原画布布局由本项目编写，无新增 npm/pip 依赖、第三方代码复制或打包图片。
 
 分享卡只读取显式允许的公开字段；圈内话题和邀约使用泛化文案，保留目标链接并由服务端重新校验权限。使用固定模板图片，禁止自动页面截图带出私人文字。私人的长短感想仍先经「选一段分享」发布，确认公开范围后才能转发对应话题。
+
+## 电影浏览分类（2026-11-06）
+
+TMDB 的多标签题材不等于本产品的主要浏览类别。保留原始标签，`movie_categories.json` 单独存放按稳定来源 ID 审阅的主要类别。已按分类输出检查现有及新增片目，收录 133 条固定分类记录，包括《阿甘正传》归剧情、《变相怪杰》归喜剧/奇幻、《天堂电影院》《小偷家族》归剧情等，避免次要爱情、犯罪或时代背景影响主要分类。其余采用最多两个主要类别的保守规则；这是一种选片口径，不宣称是电影唯一的官方类型。
+
+音乐与歌舞依据 [BFI 音乐电影季](https://www.bfi.org.uk/news/bfi-musicals-full-programme-unveiled)、[BFI 歌舞片选集](https://www.bfi.org.uk/lists/best-musical-every-year)及[发行方《马戏之王》页面](https://family.20thcenturystudios.com/movies/the-greatest-showman)核对。《爱乐之城》《马戏之王》《悲惨世界》均纳入音乐与歌舞；以音乐人为主题的纪录片可同时出现在音乐与纪录片入口。更新来源资料不覆盖这些编辑分类。

@@ -10,12 +10,27 @@ const routes = {
   bookstores: [],
   profile: [],
   cycle: ["id"],
-  work: ["id", "weread_id"],
+  work: ["id", "weread_id", "movie_id"],
   bookstore: ["id"],
   "bookstore-topic": ["id"],
   "bookstore-guide": ["city"],
 };
 let brandImage = "";
+function decodeQuery(query = {}) {
+  const result = {};
+  for (const [key, value] of Object.entries(query)) {
+    if (typeof value !== "string") {
+      result[key] = value;
+      continue;
+    }
+    try {
+      result[key] = decodeURIComponent(value);
+    } catch (_) {
+      result[key] = value;
+    }
+  }
+  return result;
+}
 function target(page, params = {}) {
   if (!Object.prototype.hasOwnProperty.call(routes, page)) return "";
   const parts = [];
@@ -117,8 +132,9 @@ function describe(page) {
       q.book_source === "catalog" && q.book_id?.startsWith("shelf:")
         ? q.book_id.slice(6)
         : q.book_id;
-    const params =
-      q.id || catalogId
+    const params = q.movie_id
+      ? { movie_id: q.movie_id }
+      : q.id || catalogId
         ? { id: q.id || catalogId }
         : q.weread_id
           ? { weread_id: q.weread_id }
@@ -252,4 +268,5 @@ module.exports = {
   message,
   coverFor,
   brand,
+  decodeQuery,
 };

@@ -8,8 +8,8 @@
     <view class="prewrap work-synopsis">{{work.description||'简介待补全'}}</view>
     <view class="actions work-main-actions"><button bindtap="writeReview" disabled="{{busy}}">{{work.kind==='book'?'写书评':'写影评'}}</button><button class="secondary" bindtap="personal">加入计划</button></view>
     <view wx:if="{{!bibliographicOnly}}" class="actions"><button class="secondary" bindtap="guide">{{work.kind==='book'?'读前导赏':'观前导赏'}}</button><button class="secondary" bindtap="study">作品深读</button></view>
-    <view wx:if="{{work.kind==='movie'}}" class="actions"><button class="secondary" bindtap="shots">逐镜记录</button><button class="secondary" bindtap="ratings">评分与相关影片</button></view>
-    <view class="fact" wx:if="{{work.extra.original_title}}"><text class="fact-label">原名</text><text>{{work.extra.original_title}}</text></view><view class="fact"><text class="fact-label">资料来源</text><text>{{sourceName}}</text></view>
+    <view wx:if="{{work.kind==='movie' && !bibliographicOnly}}" class="actions"><button class="secondary" bindtap="shots">逐镜记录</button><button class="secondary" bindtap="ratings">评分与相关影片</button></view>
+    <view class="fact" wx:if="{{work.browseLabel}}"><text class="fact-label">主要类型</text><text>{{work.browseLabel}}</text></view><view class="fact" wx:if="{{work.tags}}"><text class="fact-label">题材</text><text>{{work.tags}}</text></view><view class="fact" wx:if="{{work.extra.original_title}}"><text class="fact-label">原名</text><text>{{work.extra.original_title}}</text></view><view class="fact"><text class="fact-label">资料来源</text><text>{{sourceName}}</text></view>
     <button class="quiet" bindtap="source">复制资料链接</button>
     <view wx:if="{{isAdmin && !bibliographicOnly}}"><view class="muted">{{work.metadataDetail}}</view><view class="actions"><button class="secondary" bindtap="edit">编辑资料</button><button class="secondary" bindtap="refresh">更新资料</button></view></view>
     <block wx:if="{{cycles.length}}"><view class="section-title">一起读过、看过</view><view wx:for="{{cycles}}" wx:key="id" class="card" data-page="cycle" data-id="{{item.id}}" bindtap="open"><view>{{item.title}}</view><view class="muted">{{item.statusLabel}}</view></view></block>

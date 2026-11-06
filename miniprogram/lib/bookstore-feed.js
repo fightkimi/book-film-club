@@ -28,6 +28,7 @@ module.exports = function forumPage(home) {
       cityIndex: 0,
     },
     onLoad(q) {
+      q = sharing.decodeQuery(q);
       this.setData({
         shop: home ? "" : q.shop || "",
         city: home ? "全国" : q.city || "全国",

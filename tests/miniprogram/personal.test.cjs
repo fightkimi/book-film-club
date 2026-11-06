@@ -4,10 +4,10 @@ function harness(name,handler=async()=>({}),signed=true){
  const api={hasSession:()=>signed,request:async(path,data)=>{calls.push({path,data});return handler(path,data);}};
  const wx={reLaunch:r=>nav.push(r),redirectTo:r=>nav.push(r),navigateTo:r=>nav.push(r),switchTab:r=>nav.push(r),showToast:()=>{},setClipboardData:()=>{},pageScrollTo:()=>{}};
  const C={go:(name,params)=>nav.push({name,params}),confirm:async()=>consent};
- const context={module:{exports:{}},require:n=>n==='./api'?api:C,Page:c=>config=c,wx};
+ const context={module:{exports:{}},require:n=>n==='./api'?api:n==='./sharing'?require('../../miniprogram/lib/sharing'):C,Page:c=>config=c,wx};
  vm.runInNewContext(fs.readFileSync(require.resolve('../../miniprogram/lib/personal-api'),'utf8'),context);
  const P=context.module.exports;
- vm.runInNewContext(fs.readFileSync(require.resolve('../../miniprogram/pages/'+name+'/index'),'utf8'),{require:n=>n.endsWith('/personal-api')?P:n.endsWith('/poster-url')?require('../../miniprogram/lib/poster-url'):{fetchBookstore:async()=>({stores:[]})},wx,getApp:()=>({globalData})});
+ vm.runInNewContext(fs.readFileSync(require.resolve('../../miniprogram/pages/'+name+'/index'),'utf8'),{require:n=>n.endsWith('/movie-catalog')?require('../../miniprogram/lib/movie-catalog'):n.endsWith('/personal-api')?P:n.endsWith('/poster-url')?require('../../miniprogram/lib/poster-url'):{fetchBookstore:async()=>({stores:[]})},wx,getApp:()=>({globalData})});
  const page={...config,data:structuredClone(config.data),setData(next){Object.assign(this.data,next);}};
  page.onLoad({id:'item1'});
  return {page,calls,nav,globalData,consent:v=>consent=v,login:v=>signed=v};
@@ -90,4 +90,18 @@ test('short and long reflections share one editor and expanding or quoting never
  assert.equal(h.page.data.reviewExpanded,true);
  const before='文'.repeat(11999);h.page.setData({reflection:before});h.page.quoteNote({currentTarget:{dataset:{id:'note1'}}});
  assert.equal(h.page.data.reflection,before);assert.match(h.page.data.error,/12000/);
+});
+
+test('expanded movie selection searches aliases and opens the movie introduction before planning',async()=>{
+ const row={id:'tmdb:157336',kind:'movie',title:'星际穿越',creator:'克里斯托弗·诺兰',tags:'科幻 / 冒险',description:'完整电影简介',extra:{original_title:'Interstellar',aliases:['星际启示录'],runtime:169}};
+ const h=harness('personal-add',async()=>({items:[row]}));h.page.onLoad({kind:'movie',source:'catalog'});await h.page.sources();
+ assert.equal(h.calls[0].path.includes('expanded=1'),true);
+ h.page.search({detail:{value:'Interstellar'}});assert.equal(h.page.data.rows.length,1);
+ h.page.genre({detail:{value:h.page.data.genres.indexOf('科幻')}});assert.equal(h.page.data.rows.length,1);
+ h.page.details({currentTarget:{dataset:{id:row.id}}});assert.equal(h.nav[0].params.movie_id,row.id);
+});
+
+test('encoded public movie preset survives the real personal-page onLoad wrapper',()=>{
+ const h=harness('personal-add');h.page.onLoad({kind:'movie',source:'catalog',book:'tmdb%3A10975'});
+ assert.equal(h.page.preset,'tmdb:10975');assert.equal(h.page.data.kind,'movie');
 });

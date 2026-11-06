@@ -35,7 +35,9 @@ function libraryTopics(state) {
     }
   }
   for (const w of works) {
-    for (const tag of (w.tags || "").split(/[/|,，、;；>＞]+/)) {
+    for (const tag of Array.isArray(w.browse_genres)
+      ? w.browse_genres
+      : (w.tags || "").split(/[/|,，、;；>＞]+/)) {
       const name = tag.trim();
       if (name) add("genre:" + name, name, w.id);
     }
