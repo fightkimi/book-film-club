@@ -4,6 +4,8 @@ from pathlib import Path
 import secrets
 import sqlite3
 import tempfile
+import os
+import hashlib
 import unittest
 from unittest.mock import patch
 
@@ -42,6 +44,32 @@ class GatheringLifecycle(unittest.TestCase):
 
     def detail(self,who=None,token=None):
         return e.detail(self.db,self.id,who,token or '')
+
+    def test_my_events_uses_bound_identity_and_preserves_circle_scope_and_cancellation(self):
+        identity=Path(self.tmp.name)/'identity.sqlite3'
+        with sqlite3.connect(identity) as club:
+            club.executescript('CREATE TABLE wx_identities(app_id TEXT,subject TEXT,user_id TEXT);')
+            club.executemany('INSERT INTO wx_identities VALUES(?,?,?)',[('app','reader-a','m'),('app','reader-b','other')])
+        with patch.dict(os.environ,WECHAT_APP_ID='app',BOOKSTORES_IDENTITY_DB=str(identity)):
+            person=e.member_person(self.member)
+            self.assertEqual(person,hashlib.sha256(b'app:bookstore:reader-a').hexdigest())
+            self.assertEqual(e.member_person(self.host),'')
+            with self.assertRaises(Problem):e.member_person(None)
+        self.op('sign',{'event':self.id,'nickname':'读者'},self.member,self.token)
+        circle=self.create(audience='circle')
+        with self.db:self.db.execute("INSERT INTO membership VALUES('duben','m')")
+        tok=self.login('reader-a',circle,self.member)
+        self.op('sign',{'event':circle,'nickname':'圈友'},self.member,tok)
+        self.op('cancel',{'event':self.id,'rev':1},self.host)
+        result=e.mine(self.db,self.member,person)['events']
+        self.assertEqual({r['id'] for r in result},{self.id,circle})
+        self.assertEqual(next(r['state'] for r in result if r['id']==self.id),'cancelled')
+        self.assertNotIn('person',str(result));self.assertNotIn('nickname',str(result))
+        self.assertEqual(e.mine(self.db,self.member,hashlib.sha256(b'app:bookstore:reader-b').hexdigest())['events'],[])
+        with self.db:self.db.execute("DELETE FROM membership WHERE reader='m'")
+        self.assertEqual([r['id'] for r in e.mine(self.db,self.member,person)['events']],[self.id])
+        self.op('delete',{'event':self.id,'rev':2},self.host)
+        self.assertEqual(e.mine(self.db,self.member,person)['events'],[])
 
     def test_share_login_is_event_scoped_and_does_not_join_club_or_circle(self):
         with self.assertRaises(Problem) as unauth:self.detail()

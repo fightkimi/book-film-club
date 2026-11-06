@@ -58,3 +58,17 @@ Text Animate 来源下载于 2026-10-28；变更为按字素拆分、响应减�
 新增原生组合组件 `Toolkit`、`ImportLibrary`、`StudyNotebook`、`FilmSources`，复用现有 Radix Tabs/Dialog/Select/Button 和 Lucide；本地视频使用 HTML video，不上传、不引入解码服务。新增标准库 CSV/JSON 解析器和官方 HTTP 适配器，无新 npm/pip 运行依赖。
 
 微信读书依据 Tencent/WeChatReading 官方 Skill 1.0.5 的接口契约自行适配；LICENSE 原文为 Apache-2.0。其他能力依照维护中的 calibre / Yamtrack / BookLore / MoviePilot 等的架构和官方服务文档实现，没有复制 GPL/AGPL 代码，也没有安装截图中未核实的同名 Skill。详细来源、最近 push 日期与保留限制见 [核查报告](research/2026-11-02-media-sources.md)。
+
+## 感想、参与记录与分享卡片（2026-11-06）
+
+本轮先核对 GitHub 仓库元数据、许可证正文、相关源码和问题记录。下面的最近 push 时间只证明维护活动，不代表所有问题已经修复。
+
+| 项目 | 维护与许可 | 实现、依赖与相关问题 | 本项目决策 |
+| --- | --- | --- | --- |
+| [NeoDB](https://github.com/neodb-social/neodb) | 2026-11-05 push；[AGPL-3.0](https://github.com/neodb-social/neodb/blob/main/LICENSE) | 作品、个人标记、长评和可见范围分离；当前 Python 3.14、Django 5.2、PostgreSQL/Redis 等依赖。[#1866](https://github.com/neodb-social/neodb/issues/1866) 指出笔记附件在网页与 API 表现不一致，截至核对仍 open。 | 借鉴按作品关联个人内容及明确可见范围。短感想和长评共用已有 reflection，不复制源码、不引入联邦服务或富文本附件。 |
+| [Gathio](https://github.com/lowercasename/gathio) | 2026-11-03 push；[GPL-3.0](https://github.com/lowercasename/gathio/blob/main/LICENSE)，package 声明 GPL-3.0-or-later | Node 22、Express、Handlebars、MongoDB；[活动列表模板](https://github.com/lowercasename/gathio/blob/main/views/partials/eventList.handlebars)保留日期、地点和来源。开放问题包括 [#206 SQLite 支持](https://github.com/lowercasename/gathio/issues/206)、[#233 Maybe 报名状态](https://github.com/lowercasename/gathio/issues/233)、[#249 小改动邮件过多](https://github.com/lowercasename/gathio/issues/249)。 | 借鉴活动摘要与报名状态分离，保留两种活动的原始来源和权限。只合并本人参与记录的展示，不搬入 MongoDB、邮件或通知系统。 |
+| [BookWyrm](https://github.com/bookwyrm-social/bookwyrm) | 2026-11-01 push；当前 [ACSL 1.4](https://github.com/bookwyrm-social/bookwyrm/blob/main/LICENSE.md)，有使用主体限制 | Django/PostgreSQL/Celery/Redis；支持 Review、Comment、Quote。[#4273](https://github.com/bookwyrm-social/bookwyrm/issues/4273) 报告错误合并作品导致评价错位，核对时未关闭。 | 不作为代码复用依赖，不将其误标为宽松许可证项目。保留原作品 ID，不因标题相近自动合并感想。 |
+
+分享使用[微信官方 Page 类型契约](https://github.com/wechat-miniprogram/api-typings/blob/master/types/wx/lib.wx.page.d.ts)中的 onShareAppMessage 与异步图片返回能力，支持好友和群聊；本轮不启用朋友圈单页模式。参考[微信官方 Canvas 2D 示例](https://github.com/wechat-miniprogram/miniprogram-demo/blob/master/miniprogram/packageComponent/pages/canvas/canvas-2d/canvas-2d.js)的原生图片绘制 API，按需生成 600×480 构图、1200×960 导出图片，作品、活动、书店、公开话题及品牌入口分别设计。原画布布局由本项目编写，无新增 npm/pip 依赖、第三方代码复制或打包图片。
+
+分享卡只读取显式允许的公开字段；圈内话题和邀约使用泛化文案，保留目标链接并由服务端重新校验权限。使用固定模板图片，禁止自动页面截图带出私人文字。私人的长短感想仍先经「选一段分享」发布，确认公开范围后才能转发对应话题。

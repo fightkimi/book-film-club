@@ -1,3 +1,4 @@
+const sharing = require("../../lib/sharing");
 const artwork = require("../../lib/static-assets");
 const { fetchBookstore, task } = require("../../lib/bookstore-api");
 const { valid } = require("../../lib/gatherings");
@@ -10,6 +11,7 @@ Page({
     this.setData({ authorized: false });
   },
   onShow() {
+    sharing.enable();
     this.load();
   },
   load() {
@@ -32,19 +34,5 @@ Page({
           (this.data.v.audience === "circle" ? "1" : "0"),
       });
   },
-  onShareAppMessage() {
-    const v = this.data.v;
-    return {
-      title:
-        v?.audience === "circle"
-          ? "本店圈友的邀约"
-          : (v?.shop_name || "书店") + "｜" + (v?.title || "店里有约"),
-      path:
-        "/pages/bookstore-gathering/index?id=" +
-        this.id +
-        "&circle=" +
-        (v?.audience === "circle" ? "1" : "0"),
-      imageUrl: "/assets/yuxiang-avatar.png",
-    };
-  },
+  onShareAppMessage: sharing.message,
 });

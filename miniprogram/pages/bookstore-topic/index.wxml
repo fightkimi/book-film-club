@@ -4,3 +4,6 @@
     <view wx:for="{{replies}}" wx:key="id" class="topic"><text class="muted">{{item.published}}</text><text class="message">{{item.body}}</text></view><button wx:if="{{more}}" class="quiet" disabled="{{busy}}" bindtap="next">更多回复</button>
     <textarea class="area" placeholder="写回复" value="{{body}}" maxlength="600" bindinput="edit"/><button disabled="{{busy || !body}}" bindtap="reply">回复</button>
   </block></block></view>
+
+<button wx:if="{{authorized && post.scope==='city'}}" class="quiet content-share" open-type="share">分享给朋友</button>
+<share-card id="share-card"/>

@@ -43,7 +43,8 @@
     "pages/personal-item/index",
     "pages/personal-notes/index",
     "pages/personal-digest/index",
-    "pages/personal-share/index"
+    "pages/personal-share/index",
+    "pages/my-activities/index"
   ],
   "window": {
     "navigationBarTitleText": "这桌还没散",

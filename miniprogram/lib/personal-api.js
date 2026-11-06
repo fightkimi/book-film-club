@@ -1,5 +1,6 @@
 const api = require("./api");
 const { go, confirm } = require("./page");
+const sharing = require("./sharing");
 function call(op, data, params = {}) {
   const query = Object.keys(params)
     .filter((k) => params[k] !== undefined && params[k] !== null)
@@ -33,6 +34,7 @@ async function run(page, work) {
 function define(options) {
   Page({
     ...options,
+    onShareAppMessage: sharing.message,
     data: { authorized: false, busy: false, error: "", ...options.data },
     onLoad(q) {
       this.q = q || {};
@@ -40,6 +42,7 @@ function define(options) {
       options.onLoad?.call(this, this.q);
     },
     onShow() {
+      sharing.enable?.();
       this.getTabBar?.()?.selectPage(this.route);
       this.load();
     },
@@ -51,7 +54,7 @@ function define(options) {
       this._gone = true;
     },
     load() {
-      return run(this, () => options.load.call(this));
+      return run(this, async () => { await options.load.call(this); sharing.prepare?.(this); });
     },
     input(e) {
       this.setData({ [e.currentTarget.dataset.key]: e.detail.value });

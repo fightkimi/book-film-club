@@ -3,6 +3,10 @@ import datetime
 import hashlib
 import secrets
 import time
+import os
+from pathlib import Path
+import sqlite3
+from contextlib import closing
 
 import ai
 import wechat_login
@@ -102,6 +106,39 @@ def shop_list(db,key,user):
     member,host=store_rights(db,key,user)
     return [dict(r) for r in db.execute("""SELECT id,kind,title,starts,state,audience FROM gathering
       WHERE shop=? AND state!='deleted' AND (audience='readers' OR ?) ORDER BY created DESC,rowid DESC LIMIT 50""",(key,member or host))]
+
+
+def member_person(user, club_db=None):
+    """Resolve only the authenticated member's binding; never accept a client person ID."""
+    if not user: raise Problem('请先微信登录',401)
+    source=os.environ.get('BOOKSTORES_IDENTITY_DB') or club_db
+    if not source: raise Problem('活动身份暂时无法读取，请稍后重试',503)
+    app=os.environ.get('WECHAT_APP_ID','')
+    if not app: raise Problem('微信登录尚待配置',503)
+    try:
+        with closing(sqlite3.connect(Path(source).resolve().as_uri()+'?mode=ro',uri=True)) as club:
+            row=club.execute('SELECT subject FROM wx_identities WHERE app_id=? AND user_id=?',(app,user['id'])).fetchone()
+    except sqlite3.Error:
+        raise Problem('活动身份暂时无法读取，请稍后重试',503)
+    return hashlib.sha256((app+':bookstore:'+row[0]).encode()).hexdigest() if row else ''
+
+
+def mine(db,user,person):
+    from bookstores import STORES
+    if not user: raise Problem('请先微信登录',401)
+    if not person:return {'events':[]}
+    # Recheck circle membership even for an old RSVP. Deleted cards are never discoverable.
+    found=db.execute("""SELECT g.id,g.shop,g.title,g.starts,g.place,g.state,g.audience,g.recap
+      FROM gathering g JOIN gathering_seat s ON s.event=g.id
+      WHERE s.person=? AND g.kind='meet' AND g.state!='deleted'
+      ORDER BY g.starts DESC,g.id DESC""",(person,)).fetchall()
+    events=[]
+    for row in found:
+        if row['shop'] not in STORES:continue
+        if row['audience']=='circle' and not any(store_rights(db,row['shop'],user)):continue
+        events.append({k:row[k] for k in ('id','shop','title','starts','place','state','audience')})
+        events[-1].update(shop_name=STORES[row['shop']]['name'],has_recap=bool(row['recap']))
+    return {'events':events}
 
 
 def detail(db,key,user,token):

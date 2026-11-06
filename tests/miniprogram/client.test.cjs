@@ -136,7 +136,7 @@ test("all declared pages and handlers exist, and there is no web-view or persist
       api: {},
       define: (c) => {
         config = Object.assign(
-          { input() {}, toggle() {}, open() {}, clearError() {} },
+          { input() {}, toggle() {}, open() {}, clearError() {}, onPullDownRefresh() {} },
           c,
         );
       },
@@ -386,7 +386,7 @@ test("an invited visitor can explicitly use their own binding after a mismatch",
       Page: (config) => {
         page = config;
       },
-      require: () => ({
+      require: (name) => name.endsWith("/sharing") ? require("../../miniprogram/lib/sharing") : ({
         async loginWithWeChat(invite) {
           attempts.push(invite);
           if (invite) throw new Error("此微信已绑定其他成员");
@@ -457,7 +457,7 @@ test("opening a tree QR continues to the tree only after successful WeChat login
   const fs=require("node:fs"), vm=require("node:vm"), routes=[];
   let page, allowed=false;
   vm.runInNewContext(fs.readFileSync(require.resolve("../../miniprogram/pages/login/index"),"utf8"),{
-    Page(def){page=def}, require:()=>({async loginWithWeChat(){if(!allowed)throw new Error("拒绝登录")}}),
+    Page(def){page=def}, require:name=>name.endsWith("/sharing")?require("../../miniprogram/lib/sharing"):({async loginWithWeChat(){if(!allowed)throw new Error("拒绝登录")}}),
     wx:{switchTab:({url})=>routes.push(url)}
   });
   page.setData=u=>Object.assign(page.data,u); page.onLoad({scene:"tree"});
@@ -475,7 +475,7 @@ test("a personal WeChat activity card requires login and returns to that activit
   const events={valid:x=>x===id,async verify(x){actions.push(x)}};
   let page;
   vm.runInNewContext(fs.readFileSync(require.resolve("../../miniprogram/pages/login/index"),"utf8"),{
-    Page:p=>{page=p},require:name=>name.endsWith("gatherings")?events:api,
+    Page:p=>{page=p},require:name=>name.endsWith("/sharing")?require("../../miniprogram/lib/sharing"):name.endsWith("gatherings")?events:api,
     wx:{redirectTo:q=>routes.push(q.url),switchTab:q=>routes.push(q.url)}
   });
   page.setData=o=>Object.assign(page.data,o);

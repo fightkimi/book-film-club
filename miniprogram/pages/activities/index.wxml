@@ -11,6 +11,7 @@
       <image wx:if="{{playIntro}}" class="scene-frame scene-motion" src="/assets/motion/club-table.gif" mode="aspectFit" binderror="settleIntro" aria-hidden="true"/>
     </view>
   </view>
+  <navigator class="my-attendance-entry" url="/pages/my-activities/index">我参加的 ›</navigator>
   <view class="cycle-heading">
     <view class="group-name">{{group}}</view>
     <button wx:if="{{canStartActivity}}" class="create-cycle" bindtap="create">发起活动</button>
@@ -28,3 +29,5 @@
   </block><template wx:else is="theme-browser" data="{{themes,canDrawTheme,canCreateTheme,historyOpen,historyTotal,draws,choosingTheme}}"/>
   <view wx:if="{{error}}" class="error">{{error}}</view>
 </view>
+
+<share-card id="share-card"/>

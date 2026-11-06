@@ -12,3 +12,5 @@
 .period-name { font-size: 28rpx; overflow-wrap: anywhere; }
 .period-state { flex: none; font-size: 24rpx; color: #404e50; }
 .row-pressed { background: #f0f1ee; }
+
+.period-progress{white-space:normal;overflow-wrap:anywhere;}.period-name{min-width:0;flex:1;}.section-head navigator{min-height:44px;display:flex;align-items:center;}.attendance-error{font-size:13px;color:#9f2a23;padding:12px 0;}

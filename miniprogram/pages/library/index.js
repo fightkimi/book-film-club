@@ -100,6 +100,9 @@ P.define({
       month: this.data.month,
     });
   },
+  write(e) {
+    P.go("personal-item", { id: e.currentTarget.dataset.id, month: this.data.month, edit: "1" });
+  },
   onReachBottom() {
     if (this.data.nextOffset !== null)
       return P.run(this, () => this.read(true));

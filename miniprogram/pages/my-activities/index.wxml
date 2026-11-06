@@ -1,0 +1,15 @@
+<view class="page attendance-page">
+ <view class="title">我参加的</view>
+ <view wx:if="{{attendanceError}}" class="error">{{attendanceError}}<button class="quiet" bindtap="onPullDownRefresh">重新载入</button></view>
+ <view wx:if="{{error}}" class="error">{{error}}</view>
+ <view wx:for="{{sections}}" wx:key="id" class="attendance-section">
+  <view class="section-title">{{item.title}}</view>
+  <navigator wx:for="{{item.items}}" wx:for-item="event" wx:key="key" url="{{event.url}}" class="attendance-card" hover-class="attendance-pressed">
+   <view class="attendance-meta"><text>{{event.type}}</text><text class="attendance-state {{event.status==='已取消'?'cancelled':''}}">{{event.status}}</text></view>
+   <view class="attendance-title">{{event.title}}</view><view class="attendance-date">{{event.date}}</view>
+   <view class="attendance-place">{{event.context}}</view><text class="attendance-arrow" aria-hidden="true">›</text>
+  </navigator>
+ </view>
+ <view wx:if="{{!attending.length && !busy && !attendanceError && !error}}" class="empty"><view>还没有参加的活动</view><navigator url="/pages/activities/index" open-type="switchTab" class="entry-link">去看活动 ›</navigator></view>
+ <view wx:if="{{busy && !attending.length}}" class="empty">正在载入…</view>
+</view>

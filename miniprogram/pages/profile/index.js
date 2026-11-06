@@ -1,26 +1,13 @@
-const C = require("../../lib/page"),
-  D = require("../../lib/data");
+const C = require("../../lib/page");
+const participation = require("../../lib/participation");
 C.define({
-  ready({ state, user }) {
+  data: { attending: [], attendanceError: "" },
+  async ready({ state, user }) {
     this.setData({
       group: state.group,
-      reports: state.cycles
-        .slice()
-        .sort((a, b) => b.start.localeCompare(a.start))
-        .flatMap((cycle) =>
-          (state.reports[cycle.id] || [])
-            .filter((report) => report.user_id === user.id)
-            .map((report) =>
-              Object.assign({}, report, {
-                cycle_id: cycle.id,
-                cycleTitle: cycle.title,
-                startLabel: D.date(cycle.start),
-                statusLabel: D.labels[report.status] || report.status,
-              }),
-            ),
-        ),
-      journalCount: (state.journals || []).length,
     });
+    const result = await participation.load(state, user);
+    if (!this._gone) this.setData({ ...result, attendingPreview: result.attending.slice(0, 3) });
   },
   archive() {
     C.go("toolkit", { tab: "archive" });

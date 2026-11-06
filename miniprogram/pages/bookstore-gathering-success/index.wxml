@@ -1,1 +1,3 @@
 <block wx:if="{{authorized && v}}"><view class="success-head"><view class="muted">邀约已发布</view><view class="title">下次见。</view></view><image class="success-scene" src="{{scene}}" mode="widthFix" aria-hidden="true"/><view class="success-info"><view class="section-title">{{v.title}}</view><view>{{v.starts}}</view><view>{{v.place}}</view></view><view class="dock"><button class="secondary" bindtap="view">查看活动</button><button open-type="share">分享给朋友</button></view></block><view wx:if="{{error}}" class="error">{{error}} <text bindtap="load">重试</text></view>
+
+<share-card id="share-card"/>

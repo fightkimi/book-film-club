@@ -1,0 +1,1 @@
+.share-art{position:fixed;left:-2000px;top:-2000px;width:600px;height:480px;pointer-events:none;}

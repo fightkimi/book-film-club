@@ -16,3 +16,6 @@
     <block wx:if="{{!bibliographicOnly}}"><view class="section-title">小组的不同视角</view><view wx:for="{{reviews}}" wx:key="id" class="card"><view>{{item.name}}　{{item.rating}} / 5</view><view class="muted">{{item.workTitle}}</view><button wx:if="{{item.spoiler&&!revealed[item.id]}}" class="quiet" data-id="{{item.id}}" bindtap="reveal">包含剧透，点击展开</button><view wx:else class="prewrap">{{item.body}}</view></view><view wx:if="{{!reviews.length}}" class="muted">还没有本期感想</view></block>
   </block><view wx:if="{{error}}" class="error">{{error}}</view>
 </view>
+
+<button wx:if="{{work}}" class="quiet content-share" open-type="share">分享给朋友</button>
+<share-card id="share-card"/>
