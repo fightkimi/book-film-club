@@ -7,7 +7,7 @@
   <view class="screen-panel">
     <view class="film-window">
       <image class="film-frame" src="/assets/motion/projector-start.jpg" mode="aspectFit" aria-hidden="true"/>
-      <image wx:if="{{phase === 'drawing'}}" class="film-frame moving" src="/assets/motion/theme-projector.gif" mode="aspectFit" bindload="filmLoaded" binderror="reveal" aria-hidden="true"/>
+      <image wx:if="{{phase === 'drawing'}}" class="film-frame moving" src="{{themeProjector}}" mode="aspectFit" bindload="filmLoaded" binderror="reveal" aria-hidden="true"/>
     </view>
     <view class="panel-caption">
       <text>un eco</text>

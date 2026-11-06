@@ -65,6 +65,38 @@
       {
         "type": "file",
         "value": "assets/bookstores/october.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/film/hirayama-reading-room.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/motion/theme-projector.gif"
+      },
+      {
+        "type": "file",
+        "value": "assets/themes/cinema-paradiso.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/themes/rashomon.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/themes/the-truman-show.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/themes/in-the-mood-for-love.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/themes/her.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/themes/lost-in-translation.jpg"
       }
     ],
     "include": []

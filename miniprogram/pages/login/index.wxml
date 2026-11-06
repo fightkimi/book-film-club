@@ -1,7 +1,7 @@
 <view class="page entry-page">
   <view class="entry-hero">
     <view class="entry-scene">
-      <image class="entry-still" src="/assets/film/hirayama-reading-room.jpg" mode="aspectFill" aria-hidden="true"/>
+      <image class="entry-still" src="{{entryArtwork}}" mode="aspectFill" aria-hidden="true"/>
     </view>
     <view class="club-opening"><text>合上书，散了场</text><text>我们接着聊</text></view>
   </view>

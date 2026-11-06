@@ -180,7 +180,7 @@ test("tourist preview cannot impersonate a WeChat member", async () => {
   assert.equal(client.hasSession(), false);
 });
 
-test("theme art ships in the client and a cycle resolves art from its own snapshots", () => {
+test("theme art uses versioned same-origin assets and a cycle resolves art from its own snapshots", () => {
   const fs = require("node:fs");
   const path = require("node:path");
   const {
@@ -188,10 +188,21 @@ test("theme art ships in the client and a cycle resolves art from its own snapsh
     themePoster,
     activityCover,
   } = require("../../miniprogram/lib/covers");
+  const { baseUrl } = require("../../miniprogram/config");
+  const config = require("../../project.config.json");
   for (const p of catalog) {
     assert.equal(themePoster({ title: p.theme }), p);
+    const remote = new URL(p.image);
+    assert.equal(remote.origin, new URL(baseUrl).origin);
+    assert.equal(remote.pathname, `/mini-assets/v161/v163/themes/${p.id}.jpg`);
+    const source = `assets/themes/${p.id}.jpg`;
+    assert.ok(
+      config.packOptions.ignore.some(
+        (entry) => entry.type === "file" && entry.value === source,
+      ),
+    );
     const art = fs.readFileSync(
-      path.join(__dirname, "../../miniprogram", p.image),
+      path.join(__dirname, "../../miniprogram", source),
     );
     assert.equal(art.readUInt16BE(0), 0xffd8);
     assert.ok(art.length < 50 * 1024);

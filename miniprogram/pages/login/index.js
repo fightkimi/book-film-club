@@ -1,8 +1,9 @@
 const api = require("../../lib/api");
 const gatherings = require("../../lib/gatherings");
+const artwork = require("../../lib/static-assets");
 
 Page({
-  data: { busy: false, error: "", invited: false },
+  data: { busy: false, error: "", invited: false, entryArtwork: artwork.login },
 
   onLoad(options) {
     this.invite = options.invite || "";
