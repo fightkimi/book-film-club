@@ -1,10 +1,11 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 function harness(name,handler=async()=>({}),signed=true){
  let config;const calls=[],nav=[],globalData={};let consent=true;
- const api={hasSession:()=>signed,request:async(path,data)=>{calls.push({path,data});return handler(path,data);}};
+ const api={hasSession:()=>signed,sessionGeneration:()=>0,request:async(path,data)=>{calls.push({path,data});return handler(path,data);}};
+ api.readCached=path=>api.request(path);
  const wx={reLaunch:r=>nav.push(r),redirectTo:r=>nav.push(r),navigateTo:r=>nav.push(r),switchTab:r=>nav.push(r),showToast:()=>{},setClipboardData:()=>{},pageScrollTo:()=>{}};
  const C={go:(name,params)=>nav.push({name,params}),confirm:async()=>consent};
- const context={module:{exports:{}},require:n=>n==='./api'?api:n==='./sharing'?require('../../miniprogram/lib/sharing'):C,Page:c=>config=c,wx};
+ const context={module:{exports:{}},require:n=>n==='./api'?api:n==='./page-lifecycle'?{retain:c=>c}:n==='./poster-url'?require('../../miniprogram/lib/poster-url'):n==='./sharing'?{...require('../../miniprogram/lib/sharing'),schedule(){}}:C,Page:c=>config=c,wx};
  vm.runInNewContext(fs.readFileSync(require.resolve('../../miniprogram/lib/personal-api'),'utf8'),context);
  const P=context.module.exports;
  vm.runInNewContext(fs.readFileSync(require.resolve('../../miniprogram/pages/'+name+'/index'),'utf8'),{require:n=>n.endsWith('/movie-catalog')?require('../../miniprogram/lib/movie-catalog'):n.endsWith('/personal-api')?P:n.endsWith('/poster-url')?require('../../miniprogram/lib/poster-url'):{fetchBookstore:async()=>({stores:[]})},wx,getApp:()=>({globalData})});
@@ -37,6 +38,11 @@ test('sync refuses to overwrite an unsaved manual review',async()=>{
  const h=harness('personal-item',async()=>assert.fail('dirty record must not sync'));
  h.page.dirty=true;h.page.setData({reflection:'我的新观点'});
  await h.page.sync();assert.equal(h.calls.length,0);assert.equal(h.page.data.reflection,'我的新观点');assert.match(h.page.data.error,/先保存/);
+});
+test('a removed private item is hidden on return instead of exposing its retained view',async()=>{
+ const h=harness('personal-item',async()=>{throw Object.assign(new Error('removed'),{status:404});});
+ h.page.setData({authorized:true,item:{id:'item1'}});await h.page.load();
+ assert.equal(h.page.data.authorized,false);assert.equal(h.page.data.error,'removed');
 });
 test('personal share starts empty and preserves selected draft after failure',async()=>{
  const h=harness('personal-share',async()=>{throw new Error('network');});

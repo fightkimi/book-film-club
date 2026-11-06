@@ -248,8 +248,13 @@ P.define({
     this.setData({ month: e.detail.value.slice(0, 7) });
   },
   onReachBottom() {
-    if (this.matches?.length > this.data.rows.length)
-      this.setData({ rows: this.matches.slice(0, this.data.rows.length + 40) });
+    const start = this.data.rows.length;
+    if (!this.matches || start >= this.matches.length) return;
+    const patch = {};
+    this.matches.slice(start, start + 40).forEach((row, offset) => {
+      patch["rows[" + (start + offset) + "]"] = row;
+    });
+    this.setData(patch);
   },
   add() {
     return P.run(this, async () => {

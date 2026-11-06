@@ -1,1 +1,7 @@
-{"navigationBarTitleText": "我的记录"}
+{
+  "navigationBarTitleText": "我的记录",
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index",
+    "month-picker": "/components/month-picker/index"
+  }
+}

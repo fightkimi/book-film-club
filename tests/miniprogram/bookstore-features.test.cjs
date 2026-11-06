@@ -17,6 +17,12 @@ function setup(name, read, write = async () => ({})) {
     setNavigationBarTitle() {},
   };
   let lib = { exports: {} };
+  const mockApi = {hasSession: () => signed, sessionGeneration: () => 0, onSessionChange: () => () => {}};
+  const lifecycle = {exports:{}};
+  vm.runInNewContext(fs.readFileSync(require.resolve("../../miniprogram/lib/page-lifecycle"), "utf8"), {
+    module: lifecycle, wx,
+    require: n => n === "./api" ? mockApi : {cancel() {}},
+  });
   vm.runInNewContext(
     fs.readFileSync(
       require.resolve("../../miniprogram/lib/bookstore-api"),
@@ -25,7 +31,7 @@ function setup(name, read, write = async () => ({})) {
     {
       module: lib,
       wx,
-      require: () => ({ hasSession: () => signed }),
+      require: n => n === "./api" ? mockApi : {schedule() {}},
     },
   );
   const store = {
@@ -36,6 +42,7 @@ function setup(name, read, write = async () => ({})) {
     photos: [],
   };
   const helpers = {
+    define: c => {page=lifecycle.exports.retain(c);},
     task: lib.exports.task,
     directory: async () => [store],
     fetchBookstore: read,
@@ -117,7 +124,14 @@ test("recommendation keeps the draft on failure and publishes once under duplica
   assert.equal(s.page.data.body, "");
   assert.equal(s.routes.at(-1), "/pages/bookstores/index");
   s.page.onHide();
-  assert.equal(s.page.data.authorized, false);
+  assert.equal(s.page.data.authorized, true);
+});
+test("revoked access hides a retained bookstore view while transient failures preserve it", async () => {
+  let status=503;
+  const s=setup("bookstore-following",async()=>{throw Object.assign(new Error("unavailable"),{status});});
+  s.page.onLoad({});s.page.setData({authorized:true});
+  await s.page.load();assert.equal(s.page.data.authorized,true);
+  status=403;await s.page.load();assert.equal(s.page.data.authorized,false);
 });
 
 test("following pagination appends updates and removing the final store returns the empty state", async () => {

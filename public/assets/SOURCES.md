@@ -1,5 +1,9 @@
 # Runtime artwork sources
 
+## Bookstore image delivery variants — 2026-11-06
+
+`bookstores/v181/` contains resized JPEG variants of the 32 photos already selected in `bookstore_catalog.json`. The accompanying manifest retains each original URL and its store association. Pillow 11.3.0 was used at build time to preserve orientation/aspect ratio, remove metadata, and export 640/960-pixel JPEGs at quality 80. Source rights and credits remain those recorded in the bookstore catalog; these assets are not covered by the software license. The mini-program loads these files through its existing static host, outside the packaged media budget.
+
 ## Tongpin identity
 
 - `tongpin-frequency.svg`: original thin-line frequency symbol, authored as SVG for this product.

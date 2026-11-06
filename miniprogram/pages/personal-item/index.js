@@ -82,9 +82,11 @@ P.define({
     });
   },
   async load() {
-    const r = await P.call("item", undefined, { item: this.id });
+    const [r] = await Promise.all([
+      P.call("item", undefined, { item: this.id }),
+      this.readNotes(),
+    ]);
     this.apply(r);
-    await this.readNotes();
     if (
       r.can_sync_notes &&
       !this.dirty &&

@@ -1,1 +1,6 @@
-{"navigationBarTitleText": "分享一段"}
+{
+  "navigationBarTitleText": "分享一段",
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
+}

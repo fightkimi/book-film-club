@@ -6,7 +6,7 @@ const {
 } = require("./bookstore-api");
 const sharing = require("./sharing");
 module.exports = function forumPage(home) {
-  return {
+  return require("./page-lifecycle").retain({
     onShareAppMessage: sharing.message,
     data: {
       home,
@@ -34,12 +34,13 @@ module.exports = function forumPage(home) {
         city: home ? "全国" : q.city || "全国",
       });
     },
-    onHide() {
-      this.setData({ authorized: false });
-    },
     onShow() {
       if (home) this.getTabBar?.()?.selectPage(this.route);
       this.load();
+    },
+    async onPullDownRefresh() {
+      require("./api").invalidateReads();
+      try { await this.load(); } finally { wx.stopPullDownRefresh(); }
     },
     async feed(more) {
       const { shop, posts, city } = this.data;
@@ -132,5 +133,5 @@ module.exports = function forumPage(home) {
         wx.navigateTo({ url: "/pages/bookstore-topic/index?id=" + post.id });
       });
     },
-  };
+  });
 };

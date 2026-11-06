@@ -2,7 +2,7 @@ const P = require("../../lib/personal-api");
 P.define({
   data: { connection: null, key: "" },
   onHide() {
-    this.setData({ key: "" });
+    this.setData({ key: "", authorized: false });
   },
   async load() {
     this.setData({ connection: await P.call("connection") });

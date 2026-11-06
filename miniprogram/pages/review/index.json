@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "写下本期感想",
-  "enablePullDownRefresh": false
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
 }

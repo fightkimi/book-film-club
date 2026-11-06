@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "activity-cover": "/components/activity-cover/index"
+    "activity-cover": "/components/activity-cover/index",
+    "option-picker": "/components/option-picker/index"
   },
   "navigationBarTitleText": "发起活动",
   "enablePullDownRefresh": false

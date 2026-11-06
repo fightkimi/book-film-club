@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "补全作品资料",
-  "enablePullDownRefresh": false
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
 }

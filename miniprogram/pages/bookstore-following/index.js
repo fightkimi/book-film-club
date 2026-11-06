@@ -4,7 +4,7 @@ const {
   writeBookstore,
   task,
 } = require("../../lib/bookstore-api");
-Page({
+require("../../lib/bookstore-api").define({
   data: {
     scene:artwork.bookshop,
     authorized: false,
@@ -17,9 +17,6 @@ Page({
   },
   onShow() {
     this.load();
-  },
-  onHide() {
-    this.setData({ authorized: false });
   },
   async read(more = false) {
     const r = await fetchBookstore("following", {

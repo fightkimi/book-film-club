@@ -6,7 +6,7 @@ const {
 } = require("../../lib/bookstore-api");
 const { confirm } = require("../../lib/page");
 const board = require("../../lib/static-assets").board;
-Page({
+require("../../lib/bookstore-api").define({
   onShareAppMessage: sharing.message,
   data: {
     busy: false,
@@ -25,9 +25,6 @@ Page({
   onLoad(q) {
     this.id = q.id;
     this.setData({ managing: q.view === "manage" });
-  },
-  onHide() {
-    this.setData({ authorized: false });
   },
   onShow() {
     sharing.enable();
@@ -87,6 +84,12 @@ Page({
       current: src,
       urls: src === board ? [board] : this.data.store.photos.map((p) => p[0]),
     });
+  },
+  photoError(e) {
+    const i = e.currentTarget.dataset.index;
+    const original = this.data.store.photos[i]?.[0];
+    if (original && this.data.store.displayPhotos[i] !== original)
+      this.setData({["store.displayPhotos[" + i + "]"]: original});
   },
   act(e) {
     return task(this, async () => {

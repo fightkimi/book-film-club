@@ -2,7 +2,7 @@ const sharing = require("../../lib/sharing");
 const api = require("../../lib/api");
 const eventApi = require("../../lib/gatherings");
 const { confirm } = require("../../lib/page");
-Page({
+Page(require("../../lib/page-lifecycle").retain({
   data: {
     busy: false,
     error: "",
@@ -17,9 +17,6 @@ Page({
   onLoad(q) {
     this.id = eventApi.valid(q.id) ? q.id : "";
     this.circle = q.circle === "1";
-  },
-  onHide() {
-    this.setData({ authorized: false });
   },
   onShow() {
     sharing.enable();
@@ -40,6 +37,7 @@ Page({
       await work();
       this.setData({ authorized: true });
     } catch (e) {
+      if (e.status === 403 || e.status === 404) this.setData({authorized: false});
       if (e.status === 401) {
         this.setData({ authorized: false });
         eventApi.loginPage(this.id, this.circle);
@@ -74,7 +72,7 @@ Page({
       patch.materialRev = v.notes_rev;
     }
     this.setData(patch);
-    sharing.enable(); sharing.prepare(this);
+    sharing.enable(); sharing.schedule(this);
     wx.setNavigationBarTitle({
       title: v.state === "deleted" ? v.title : v.kind === "notice" ? "书店告示" : "店里有约",
     });
@@ -185,4 +183,4 @@ Page({
     });
   },
   onShareAppMessage: sharing.message,
-});
+}));

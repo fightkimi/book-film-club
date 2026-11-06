@@ -1,1 +1,7 @@
-{"navigationBarTitleText":"书单发现","enablePullDownRefresh":true}
+{
+  "navigationBarTitleText": "书单发现",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "option-picker": "/components/option-picker/index"
+  }
+}

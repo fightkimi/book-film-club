@@ -143,7 +143,7 @@ test("all declared pages and handlers exist, and there is no web-view or persist
     };
     vm.runInNewContext(js, {
       require: (name) =>
-        name.endsWith("/theme-browser") ? require("../../miniprogram/lib/theme-browser") : name.endsWith("/bookstore-feed") ? require("../../miniprogram/lib/bookstore-feed") :
+        name.endsWith("/page-lifecycle") ? {retain:c=>c} : name.endsWith("/bookstore-api") ? common : name.endsWith("/theme-browser") ? require("../../miniprogram/lib/theme-browser") : name.endsWith("/bookstore-feed") ? require("../../miniprogram/lib/bookstore-feed") :
         name.endsWith("/personal-api") ? {...common,currentMonth:()=>"2026-11",today:()=>"2026-11-05"} : name.includes("/page")
           ? common
           : name.includes("/data")
@@ -296,7 +296,7 @@ test("library mixes both media and counts and filters the real collection", asyn
   const common = {
     api: {
       groupBooks: async () => ({unavailable:[], books:[...data.filter(w=>w.kind==="book").map(w=>({id:w.id, workId:w.id})), {id:"external",title:"另一位的书",author:"作者"}]}),
-      get: () => ({ state: { works: data, shelves: [] }, user: { id: "me" } }),
+      get: () => ({ revision:data.length,state: { works: data, shelves: [] }, user: { id: "me" } }),
     },
     define: (page) => {
       config = page;
@@ -432,7 +432,7 @@ test("page navigation shares fresh state; forced checks use revisions; logout dr
 
 test("the trial tree entry and a stale session redirect to login before showing content", async () => {
   const fs = require("node:fs"), vm = require("node:vm");
-  const api = {hasSession: () => false};
+  const api = {hasSession: () => false, sessionGeneration: () => 0};
   const destinations = [];
   const ctx = { require: () => api, module: {exports:{}}, wx:{reLaunch: e=>destinations.push(e.url)} };
   vm.runInNewContext(fs.readFileSync(require.resolve("../../miniprogram/lib/bookstore-api"),"utf8"),ctx);
@@ -490,7 +490,7 @@ test("activity intro plays once and settles without a duplicate still or film ba
   let page; const globalData={};
   vm.runInNewContext(fs.readFileSync(require.resolve("../../miniprogram/pages/activities/index"),"utf8"), {
     getApp:()=>({globalData}),
-    require: name => name.endsWith("/theme-browser") ? require("../../miniprogram/lib/theme-browser") : name.endsWith("/page") ? {define:p=>{page=p}} : {cycleView:c=>c},
+    require: name => name.endsWith("/page-lifecycle") ? {retain:c=>c} : name.endsWith("/bookstore-api") ? common : name.endsWith("/theme-browser") ? require("../../miniprogram/lib/theme-browser") : name.endsWith("/page") ? {define:p=>{page=p}} : {cycleView:c=>c},
   });
   const screen = {data:{...page.data},setData(d){Object.assign(this,d);Object.assign(this.data,d)}};
   page.onLoad.call(screen);

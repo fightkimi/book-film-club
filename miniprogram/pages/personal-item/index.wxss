@@ -6,7 +6,10 @@
 .personal-form button.record-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:14px 0;margin:8px 0 24px;border-bottom:0.5px solid #d9d9d9;background:transparent;color:#646464;font-size:12px;font-weight:400;} .record-toggle>text:first-child{color:#202020;font-size:15px;} .review-latest{margin-top:16px;color:#646464;} .personal-form button.note-materials{width:auto;margin:8px 0 0;padding:6px 0;font-size:12px;}
 .plan-month-field{position:relative;justify-content:center;padding-left:32px;padding-right:32px;white-space:nowrap;} .plan-month-field:after{position:absolute;right:12px;}
 .reflection-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:26px 0 14px;}.reflection-heading .section-title{margin:0;font-size:20px;}.reflection-heading .muted{flex:none;}
-.personal-form .reflection-editor{min-height:132px;font-size:17px;line-height:1.85;padding:16px;}.personal-form .reflection-editor.expanded{min-height:260px;}
+.reflection-field{box-sizing:border-box;width:100%;padding:16px;border:.5px solid var(--personal-control);background:var(--personal-bg);}
+.personal-form .reflection-editor{box-sizing:border-box;width:100%;min-width:0;min-height:100px;margin:0;padding:0;border:0;background:transparent;font-size:17px;line-height:28px;}
+.reflection-placeholder{font-size:17px;line-height:28px;color:#8d8d8d;}
+.reflection-field.expanded .reflection-editor{min-height:228px;}
 .reflection-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;}.personal-form .reflection-toolbar button{width:auto;margin:0;padding:10px 0;font-size:14px;color:#193b2d;}.reflection-toolbar .muted{white-space:nowrap;font-variant-numeric:tabular-nums;}
 .reflection-full{font-size:17px;line-height:1.95;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;padding:8px 0 24px;}.personal-form button.continue-writing{width:auto;margin:0;padding:10px 22px;}
 .review-note{display:block;}.review-note label{display:flex;align-items:flex-start;gap:8px;}.review-note label>view{flex:1;min-width:0;}.personal-form button.quote-note{width:auto;margin:6px 0 0 32px;padding:6px 0;min-height:40px;font-size:13px;color:#193b2d;}

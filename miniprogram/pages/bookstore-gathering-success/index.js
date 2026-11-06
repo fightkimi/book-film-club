@@ -2,13 +2,10 @@ const sharing = require("../../lib/sharing");
 const artwork = require("../../lib/static-assets");
 const { fetchBookstore, task } = require("../../lib/bookstore-api");
 const { valid } = require("../../lib/gatherings");
-Page({
+require("../../lib/bookstore-api").define({
   data: {scene:artwork.sisters, authorized: false, busy: false, error: "", v: null },
   onLoad(q) {
     this.id = valid(q.id) ? q.id : "";
-  },
-  onHide() {
-    this.setData({ authorized: false });
   },
   onShow() {
     sharing.enable();

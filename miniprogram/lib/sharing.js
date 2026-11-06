@@ -173,7 +173,7 @@ function describe(page) {
         label: d.store.city + " · 独立书店",
         title: d.store.name,
         excerpt: d.store.lead,
-        cover: d.store.photos?.[0]?.[0],
+        cover: d.store.thumbnail || d.store.photos?.[0]?.[0],
       },
       destination: target("bookstore", { id: page.id }),
     };
@@ -240,6 +240,19 @@ function prepare(page, custom) {
     .catch(() => "");
   return page._sharePending;
 }
+function cancel(page) {
+  if (page._shareTimer) clearTimeout(page._shareTimer);
+  page._shareTimer = null;
+}
+function schedule(page) {
+  cancel(page);
+  if (page._gone || page._visible === false) return;
+  // Canvas export and cover decoding are secondary to the native transition.
+  page._shareTimer = setTimeout(() => {
+    page._shareTimer = null;
+    if (!page._gone && page._visible !== false) prepare(page);
+  }, 450);
+}
 function message() {
   const info = describe(this),
     key = JSON.stringify(info.model);
@@ -265,6 +278,8 @@ module.exports = {
   describe,
   enable,
   prepare,
+  schedule,
+  cancel,
   message,
   coverFor,
   brand,

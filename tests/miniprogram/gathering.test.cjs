@@ -22,7 +22,7 @@ function setup() {
   }};
   let page;
   vm.runInNewContext(fs.readFileSync(require.resolve('../../miniprogram/pages/bookstore-gathering/index'),'utf8'),{
-    Page(p){page=p;},wx,require:name=>name.endsWith('/sharing')?{enable(){},prepare(){}}:name.endsWith('/api')?api:name.endsWith('/page')?common.exports:eventApi,
+    Page(p){page=p;},wx,require:name=>name.endsWith('/page-lifecycle')?{retain:c=>c}:name.endsWith('/sharing')?{enable(){},prepare(){},schedule(){}}:name.endsWith('/api')?api:name.endsWith('/page')?common.exports:eventApi,
   });
   page.data={...page.data,v:{kind:'meet',state:'open',rev:1}};
   page.id='0123456789abcdef01234567';page.setData=d=>Object.assign(page.data,d);

@@ -1,6 +1,6 @@
 const sharing = require("../../lib/sharing");
 const { directory, task, writeBookstore } = require("../../lib/bookstore-api");
-Page({
+require("../../lib/bookstore-api").define({
   onShareAppMessage: sharing.message,
   data: {
     stores: [],
@@ -16,9 +16,6 @@ Page({
     q = sharing.decodeQuery(q);
     this.startCity = q.city;
   },
-  onHide() {
-    this.setData({ authorized: false });
-  },
   onShow() {
     sharing.enable();
     this.load();
@@ -33,8 +30,11 @@ Page({
       const previous = this.data.cities.length
         ? this.data.city
         : this.startCity || wx.getStorageSync("bookstore-city");
+      const area = this.data.area;
       this.setData({ stores, cities });
       this.showCity(cities.includes(previous) ? previous : "全国");
+      if (area !== "全城" && this.data.areas.includes(area))
+        this.filter({currentTarget:{dataset:{area}}});
     });
   },
   follow(e) {
@@ -53,6 +53,11 @@ Page({
         visible: patch(this.data.visible),
       });
     });
+  },
+  photoError(e) {
+    const i = e.currentTarget.dataset.index, row = this.data.visible[i];
+    if (row?.id === e.currentTarget.dataset.id && row.thumbnail !== row.photos[0]?.[0])
+      this.setData({["visible[" + i + "].thumbnail"]: row.photos[0][0]});
   },
   showCity(city) {
     const visible = this.data.stores.filter(
