@@ -10,6 +10,7 @@ import time
 import bookstore_events as gatherings
 import personal_reading
 import theme_ideation
+import activity_picks
 from companion import generation_slot
 from domain import Problem, admin, boolean, choice, now, text
 
@@ -319,6 +320,11 @@ def serve(handler, path, query, user, body=None, club_db=None, ip='local'):
             with generation_slot(reader):draft=gatherings.ai.generate('activity_theme',context)
             theme_ideation.ensure_novel(draft,state,context)
             result={'draft':draft}
+        elif operation=='activity-picks-ai' and body is not None:
+            reader=require_user(user)
+            works,context=activity_picks.candidates(private_snapshot(handler,club_db),body)
+            with generation_slot(reader):draft=gatherings.ai.generate('recommend',context)
+            result=activity_picks.present(works,draft)
         elif operation.startswith('personal/'):
             result=personal_reading.handle(db,operation.removeprefix('personal/'),{k:v[0] for k,v in query.items()},body,user,
                 load_state=lambda:private_snapshot(handler,club_db),load_books=lambda:library_books(handler,club_db,include_media=True),
