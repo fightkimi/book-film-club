@@ -8,9 +8,16 @@
   <view wx:if="{{themeDraft}}" class="theme-suggestion"><view class="muted">AI 新主题</view><view class="suggestion-title">{{themeDraft.title}}</view><view class="theme-description">{{themeDraft.description}}</view><view class="suggestion-angles">{{themeDraft.angles}}</view><view class="actions"><button class="secondary" bindtap="generateTheme" disabled="{{busy}}">再想一个</button><button bindtap="useTheme" loading="{{themeBusyAction==='adopt'}}" disabled="{{busy}}">用这个主题</button></view></view>
 
   <view class="label">活动类型</view><option-picker disabled="{{busy}}" title="活动类型" range="{{kinds}}" value="{{kindIndex}}" bindchange="kind"><view class="picker">{{kinds[kindIndex]}}</view></option-picker>
-  <view class="section-title">本期作品 <text class="muted">已选 {{form.work_ids.length}} 部</text></view>
-  <input class="field" placeholder="搜索作品或作者" value="{{workQuery}}" bindinput="searchWorks"/>
-  <checkbox-group bindchange="works"><label wx:for="{{works}}" wx:key="id" class="check work-choice"><checkbox disabled="{{busy}}" color="#202020" value="{{item.id}}" checked="{{item.checked}}"/><text>{{item.title}}<text wx:if="{{item.metadata_status!=='confirmed'}}" class="muted">　资料待补全</text></text></label></checkbox-group>
+  <view class="section-title work-heading"><text>{{form.kind==='movie'?'本期电影':form.kind==='book'?'本期书籍':'本期作品'}}</text><text class="muted">已选 {{form.work_ids.length}} {{form.kind==='book'?'本':'部'}}</text></view>
+  <button class="secondary works-ai" bindtap="recommendWorks" loading="{{picksBusy}}" disabled="{{busy||!services.ai}}">{{picksLoaded?'AI 换一批':form.kind==='movie'?'AI 帮我选片':form.kind==='book'?'AI 帮我选书':'AI 先选一批'}}</button>
+  <view wx:if="{{picksError}}" class="error">{{picksError}}</view>
+  <view wx:if="{{picksLoaded && !recommendations.length}}" class="muted work-notice">暂时没有合适的推荐，可以换一批或手动选择。</view>
+  <view wx:if="{{recommendations.length}}" class="recommended-works"><checkbox-group bindchange="selectRecommended"><label wx:for="{{recommendations}}" wx:key="id" class="check work-choice"><checkbox color="#202020" disabled="{{busy}}" value="{{item.id}}" checked="{{item.checked}}"/><view class="work-info"><text class="work-title">{{item.title}}</text><text class="muted work-byline">{{item.kind==='movie'?'电影':'书籍'}}{{item.creator?'　'+item.creator:''}}</text><text class="pick-reason">{{item.reason}}</text><text wx:if="{{item.caveat}}" class="muted pick-caveat">{{item.caveat}}</text></view></label></checkbox-group><button class="secondary works-ai" bindtap="selectAllRecommended" disabled="{{busy||allPicksSelected}}">{{allPicksSelected?'已选入':'全部选入本次活动'}}</button><view class="label">自己再挑选</view></view>
+  <input class="field" placeholder="{{form.kind==='movie'?'搜索片名、译名或导演':form.kind==='book'?'搜索书名或作者':'搜索书名、片名、作者或导演'}}" value="{{workQuery}}" bindinput="searchWorks"/>
+  <view wx:if="{{workNotice}}" class="muted work-notice">{{workNotice}}</view>
+  <button wx:if="{{workError && form.kind!=='book'}}" class="quiet" bindtap="retryMovies" disabled="{{busy}}">{{workError}}</button>
+  <checkbox-group bindchange="works"><label wx:for="{{works}}" wx:key="id" class="check work-choice"><checkbox disabled="{{busy}}" color="#202020" value="{{item.id}}" checked="{{item.checked}}"/><view class="work-info"><text class="work-title">{{item.title}}</text><text class="muted work-byline">{{item.kindLabel}}{{item.creator?'　'+item.creator:''}}{{!item.externalMovie && item.metadata_status!=='confirmed'?'　资料待补全':''}}</text></view></label></checkbox-group>
+  <view wx:if="{{!works.length && !busy}}" class="empty">{{workQuery?'没有找到匹配的作品':form.kind==='movie'?'暂时没有可选电影':form.kind==='book'?'暂时没有可选书籍':'暂时没有可选作品'}}</view>
   <button wx:if="{{works.length < workCount}}" class="quiet" bindtap="moreWorks">查看更多作品</button>
  </block>
  <block wx:else>
@@ -27,4 +34,4 @@
  </block>
  <view wx:if="{{error}}" class="error">{{error}}</view>
 </view>
-<view class="dock"><button wx:if="{{step===1}}" class="secondary" bindtap="previousStep" disabled="{{busy}}">上一步</button><button wx:if="{{step===0}}" bindtap="nextStep" disabled="{{busy||!mayEdit}}">下一步</button><button wx:else loading="{{busy}}" disabled="{{busy||!mayEdit}}" bindtap="save">保存筹备活动</button></view>
+<view class="dock"><button wx:if="{{step===1}}" class="secondary" bindtap="previousStep" disabled="{{busy}}">上一步</button><button wx:if="{{step===0}}" bindtap="nextStep" loading="{{busy && !themeBusyAction}}" disabled="{{busy||!mayEdit}}">下一步</button><button wx:else loading="{{busy}}" disabled="{{busy||!mayEdit}}" bindtap="save">保存筹备活动</button></view>

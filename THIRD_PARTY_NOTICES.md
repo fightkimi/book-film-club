@@ -38,6 +38,8 @@ Open Library、微信读书、Google Books、TMDB、Trakt 等数据及图片遵�
 
 Activity theme ideation adapts methods from [Creative Ideation](https://github.com/NousResearch/hermes-agent/tree/main/optional-skills/creative/creative-ideation), Copyright (c) 2025 Nous Research, MIT. The app-specific Chinese adaptation is in `theme_ideation.py`; selection and adaptations are documented in `docs/THEME-IDEATION.md`. The permission notice is retained in `docs/licenses/creative-ideation-MIT.txt`. No external scripts are installed or executed.
 
+Activity book/film selection also adapts its selection/inversion and anti-slop methods in `activity_picks.py`. The bounded product-specific rules, source comparison and limitations are recorded in `docs/ACTIVITY-SELECTION.md`; the same MIT notice applies. No external runtime dependency is added.
+
 ## TMDB movie catalog and attribution logo
 
 `movie_catalog.json` contains public movie metadata retrieved through the configured TMDB API on 2026-11-06. Source URLs are recorded per film. Metadata and film artwork are not licensed as this project's software; the [TMDB API terms and attribution requirements](https://developer.themoviedb.org/docs/faq) apply. This product uses the TMDB API but is not endorsed or certified by TMDB.

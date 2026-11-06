@@ -153,6 +153,23 @@ class HttpBoundaries(unittest.TestCase):
         self.request('/api/action',{'revision':before['revision'],'action':'unknown','payload':{}},self.auth)
         _,after,_=self.request('/api/state',cookie=self.auth)
         self.assertEqual(before['revision'],after['revision'])
+    def test_member_can_import_a_verified_movie_and_use_it_in_a_viewing_activity(self):
+        movie=dict(kind='movie',title='Activity selection fixture',creator='Director',description='Verified synopsis',
+                   image='https://example.com/film.jpg',source_url='https://example.com/film',
+                   provider='tmdb',source_id='999881',year='2020',scraped_at='2026-11-06',extra={})
+        with patch('server.metadata.detail',return_value=movie):
+            status,preview,_=self.request('/api/metadata/detail',{'provider':'tmdb','source_id':'999881'},self.member_auth)
+        self.assertEqual(status,200)
+        _,before,_=self.request('/api/state',cookie=self.member_auth)
+        status,imported,_=self.request('/api/action',{'revision':before['revision'],'action':'metadata.import','payload':{'token':preview['token']}},self.member_auth)
+        self.assertEqual(status,200);work=imported['result']
+        self.assertEqual(work['provider'],'tmdb');self.assertEqual(work['metadata_status'],'confirmed')
+        form=dict(title='Viewing fixture',kind='movie',start='2026-11-06',end='2026-11-07',
+                  theme_id=imported['state']['themes'][0]['id'],member_ids=[before['user']['id']],work_ids=[work['id']],rules={'quantity':'all'})
+        status,draft,_=self.request('/api/action',{'revision':imported['revision'],'action':'cycle.save','payload':form},self.member_auth)
+        self.assertEqual(status,200);self.assertEqual(draft['result']['works'][0]['kind'],'movie')
+        status,published,_=self.request('/api/action',{'revision':draft['revision'],'action':'cycle.transition','payload':{'id':draft['result']['id'],'status':'active'}},self.member_auth)
+        self.assertEqual(status,200);self.assertEqual(published['result']['status'],'active')
     def test_session_logout_revokes_cookie(self):
         _,_,cookie=self.request('/api/login',{'username':'reader','credential':HttpBoundaries.member_secret})
         self.assertEqual(self.request('/api/logout',{},cookie)[0],200)
